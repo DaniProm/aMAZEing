@@ -1,12 +1,15 @@
 package com.csanydroid.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class amazeingGame extends ApplicationAdapter {
+import java.io.IOException;
+
+public class amazeingGame extends Game {
 	SpriteBatch batch;
 	Texture img;
 	
@@ -14,6 +17,13 @@ public class amazeingGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
+		try {
+			setScreen(new GameScreen("test"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
