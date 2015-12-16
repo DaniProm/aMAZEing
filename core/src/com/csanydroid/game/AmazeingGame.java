@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.IOException;
 
-public class AamazeingGame extends Game {
+public class AmazeingGame extends Game {
 	SpriteBatch batch;
 	Texture img;
 	
