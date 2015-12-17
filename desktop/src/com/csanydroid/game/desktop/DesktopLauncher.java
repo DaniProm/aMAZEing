@@ -7,6 +7,7 @@ import com.csanydroid.game.AmazeingGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title="aMAZEing";
 		new LwjglApplication(new AmazeingGame(), config);
 	}
 }

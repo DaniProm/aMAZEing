@@ -108,6 +108,11 @@ public class GameScreen extends MyScreen {
                     case '~': // puddle
                         actor = new PuddleActor();
                         break;
+                    case '[': //warmhole
+                        actor = new WormholeActor();
+                        break;
+                    case '¤': //blackhole :3
+                        actor = new BlackHoleActor();
                     default:
                         if((ch >= 'A' && ch < 'X') || (ch >= 'a' && ch < 'x')) {
 
