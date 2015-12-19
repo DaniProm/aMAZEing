@@ -1,32 +1,23 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 
-public class HoleActor extends MyActor {
+public class HoleActor extends GameActor {
 
-    /*
-    * null: black hole
-    * this: normal hole
-    * other: behave as a pipe
-    * */
-    private HoleActor endpoint = this;
+	protected static Texture texture = new Texture("hole.png");
 
-    @Override
-    protected void createSprite() {
+	public HoleActor() {
+		sprite = new Sprite(texture);
+		setSize(GameScreen.BASE_SIZE, GameScreen.BASE_SIZE);
+	}
 
-    }
-
-    @Override
-    protected Shape getShape() {
-        return null;
-    }
 
     @Override
     public void dispose() {
 
     }
 
-    public void setEndpoint(HoleActor endpoint) {
-        this.endpoint = endpoint;
-    }
 }
