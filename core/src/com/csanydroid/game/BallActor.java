@@ -14,8 +14,12 @@ public class BallActor extends GameActor {
 	// http://stackoverflow.com/questions/30812250/how-can-i-use-the-accelerometer-for-detecting-jump-in-libgdx
 	protected static Texture texture = new Texture("ball.png");
 
+	static float ballX, ballY;
+
 	public BallActor() {
 		sprite = new Sprite(texture);
+		ballX = sprite.getX();
+		ballY = sprite.getY();
 		setSize(GameScreen.BASE_SIZE, GameScreen.BASE_SIZE);
 	}
 
@@ -27,9 +31,11 @@ public class BallActor extends GameActor {
 	    return shape;
     }
 
-    @Override
-    public void dispose() {
+    @Override @SuppressWarnings("unused") public void dispose() {}
 
-    }
+
+	public void destroy(){
+		//TODO Hory
+	}
 
 }

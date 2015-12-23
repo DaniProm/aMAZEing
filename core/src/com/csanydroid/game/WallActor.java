@@ -1,30 +1,65 @@
 package com.csanydroid.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
 
 public class WallActor extends GameActor {
 
-    private int strength = Integer.MAX_VALUE; // a fal erőssége
+    protected static int strength = Integer.MAX_VALUE, pwOfExpWall = strength/2; // a fal erőssége
+    //Azért, mert csak akkor fog felrobbani, ha a ütköző-erő nagyobb
+    static boolean itWillExp = false;
 
-	protected static Texture texture = new Texture("wall0.png");
+    private int fireFrame = 0;
 
-	public WallActor() {
-		sprite = new Sprite(texture);
-		setSize(GameScreen.BASE_SIZE, GameScreen.BASE_SIZE);
+	protected static Texture textureNormWall, textureExpWall;
+
+    private Sprite spriteNorm, spriteExp, spriteExplosion;
+
+    private Animation animationExpWall;
+
+    protected static TextureAtlas textureAtlasExpWall;
+
+	public WallActor(boolean b) {
+        if(b)createANormalWall();
+        else createAExplosionWall();
 	}
 
+    private void createANormalWall(){
+        textureNormWall = new Texture("normwall.png");
+        spriteNorm = new Sprite(textureNormWall);
+        spriteNorm.setSize(GameScreen.BASE_SIZE, GameScreen.BASE_SIZE);
+        int pw = strength;
+        }
+
+    private void createAExplosionWall(){
+        textureExpWall = new Texture("expwall.png");
+        spriteExp = new Sprite(textureExpWall);
+        spriteExp.setSize(GameScreen.BASE_SIZE, GameScreen.BASE_SIZE);
+    }
+
     @Override
-    public void dispose() {
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
 
+        if(itWillExp){
+            textureAtlasExpWall = new TextureAtlas("bummingForWall.atlas");
+            animationExpWall = new Animation(1 / 30f, textureAtlasExpWall.getRegions());
+            spriteExplosion = new Sprite();
+            spriteExp.setRegion(textureAtlasExpWall.getRegions().get(fireFrame));
+            spriteExp.draw(batch); //s.play(parentAlpha );
+            if (textureAtlasExpWall.getRegions().size-1 > fireFrame) {
+                fireFrame++;
+            }
+        }
     }
 
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
+
+
+    @Override @SuppressWarnings("unused") public void dispose() {}
+
 
 }

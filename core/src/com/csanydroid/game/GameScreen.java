@@ -18,6 +18,7 @@ import java.io.IOException;
 public class GameScreen extends MyScreen {
 
 	public static float BASE_SIZE = 128; // TODO máshova kell rakni valószínűleg
+	BallActor ball = new BallActor();
 	private Stage stage = new Stage(viewport) {
 
 		@Override
@@ -48,7 +49,7 @@ public class GameScreen extends MyScreen {
 						a = (GameActor)(bodyA.getUserData()),
 						b = (GameActor)(bodyB.getUserData());
 
-				//Gdx.app.log("contact", a + " - " + b);
+				Gdx.app.log("contact", a + " - " + b);
 				bodyB.setTransform(10, 10, 0);
 				contact.setEnabled(false);
 				if(Math.random() < 0) return;
@@ -73,12 +74,21 @@ public class GameScreen extends MyScreen {
 					}
 				}
 
+				if(a instanceof WallActor){
+					if(bodyA.getLinearVelocity().len() > WallActor.pwOfExpWall) {
+						WallActor.itWillExp = true;
+						ball.destroy();
+					}
+				}
+
+
 
 
 				//.applyForceToCenter(contact.getFixtureB().getBody().getLinearVelocity(),true);
 				//contact.getFixtureB().getBody().applyForceToCenter(contact.getFixtureA().getBody().getLinearVelocity(),true);
 
 			}
+
 
 			@Override
 			public void endContact(Contact contact) {
@@ -122,7 +132,7 @@ public class GameScreen extends MyScreen {
 					case ' ':
 						break; // do nothing
 					case '.': // wall
-						actor = new WallActor();
+						actor = new WallActor(true);//Ha true akkor nem robban
 						bodyType = BodyDef.BodyType.StaticBody;
 						break;
 					case 'O': // ball
@@ -146,6 +156,9 @@ public class GameScreen extends MyScreen {
 						actor = new PuddleActor();
 						bodyType = BodyDef.BodyType.KinematicBody;
 						break;
+					case ':': //explosion wall
+						actor = new WallActor(false);//Ha false, akkor felrobbanós fal lesz
+						bodyType = BodyDef.BodyType.DynamicBody;
 					default:
 
 						// wormhole
