@@ -2,10 +2,12 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -14,8 +16,21 @@ public class MyScreen implements Screen {
 	protected OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	protected Viewport viewport = new ScreenViewport(camera);
 
-	protected SpriteBatch batch = new SpriteBatch();
+	protected final SpriteBatch batch = new SpriteBatch();
 	protected final static float WORLD_WIDTH = 160, WORLD_HEIGHT = 90;
+
+	protected static BitmapFont font;
+	static {
+
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 200;
+		parameter.kerning = false;
+		parameter.color = Color.BLACK;
+		font = generator.generateFont(parameter);
+		generator.dispose();
+
+	}
 
 	public MyScreen() {
 
@@ -26,7 +41,6 @@ public class MyScreen implements Screen {
 		Gdx.gl.glClearColor(.7f, .7f, .7f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 	}
 
@@ -52,12 +66,12 @@ public class MyScreen implements Screen {
 
 	@Override
 	public void dispose() {
-
+		batch.dispose();
 	}
 
 	@Override
 	public void show() {
-		//  batch.dispose();
+
 
 	}
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -48,11 +49,30 @@ public abstract class GameActor extends Actor implements Disposable {
 		sprite.setRotation(degrees);
 	}
 
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		body.setActive(visible);
+	}
+
 	protected Shape getShape() {
-		// default shape is a tile
+		return getTileShape();
+	}
+
+	protected static Shape getTileShape() {
 		final PolygonShape shape = new PolygonShape();
 		final float hs =  GameScreen.TILE_SIZE / 2 / PIX2M;
 		shape.setAsBox(hs, hs, new Vector2(hs, hs), 0);
+		return shape;
+
+	}
+
+	protected static Shape getCircleShape(float scale) {
+		scale /= 2; // diameter -> radius
+
+		final CircleShape shape = new CircleShape();
+		shape.setRadius(GameScreen.TILE_SIZE * scale / PIX2M);
+		shape.setPosition(new Vector2(GameScreen.TILE_SIZE * scale / PIX2M, GameScreen.TILE_SIZE * scale / PIX2M));
 		return shape;
 	}
 
@@ -71,7 +91,7 @@ public abstract class GameActor extends Actor implements Disposable {
 	final public void applyWorld(World world, BodyDef.BodyType bodyType) {
 
 		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.restitution = 0.01f;
+		fixtureDef.restitution = 0;
 		fixtureDef.density = bodyType == BodyDef.BodyType.StaticBody ? 10 : 1;
 		fixtureDef.friction = bodyType == BodyDef.BodyType.StaticBody ? 0 : 1;
 		fixtureDef.shape = getShape();
@@ -89,7 +109,7 @@ public abstract class GameActor extends Actor implements Disposable {
 		body = world.createBody(bodyDef);
 		body.setFixedRotation(true);//bodyType == BodyDef.BodyType.StaticBody);
 		body.setUserData(this);
-
+		body.setLinearDamping(0);
 
 		//final Shape shape = getShape();
 		body.createFixture(fixtureDef);
@@ -106,5 +126,12 @@ public abstract class GameActor extends Actor implements Disposable {
 		final Vector2 pos = body.getPosition();
 		setPosition(pos.x * PIX2M, pos.y * PIX2M);
 
+	}
+
+	@Override
+	public void dispose() { }
+
+	{
+		setBounds(0,0,GameScreen.TILE_SIZE,GameScreen.TILE_SIZE);
 	}
 }

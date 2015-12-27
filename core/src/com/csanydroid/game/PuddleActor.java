@@ -12,9 +12,4 @@ public class PuddleActor extends GameActor {
 		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
 	}
 
-    @Override
-    public void dispose() {
-
-    }
-
 }

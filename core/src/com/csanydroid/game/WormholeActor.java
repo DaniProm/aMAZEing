@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 import java.util.ArrayDeque;
 
@@ -14,7 +15,7 @@ import java.util.ArrayDeque;
 public class WormholeActor extends GameActor {
 
 	protected static Texture texture = new Texture("wormhole.png");
-	// H: az effekt túl hosszú szerintem, egy rövidebb jobb lenne
+
 	private final Sound sound = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
 	private float active = 0;
 	private WormholeActor endpoint = null;
@@ -44,6 +45,11 @@ public class WormholeActor extends GameActor {
 	public WormholeActor() {
 		sprite = new Sprite(texture);
 		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+	}
+
+	@Override
+	protected Shape getShape() {
+		return getCircleShape(.5f);
 	}
 
 	public WormholeActor getEndpoint() {return endpoint;}
@@ -79,9 +85,7 @@ public class WormholeActor extends GameActor {
 	}
 
 	@Override
-	@SuppressWarnings("unused")
 	public void dispose() {
 		sound.dispose();
-
 	}
 }

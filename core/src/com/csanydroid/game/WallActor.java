@@ -13,7 +13,4 @@ public class WallActor extends GameActor {
 		sprite.setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
 	}
 
-    @Override @SuppressWarnings("unused") public void dispose() {}
-
-
 }

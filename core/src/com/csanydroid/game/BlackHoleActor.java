@@ -19,13 +19,9 @@ public class BlackHoleActor extends GameActor {
 		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
 	}
 
-	private final static float SIZE_SCALE = .2f;
 	@Override
 	protected Shape getShape() {
-		final CircleShape shape = new CircleShape();
-		shape.setRadius(GameScreen.TILE_SIZE * SIZE_SCALE / PIX2M);
-		shape.setPosition(new Vector2(GameScreen.TILE_SIZE * SIZE_SCALE / PIX2M, GameScreen.TILE_SIZE * SIZE_SCALE / PIX2M));
-		return shape;
+		return getCircleShape(.4f);
 	}
 
 	public void swallowBall(BallActor ball) {
