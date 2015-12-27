@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.IOException;
 
-public class AmazeingGame extends Game implements ApplicationListener {
+public class AmazingGame extends Game implements ApplicationListener {
 
 	@Override
 	public void create () {

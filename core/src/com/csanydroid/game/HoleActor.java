@@ -2,22 +2,41 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 
 public class HoleActor extends GameActor {
+
+	private boolean hasSwallowedBall = false;
+
+	public void swallowBall(BallActor ball) {
+		if(hasSwallowedBall) return;
+		ballToSwallow = ball;
+	}
+
+	private BallActor ballToSwallow;
 
 	protected static Texture texture = new Texture("hole.png");
 
 	public HoleActor() {
 		sprite = new Sprite(texture);
-		setSize(GameScreen.BASE_SIZE, GameScreen.BASE_SIZE);
+		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
 	}
 
+	@Override
+	public void act(float delta) {
+		super.act(delta);
 
-    @Override
-    public void dispose() {
+		if(ballToSwallow != null) {
+			hasSwallowedBall = true;
+			ballToSwallow.delete();
+			ballToSwallow = null;
 
-    }
+			// itt lehetne megváltoztatni a sprite-ot is...
+
+		}
+
+	}
+
+	@Override
+    public void dispose() {  }
 
 }

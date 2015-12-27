@@ -1,0 +1,39 @@
+explosion.png
+formátum: RGBA8888
+szűrő: Nearest,Nearest
+ismétlés: none
+0
+  forgatás: false
+  pozíció: 0, 0
+  méret: 128, 128
+  eredetiMéret: 128, 128
+  eltolás: 0, 0
+  ez: -1
+1
+  forgatás: false
+  pozíció: 128, 0
+  méret: 128, 128
+  eredetiMéret: 128, 128
+  eltolás: 0, 0
+  egy: -1
+2
+  forgatás: false
+  pozíció: 256, 0
+  méret: 128, 128
+  eredetiMéret: 128, 128
+  eltolás: 0, 0
+  nagy: -1
+3
+  forgatás: false
+  pozíció: 384, 0
+  méret: 128, 128
+  eredetiMéret: 128, 128
+  eltolás: 0, 0
+  kalap: -1
+4
+  forgatás: false
+  pozíció: 512, 0
+  méret: 128, 128
+  eredetiMéret: 128, 128
+  eltolás: 0, 0
+  sz@r: -1

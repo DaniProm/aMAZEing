@@ -1,7 +1,6 @@
 package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
 
-
+// Disposable: Textúrák takarítása, de csak azok, amelyek nem statikusak!
 public abstract class GameActor extends Actor implements Disposable {
 	protected static float PIX2M = 64f;
 	protected float elapsedTime = 0;
@@ -32,7 +31,7 @@ public abstract class GameActor extends Actor implements Disposable {
 
 	@Override
 	public void setSize(float width, float height) {
-		super.setSize(width,height);
+		super.setSize(width, height);
 		sprite.setSize(width, height);
 		sprite.setOrigin(width / 2, height / 2);
 	}
@@ -50,17 +49,23 @@ public abstract class GameActor extends Actor implements Disposable {
 	}
 
 	protected Shape getShape() {
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(GameScreen.BASE_SIZE / 2 / PIX2M, GameScreen.BASE_SIZE / 2 / PIX2M, new Vector2(GameScreen.BASE_SIZE / 2 / PIX2M, GameScreen.BASE_SIZE / 2 / PIX2M), 0);
+		// default shape is a tile
+		final PolygonShape shape = new PolygonShape();
+		final float hs =  GameScreen.TILE_SIZE / 2 / PIX2M;
+		shape.setAsBox(hs, hs, new Vector2(hs, hs), 0);
 		return shape;
 	}
 
-	@Override
-	abstract public void dispose(); //Textúrák takarítása, de csak azok, amelyek nem statikusak!
-
-	final public void removeWorld() {
+	final public void detachWorld() {
+		if (world == null) return;
 		world.destroyBody(body);
 		world = null;
+	}
+
+	public void delete() {
+		detachWorld();
+		super.remove();
+		dispose();
 	}
 
 	final public void applyWorld(World world, BodyDef.BodyType bodyType) {
@@ -72,7 +77,7 @@ public abstract class GameActor extends Actor implements Disposable {
 		fixtureDef.shape = getShape();
 		fixtureDef.isSensor = bodyType == BodyDef.BodyType.KinematicBody;
 
-		if(bodyType == BodyDef.BodyType.KinematicBody) {
+		if (bodyType == BodyDef.BodyType.KinematicBody) {
 			bodyType = BodyDef.BodyType.StaticBody;
 		}
 
