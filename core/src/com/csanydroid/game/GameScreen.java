@@ -40,6 +40,8 @@ public class GameScreen extends MyScreen {
 			if(actor instanceof BallActor) {
 				balls.add((BallActor) actor);
 				actor.setZIndex(0x1000);
+			} else {
+				actor.setZIndex(1);
 			}
 
 		}
