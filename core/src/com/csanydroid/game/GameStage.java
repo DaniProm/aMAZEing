@@ -240,7 +240,7 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 		{
 			//keyGravityX*=0.1f;
 			//keyGravityY*=0.1f;
-			world.setGravity(new Vector2(keyGravityX, -keyGravityY));
+			world.setGravity(new Vector2(keyGravityX*50, -keyGravityY*50));
 		}
 //Teszteléshez
 		world.step(delta, 1, 1);

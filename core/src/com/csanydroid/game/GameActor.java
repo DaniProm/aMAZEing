@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 // Disposable: Textúrák takarítása, de csak azok, amelyek nem statikusak!
 public abstract class GameActor extends Actor implements Disposable {
-	protected static float PIX2M = 64f;
+	protected static float PIX2M = 1f;
 	protected float elapsedTime = 0;
 	protected Body body;
 	protected World world;
