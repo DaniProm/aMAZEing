@@ -1,6 +1,7 @@
 package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -211,11 +212,37 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
 	private float additionalZoom = 1;
 
+
+	private float keyGravityX=0, keyGravityY=0;
 	@Override
 	public void act(float delta) {
 		if (world == null) return;
 
 		world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
+
+//Teszteléshez
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+		{
+			if (keyGravityX<10) keyGravityX+=1f;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+		{
+			if (keyGravityX>-10) keyGravityX-=1f;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.UP))
+		{
+			if (keyGravityY>-10) keyGravityY-=1f;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			if (keyGravityY<10)	keyGravityY += 1f;
+		}
+		if (keyGravityX!=0 || keyGravityY!=0)
+		{
+			//keyGravityX*=0.1f;
+			//keyGravityY*=0.1f;
+			world.setGravity(new Vector2(keyGravityX, -keyGravityY));
+		}
+//Teszteléshez
 		world.step(delta, 1, 1);
 
 		super.act(delta);

@@ -3,6 +3,7 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.io.IOException;
 public class GameScreen extends MyScreen {
 
 	public static float TILE_SIZE = 128;
-	//private Box2DDebugRenderer debugger = new Box2DDebugRenderer();
+	private Box2DDebugRenderer debugger = new Box2DDebugRenderer();
 	private GameStage gameStage;
 	private Stage asfd = new Stage() {
 
@@ -36,7 +37,7 @@ public class GameScreen extends MyScreen {
 		batch.begin();
 
 		gameStage.updateCamera(camera);
-		//debugger.render(world, camera.combined);
+		debugger.render(gameStage.world, camera.combined);
 		batch.end();
 
 	}
