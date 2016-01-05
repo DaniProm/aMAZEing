@@ -28,8 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameStage extends Stage implements GestureDetector.GestureListener {
-private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
+	private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
 	protected static BitmapFont scribbleFont;
+
 	static {
 		// http://www.fontsquirrel.com/fonts/list/language/hungarian
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
@@ -54,10 +55,10 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 		Gdx.input.vibrate(250);
 		balls.remove(ball);
 
-		if(balls.size() == 0) {
+		if (balls.size() == 0) {
 			// TODO to do
 			// vége a játéknak
-			if(everyHoleHasBall()) {
+			if (everyHoleHasBall()) {
 				Gdx.app.log("játék", "Nyertem! :)");
 			} else {
 				Gdx.app.log("játék", "Vesztettem!");
@@ -69,8 +70,8 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 	}
 
 	private boolean everyHoleHasBall() {
-		for(HoleActor hole : holes) {
-			if(!hole.hasSwallowedBall()) return false;
+		for (HoleActor hole : holes) {
+			if (!hole.hasSwallowedBall()) return false;
 		}
 		return true;
 	}
@@ -116,7 +117,7 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 				                         } else if (other instanceof HoleActor) {
 					                         ((HoleActor) other).swallowBall(ball);
 				                         } else if (other instanceof StarActor) {
-					                         ((StarActor)other).collect();
+					                         ((StarActor) other).collect();
 				                         }
 
 			                         }
@@ -213,7 +214,8 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 	private float additionalZoom = 1;
 
 
-	private float keyGravityX=0, keyGravityY=0;
+	private float keyGravityX = 0, keyGravityY = 0;
+
 	@Override
 	public void act(float delta) {
 		if (world == null) return;
@@ -221,26 +223,22 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 		world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
 
 //Teszteléshez
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-		{
-			if (keyGravityX<10) keyGravityX+=1f;
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			if (keyGravityX < 10) keyGravityX += 1f;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-		{
-			if (keyGravityX>-10) keyGravityX-=1f;
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			if (keyGravityX > -10) keyGravityX -= 1f;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP))
-		{
-			if (keyGravityY>-10) keyGravityY-=1f;
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			if (keyGravityY > -10) keyGravityY -= 1f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			if (keyGravityY<10)	keyGravityY += 1f;
+			if (keyGravityY < 10) keyGravityY += 1f;
 		}
-		if (keyGravityX!=0 || keyGravityY!=0)
-		{
+		if (keyGravityX != 0 || keyGravityY != 0) {
 			//keyGravityX*=0.1f;
 			//keyGravityY*=0.1f;
-			world.setGravity(new Vector2(keyGravityX*50, -keyGravityY*50));
+			world.setGravity(new Vector2(keyGravityX * 50, -keyGravityY * 50));
 		}
 //Teszteléshez
 		world.step(delta, 1, 1);
@@ -250,39 +248,18 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
 	}
 
-	public class ScribbleActor extends Actor {
-		public ScribbleActor(float x, float y, int span) {
-			this.x = x;
-			this.y = y;
-			this.span = span;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
-
-		private String text;
-		private final float x, y;
-		private final int span;
-
-		@Override
-		public void draw(Batch batch, float parentAlpha) {
-			scribbleFont.draw(batch, text, x, y, span * GameScreen.TILE_SIZE, Align.center, true); // TODO align vertically center
-		}
-	}
-
-	@Override
+@Override
 	public void addActor(Actor actor) {
 		super.addActor(actor);
 
-		if(!(actor instanceof BallActor)) actor.toBack();
+		if (!(actor instanceof BallActor)) actor.toBack();
 		else actor.toFront();
 
 		if (actor instanceof BallActor) {
 			balls.add((BallActor) actor);
 		} else if (actor instanceof HoleActor) {
 			holes.add((HoleActor) actor);
-		} else if(actor instanceof StarActor) {
+		} else if (actor instanceof StarActor) {
 			++totalStars;
 		}
 
@@ -302,12 +279,12 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
 			final ArrayList<ScribbleActor> scribbles = showScribbles ? new ArrayList<ScribbleActor>() : null;
 
-			for (int y = 0;null != (line = reader.readLine());) {
-				if(line.compareTo("") == 0) break;
+			for (int y = 0; null != (line = reader.readLine()); ) {
+				if (line.compareTo("") == 0) break;
 
 				y++;
 				int x = 0;
-				for(int i = 0;i < line.length();i++) {
+				for (int i = 0; i < line.length(); i++) {
 					GameActor actor = null;
 					BodyDef.BodyType bodyType = null;
 					final char ch = line.charAt(i);
@@ -350,7 +327,7 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 							bodyType = BodyDef.BodyType.KinematicBody;
 							break;
 						case '#': // scribble
-							if(scribbles != null) {
+							if (scribbles != null) {
 								int nextCh = line.charAt(++i);
 
 								ScribbleActor scribble = new ScribbleActor(x * GameScreen.TILE_SIZE, height - (y - 1) * GameScreen.TILE_SIZE, nextCh - '0');
@@ -395,9 +372,9 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
 			}
 
-			if(scribbles != null) {
+			if (scribbles != null) {
 				// read scribbles
-				for (int i = 0;null != (line = reader.readLine());i++) {
+				for (int i = 0; null != (line = reader.readLine()); i++) {
 					scribbles.get(i).setText(line);
 				}
 
@@ -448,6 +425,27 @@ private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 		additionalZoom = initialDistance / distance;
 		// TODO
 		return false;
+	}
+
+
+	public class ScribbleActor extends Actor {
+		private final float x, y;
+		private final int span;
+		private String text;
+		public ScribbleActor(float x, float y, int span) {
+			this.x = x;
+			this.y = y;
+			this.span = span;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			scribbleFont.draw(batch, text, x, y, span * GameScreen.TILE_SIZE, Align.center, true); // TODO align vertically center
+		}
 	}
 
 	@Override

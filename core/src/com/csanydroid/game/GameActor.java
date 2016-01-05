@@ -16,7 +16,24 @@ import com.badlogic.gdx.utils.Disposable;
 
 // Disposable: Textúrák takarítása, de csak azok, amelyek nem statikusak!
 public abstract class GameActor extends Actor implements Disposable {
-	protected static float PIX2M = 1f;
+	/**
+	 * Ha megnézzük, hogy hol van használva ez a változó, akkor kiderül, hogyha ez egy, akkor nincs is rá szükségünk.
+	 * De!! (Most jön a de.)
+	 * Ez a változó itt volt.
+	 * Valószínűleg nem tesztelted a változtatásodat, miután átírtad a számot egyre. Ekkor azt láthattad volna, hogy a laszti alig mozdul -> nem annyira életszerű...
+	 * Na, már most! Hogy megértsük, hogy miért volt az, hogy ez a szám nem 1, ahhoz előbb meg kell értenünk a box2d fizikai szimulátor működését. (ha csak egy picit is...)
+	 * A változó célja, hogy skálázza az általunk megjelenített pixel koordinátáját, a szimulátor által (belsőleg) használt egységéhez (ami méter; életszerűség).
+	 * Ha ez a változó 1, az azt jelenti, hogy nincs skálázás -> magyarán, ha a képernyőn a csiga 1 pixelt tesz meg, akkor az a valóságban (a fizikai modell szerint) 1 métert jelent. (ugye ez 1 másodperc alatt (60 képkocka/mp-nél) 1s * 60 egység (méter), ami 216km/h-t takar.)
+	 * Az utóbb kiszámolt sebesség a mi világunkban imsert maximális sebességtől igencsak messze esik. Akkor miért nem tud gyorsabban mozogni a képernyőn a tárgy?
+	 * A probléma ott kezdődik, hogy a box2d belső "fénysebessége" jócskán kisebb.
+	 * Ez a varázsszám a 2 (azaz hozzávetőlegesen nem több, mint kevesebb kettő egész nullánál) egységben (méterben) van meghatározva.
+	 * Ez a tárgy maximális elmozdulását jelenti 1 darab world.step-nél. Ami 60-szor meghívva egy másodperc alatt: 2 egység * 60 darab = 120 egység elmozdulás = 120m -> 120m-t tesz meg másodpercenként -> 120m/s -> 432km/h -> ez viszonylag, azért elég sok, ahhoz képest, hogy a képernyőn csak 120 pixelt tett meg.
+	 * Itten lehet olvasni rólája: http://www.iforce2d.net/b2dtut/gotchas#speedlimit
+	 * Próbáltam valamennyire "érthetően fogalmazni", és állításaim többé-kevésbé igazak (remélem)
+	 * És mivel, ha ez a szám nem 1, akkor a debuggolásos rendeleléses cucc el lesz csúszva, ezért is kommenteltem ki azokat a sorokat. De biztos van rá valami megoldás...
+	 */
+
+	protected static float PIX2M = 70; // különböző átváltásokkal meg lehetne kapni a megfelelő számot TODO majd egy pontos érték kiszámítása
 	protected float elapsedTime = 0;
 	protected Body body;
 	protected World world;
