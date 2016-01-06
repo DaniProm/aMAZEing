@@ -8,16 +8,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class MyScreen implements Screen {
-	protected OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	protected Viewport viewport = new ScreenViewport(camera);
 
 	protected final SpriteBatch batch = new SpriteBatch();
 	protected final static float WORLD_WIDTH = 160, WORLD_HEIGHT = 90;
+	protected OrthographicCamera camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+	//protected Viewport viewport = new ScreenViewport(camera);
+	protected Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+
 
 	protected static BitmapFont font;
 	static {

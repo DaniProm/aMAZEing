@@ -281,7 +281,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		try {
 			BufferedReader reader = new BufferedReader(Gdx.files.internal("mazes/" + maze + ".txt").reader());
-			final float height = Gdx.graphics.getHeight();
+			//final float height = Gdx.graphics.getHeight(); - Nem szükséges, mert a pálya nem függ a képernyőtől. Inkább játszunk a kamerával...
 			WormholeActor[] wormholes = new WormholeActor['F' - 'A' + 1];
 			String line;
 
@@ -342,8 +342,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 
 								Label label = new Label("Valami", LABEL_STYLE);
-								label.setFontScale(0.007f);
-								label.setPosition(x * GameScreen.TILE_SIZE, 480 - y * GameScreen.TILE_SIZE);
+								label.setFontScale(0.007f); //Ennyin volt jó...
+								label.setPosition(x * GameScreen.TILE_SIZE, -y * GameScreen.TILE_SIZE);
 								label.setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
 								label.setAlignment(Align.center);
 								label.setWrap(true);
@@ -381,7 +381,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 					if (actor != null) {
 
-						actor.setPosition(x * GameScreen.TILE_SIZE, height - y * GameScreen.TILE_SIZE);
+						//actor.setPosition(x * GameScreen.TILE_SIZE, height - y * GameScreen.TILE_SIZE);
+						actor.setPosition(x * GameScreen.TILE_SIZE, -y * GameScreen.TILE_SIZE);
 
 						actor.applyWorld(world, bodyType);
 
