@@ -211,7 +211,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		camera.zoom = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 	}
 
-	private float additionalZoom = 1;
+	private float additionalZoom = 0.01f;
 
 
 	private float keyGravityX = 0, keyGravityY = 0;
@@ -238,7 +238,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		if (keyGravityX != 0 || keyGravityY != 0) {
 			//keyGravityX*=0.1f;
 			//keyGravityY*=0.1f;
-			world.setGravity(new Vector2(keyGravityX * 50, -keyGravityY * 50));
+			world.setGravity(new Vector2(keyGravityX * 2, -keyGravityY * 2));
 		}
 //Teszteléshez
 		world.step(delta, 1, 1);

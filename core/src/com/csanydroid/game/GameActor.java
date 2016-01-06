@@ -29,7 +29,7 @@ public abstract class GameActor extends Actor implements Disposable {
 	 * És mivel, ha ez a szám nem 1, akkor a debuggolásos rendeleléses cucc el lesz csúszva, ezért is kommenteltem ki azokat a sorokat. De biztos van rá valami megoldás...
 	 */
 
-	protected static float PIX2M = 70; // különböző átváltásokkal meg lehetne kapni a megfelelő számot TODO majd egy pontos érték kiszámítása
+	protected static float PIX2M = 1; // különböző átváltásokkal meg lehetne kapni a megfelelő számot TODO majd egy pontos érték kiszámítása
 	protected float elapsedTime = 0;
 	protected Body body;
 	protected World world;
