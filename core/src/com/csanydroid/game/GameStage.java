@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -42,6 +43,15 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		scribbleFont = generator.generateFont(parameter);
 		generator.dispose();
 
+	}
+
+
+	protected static final Label.LabelStyle LABEL_STYLE;
+
+	static	{
+		LABEL_STYLE = new Label.LabelStyle();
+		LABEL_STYLE.font = scribbleFont;
+		//LABEL_STYLE.fontColor = Color.WHITE; //Nem működik
 	}
 
 	public World world = new World(Vector2.Zero, false);
@@ -277,7 +287,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			line = reader.readLine(); // maze description
 
-			final ArrayList<ScribbleActor> scribbles = showScribbles ? new ArrayList<ScribbleActor>() : null;
+			final ArrayList<Label> scribbles = showScribbles ? new ArrayList<Label>() : null;
 
 			for (int y = 0; null != (line = reader.readLine()); ) {
 				if (line.compareTo("") == 0) break;
@@ -330,9 +340,21 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 							if (scribbles != null) {
 								int nextCh = line.charAt(++i);
 
+
+								Label label = new Label("Valami", LABEL_STYLE);
+								label.setFontScale(0.007f);
+								label.setPosition(x * GameScreen.TILE_SIZE, 480 - y * GameScreen.TILE_SIZE);
+								label.setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+								label.setAlignment(Align.center);
+								label.setWrap(true);
+								label.setVisible(true);
+								scribbles.add(label);
+								addActor(label);
+
+/*
 								ScribbleActor scribble = new ScribbleActor(x * GameScreen.TILE_SIZE, height - (y - 1) * GameScreen.TILE_SIZE, nextCh - '0');
 								scribbles.add(scribble);
-								addActor(scribble);
+								addActor(scribble);*/
 								--x;
 							}
 							break;
@@ -426,7 +448,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		// TODO
 		return false;
 	}
-
+/*
 
 	public class ScribbleActor extends Actor {
 		private final float x, y;
@@ -444,10 +466,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
-			scribbleFont.draw(batch, text, x, y, span * GameScreen.TILE_SIZE, Align.center, true); // TODO align vertically center
+
+			//scribbleFont.draw(batch, text, x, y, span * GameScreen.TILE_SIZE, Align.center, true); // TODO align vertically center
 		}
 	}
-
+*/
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 		//Gdx.app.log("stage", "pinch");
