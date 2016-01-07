@@ -27,6 +27,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GameStage extends Stage implements GestureDetector.GestureListener {
 	private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
@@ -51,7 +53,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	static	{
 		LABEL_STYLE = new Label.LabelStyle();
 		LABEL_STYLE.font = scribbleFont;
-		//LABEL_STYLE.fontColor = Color.WHITE; //Nem működik
 	}
 
 	public World world = new World(Vector2.Zero, false);
@@ -271,6 +272,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			holes.add((HoleActor) actor);
 		} else if (actor instanceof StarActor) {
 			++totalStars;
+		} else if (actor instanceof Scribble) {
+			//actor.setZIndex(0);
 		}
 
 	}
@@ -287,8 +290,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			line = reader.readLine(); // maze description
 
-			final ArrayList<Label> scribbles = showScribbles ? new ArrayList<Label>() : null;
-
 			for (int y = 0; null != (line = reader.readLine()); ) {
 				if (line.compareTo("") == 0) break;
 
@@ -300,7 +301,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					final char ch = line.charAt(i);
 					switch (ch) {
 						case ' ':
-							break; // space: do nothing
+							break; // space
+						case '\t':
+							--x;
+							break;
 						case '<':
 							x -= 2;
 							break;
@@ -309,7 +313,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 							bodyType = BodyDef.BodyType.StaticBody;
 							break;
 						case ':': // explosive wall
-							actor = new ExplosiveWallActor(10.0f);
+							actor = new ExplosiveWallActor(9.0f);
 							bodyType = BodyDef.BodyType.StaticBody;
 							break;
 						case 'O': // ball
@@ -335,28 +339,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 						case '*': // bonus star
 							actor = new StarActor();
 							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '#': // scribble
-							if (scribbles != null) {
-								int nextCh = line.charAt(++i);
-
-
-								Label label = new Label("Valami", LABEL_STYLE);
-								label.setFontScale(0.007f); //Ennyin volt jó...
-								label.setPosition(x * GameScreen.TILE_SIZE, -y * GameScreen.TILE_SIZE);
-								label.setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
-								label.setAlignment(Align.center);
-								label.setWrap(true);
-								label.setVisible(true);
-								scribbles.add(label);
-								addActor(label);
-
-/*
-								ScribbleActor scribble = new ScribbleActor(x * GameScreen.TILE_SIZE, height - (y - 1) * GameScreen.TILE_SIZE, nextCh - '0');
-								scribbles.add(scribble);
-								addActor(scribble);*/
-								--x;
-							}
 							break;
 						default:
 
@@ -395,10 +377,20 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			}
 
-			if (scribbles != null) {
+			if (showScribbles) {
+				final Pattern pattern = Pattern.compile("(\\d+),(\\d+):(\\d) (.*)");
 				// read scribbles
 				for (int i = 0; null != (line = reader.readLine()); i++) {
-					scribbles.get(i).setText(line);
+					try {
+						Matcher matcher = pattern.matcher(line);
+						matcher.find();
+
+						new Scribble(matcher.group(4), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)) + 1, Integer.parseInt(matcher.group(3)));
+					} catch(IllegalStateException e) {
+
+						Gdx.app.log("tokens", "invalid");
+					}
+
 				}
 
 			}
@@ -407,6 +399,23 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private class Scribble extends Label {
+
+		Scribble(String text, int x, int y, int width) {
+			super(text, LABEL_STYLE);
+
+			setFontScale(0.007f); //Ennyin volt jó...
+			setPosition(x * GameScreen.TILE_SIZE, -y * GameScreen.TILE_SIZE);
+			setSize(GameScreen.TILE_SIZE * width, GameScreen.TILE_SIZE);
+
+			setAlignment(Align.center);
+			setWrap(true);
+			setVisible(true);
+
+			addActor(this);
 		}
 	}
 
@@ -445,33 +454,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = initialDistance / distance;
+		additionalZoom = initialDistance / distance / 100;
 		// TODO
 		return false;
 	}
-/*
 
-	public class ScribbleActor extends Actor {
-		private final float x, y;
-		private final int span;
-		private String text;
-		public ScribbleActor(float x, float y, int span) {
-			this.x = x;
-			this.y = y;
-			this.span = span;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
-
-		@Override
-		public void draw(Batch batch, float parentAlpha) {
-
-			//scribbleFont.draw(batch, text, x, y, span * GameScreen.TILE_SIZE, Align.center, true); // TODO align vertically center
-		}
-	}
-*/
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 		//Gdx.app.log("stage", "pinch");

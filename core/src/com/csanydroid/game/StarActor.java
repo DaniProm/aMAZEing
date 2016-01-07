@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 public class StarActor extends GameActor {
 
@@ -46,4 +47,8 @@ public class StarActor extends GameActor {
 		music.dispose();
 	}
 
+	@Override
+	protected Shape getShape() {
+		return getCircleShape(.5f);
+	}
 }

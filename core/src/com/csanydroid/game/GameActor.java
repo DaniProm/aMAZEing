@@ -16,20 +16,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 // Disposable: Textúrák takarítása, de csak azok, amelyek nem statikusak!
 public abstract class GameActor extends Actor implements Disposable {
-	/**
-	 * Ha megnézzük, hogy hol van használva ez a változó, akkor kiderül, hogyha ez egy, akkor nincs is rá szükségünk.
-	 * Valószínűleg nem lett tesztelve a változtatás, miután át lett írva ez a számot egyre. Ekkor azt láthattuk, hogy a laszti alig mozdul.
-	 * A változóra a fizikai szimulátor működéséből kifolyólag van szükségünk.
-	 * Célja, hogy skálázza az általunk megjelenített pixel koordinátáját, a szimulátor által (belsőleg) használt egységéhez (ami méter; életszerűség).
-	 * Ha ez a változó 1, az azt jelenti, hogy nincs skálázás -> magyarán, ha a képernyőn a csiga 1 pixelt tesz meg, akkor az a valóságban (a fizikai modell szerint) 1 métert jelent. (ugye ez 1 másodperc alatt (60 képkocka/mp-nél) 1s * 60 egység (méter), ami 216km/h-t takar.)
-	 * Az utóbb kiszámolt sebesség a mi világunkban imsert maximális sebességtől igencsak messze esik. Akkor miért nem tud gyorsabban mozogni a képernyőn a tárgy?
-	 * A probléma, akkor válik láthatóvá, ha elérjük a box2d belső "fénysebességét", ami 2 egységben (méterben) van meghatározva.
-	 * Ez a tárgy maximális elmozdulását jelenti 1 darab world.step-nél. Ami 60-szor meghívva egy másodperc alatt: 2 egység * 60 darab = 120 egység elmozdulás = 120m -> 120m-t tesz meg másodpercenként -> 120m/s -> 432km/h -> ez viszonylag, azért elég sok, ahhoz képest, hogy a képernyőn csak 120 pixelt tett meg.
-	 * Bővebben itt: http://www.iforce2d.net/b2dtut/gotchas#speedlimit
-	 * És mivel, ha ez a szám nem 1, akkor a debuggolásos rendeleléses cucc el lesz csúszva, ezért is kommenteltem ki azokat a sorokat. De biztos van rá valami megoldás...
-	 */
 
-	protected static float PIX2M = 1; // különböző átváltásokkal meg lehetne kapni a megfelelő számot TODO majd egy pontos érték kiszámítása
 	protected float elapsedTime = 0;
 	protected Body body;
 	protected World world;
@@ -73,20 +60,32 @@ public abstract class GameActor extends Actor implements Disposable {
 	}
 
 	protected static Shape getTileShape() {
+		return getTileShape(1);
+	}
+
+	protected static Shape getTileShape(float scale) {
 		final PolygonShape shape = new PolygonShape();
-		final float hs =  GameScreen.TILE_SIZE / 2 / PIX2M;
-		shape.setAsBox(hs, hs, new Vector2(hs, hs), 0);
+		shape.setAsBox(
+	          GameScreen.TILE_SIZE / 2 * scale,
+	          GameScreen.TILE_SIZE / 2 * scale,
+	          new Vector2(GameScreen.TILE_SIZE / 2, GameScreen.TILE_SIZE / 2),
+	          0
+		);
 		return shape;
 
 	}
 
 	protected static Shape getCircleShape(float scale) {
-		scale /= 2; // diameter -> radius
+		scale /= 2; // to radius
 
 		final CircleShape shape = new CircleShape();
-		shape.setRadius(GameScreen.TILE_SIZE * scale / PIX2M);
-		shape.setPosition(new Vector2(GameScreen.TILE_SIZE * scale / PIX2M, GameScreen.TILE_SIZE * scale / PIX2M));
+		shape.setRadius(GameScreen.TILE_SIZE * scale);
+		shape.setPosition(new Vector2(GameScreen.TILE_SIZE / 2, GameScreen.TILE_SIZE / 2));
 		return shape;
+	}
+
+	protected static Shape getCircleShape() {
+		return getCircleShape(1);
 	}
 
 	final public void detachWorld() {
@@ -117,7 +116,7 @@ public abstract class GameActor extends Actor implements Disposable {
 		this.world = world;
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = bodyType;
-		bodyDef.position.set(getX() / PIX2M, getY() / PIX2M);
+		bodyDef.position.set(getX(), getY());
 
 		body = world.createBody(bodyDef);
 		body.setFixedRotation(true);//bodyType == BodyDef.BodyType.StaticBody);
@@ -137,7 +136,7 @@ public abstract class GameActor extends Actor implements Disposable {
 		//super.act(delta);
 
 		final Vector2 pos = body.getPosition();
-		setPosition(pos.x * PIX2M, pos.y * PIX2M);
+		setPosition(pos.x, pos.y);
 
 	}
 

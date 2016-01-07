@@ -19,7 +19,7 @@ public class BallActor extends GameActor {
 
 	@Override
     protected Shape getShape() {
-		return getCircleShape(.8f);
+		return getCircleShape(.9f);
     }
 
 	@Override

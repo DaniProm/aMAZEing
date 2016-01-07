@@ -49,10 +49,8 @@ public class WormholeActor extends GameActor {
 
 	@Override
 	protected Shape getShape() {
-		return getCircleShape(.5f);
+		return getCircleShape(.75f);
 	}
-
-	public WormholeActor getEndpoint() {return endpoint;}
 
 	public void setEndpoint(WormholeActor endpoint) {this.endpoint = endpoint;}
 

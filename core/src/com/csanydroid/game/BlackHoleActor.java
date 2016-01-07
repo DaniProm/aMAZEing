@@ -21,7 +21,7 @@ public class BlackHoleActor extends GameActor {
 
 	@Override
 	protected Shape getShape() {
-		return getCircleShape(.4f);
+		return getCircleShape(.55f);
 	}
 
 	public void swallowBall(BallActor ball) {
