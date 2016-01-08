@@ -19,7 +19,7 @@ public class ExplosiveWallActor extends WallActor {
 
 	public ExplosiveWallActor(float strength) {
 		sprite = new Sprite(texture);
-		sprite.setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		sprite.setSize(1, 1);
 
 		this.strength = strength;
 	}

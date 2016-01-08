@@ -205,20 +205,25 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				else if (y < bottom) bottom = y;
 			}
 
-			top += GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
-			bottom += GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
+			top += 1 / 2 + BALL_HORIZON;
+			bottom += 1 / 2 - BALL_HORIZON;
 
-			left += GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
-			right += GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
+			left += 1 / 2 - BALL_HORIZON;
+			right += 1 / 2 + BALL_HORIZON;
 
 
 			height = Math.max(top - bottom, BALL_HORIZON);
 			width = Math.max(right - left, BALL_HORIZON);
 
-			camera.position.x = (right + left) / 2;
-			camera.position.y = (top + bottom) / 2;
+			float newValue;
 
-			camera.zoom = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
+			newValue = (right + left) / 2;
+			camera.position.x += (newValue - camera.position.x) / 3;
+			newValue = (top + bottom) / 2;
+			camera.position.y += (newValue - camera.position.y) / 3;
+
+			newValue = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
+			camera.zoom += (newValue - camera.zoom) / 3;
 
 		}
 
@@ -366,7 +371,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					if (actor != null) {
 
 						//actor.setPosition(x * GameScreen.TILE_SIZE, height - y * GameScreen.TILE_SIZE);
-						actor.setPosition(x * GameScreen.TILE_SIZE, -y * GameScreen.TILE_SIZE);
+						actor.setPosition(x, -y);
 
 						actor.applyWorld(world, bodyType);
 
@@ -410,8 +415,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			super(text, LABEL_STYLE);
 
 			setFontScale(0.007f); //Ennyin volt jó...
-			setPosition(x * GameScreen.TILE_SIZE, -y * GameScreen.TILE_SIZE);
-			setSize(GameScreen.TILE_SIZE * width, GameScreen.TILE_SIZE);
+			setPosition(x * 1, -y * 1);
+			setSize(1 * width, 1);
 
 			setAlignment(Align.center);
 			setWrap(true);

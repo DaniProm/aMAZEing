@@ -18,7 +18,7 @@ public class DoorActor extends GameActor {
 
 	public DoorActor() {
 		sprite = new Sprite(texture);
-		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		setSize(1, 1);
 	}
 
 	{

@@ -44,7 +44,7 @@ public class WormholeActor extends GameActor {
 
 	public WormholeActor() {
 		sprite = new Sprite(texture);
-		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		setSize(1, 1);
 	}
 
 	@Override

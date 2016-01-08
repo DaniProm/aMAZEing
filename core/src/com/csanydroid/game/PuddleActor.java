@@ -9,7 +9,7 @@ public class PuddleActor extends GameActor {
 
 	public PuddleActor() {
 		sprite = new Sprite(texture);
-		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		setSize(1, 1);
 	}
 
 }

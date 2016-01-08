@@ -23,7 +23,7 @@ public class HoleActor extends GameActor {
 
 	public HoleActor() {
 		sprite = new Sprite(texture);
-		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		setSize(1, 1);
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public class GameScreen extends MyScreen {
 
-	public static float TILE_SIZE = 1;
 	private Box2DDebugRenderer debugger = new Box2DDebugRenderer();
 	private GameStage gameStage;
 	private Stage asfd = new Stage() {

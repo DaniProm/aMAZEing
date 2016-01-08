@@ -15,7 +15,7 @@ public class StarActor extends GameActor {
 
 	public StarActor() {
 		sprite = new Sprite(texture);
-		setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		setSize(1, 1);
 	}
 
 	public void collect() {

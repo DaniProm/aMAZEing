@@ -10,7 +10,7 @@ public class WallActor extends GameActor {
 
 	public WallActor() {
 		sprite = new Sprite(texture);
-		sprite.setSize(GameScreen.TILE_SIZE, GameScreen.TILE_SIZE);
+		sprite.setSize(1, 1);
 	}
 
 }
