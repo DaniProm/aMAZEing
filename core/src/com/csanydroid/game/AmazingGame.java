@@ -16,7 +16,7 @@ public class AmazingGame extends Game implements ApplicationListener {
 	public void create () {
 
 		try {
-			setScreen(new GameScreen("long"));
+			setScreen(new GameScreen("test"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

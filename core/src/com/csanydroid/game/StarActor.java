@@ -16,7 +16,6 @@ public class StarActor extends GameActor {
 
 	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
 
-	static boolean doNothing = false;
 
 	//protected static Texture textureStar = null, texture=new Texture("star.png");
 	//protected static TextureAtlas textureAtlasStar;
@@ -30,8 +29,14 @@ public class StarActor extends GameActor {
 		//sprite = new Sprite(texture);
 		sprite = new Sprite(textureAtlasStar.get(0));
 		sprite.setRegion(textureAtlasStar.get(0));
-		animationStar = new Animation(1 / 15f, textureAtlasStar, Animation.PlayMode.LOOP);
+		animationStar = new Animation(1 / 30f, textureAtlasStar, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
+		music.setOnCompletionListener(new Music.OnCompletionListener() {
+			@Override
+			public void onCompletion(Music music) {
+				delete();
+			}
+		});
 	}
 
 	@Override
@@ -54,9 +59,10 @@ public class StarActor extends GameActor {
 
 	public void collect() {
 		if(hasCollected) return;
-		else doNothing = true;
+		setZIndex(Integer.MAX_VALUE);
 		hasCollected = true;
 		++((GameStage)getStage()).collectedStars;
+		music.play();
 	}
 
 	private boolean hasCollected = false;
@@ -65,14 +71,14 @@ public class StarActor extends GameActor {
 	public void act(final float delta) {
 		if(!hasCollected) super.act(delta);
 		else {
-			setVisible(false);
-			music.play();
-			music.setOnCompletionListener(new Music.OnCompletionListener() {
-				@Override
-				public void onCompletion(Music music) {
-					delete();
-				}
-			});
+			deactivate();
+			float width=getWidth();
+			setSize(getWidth() * 1.02f, getHeight() * 1.02f);
+			setPosition(getX()-(getWidth()-width)/2, getY()-(getWidth()-width)/2);
+			sprite.setAlpha(sprite.getColor().a*0.97f);
+			//sprite.setColor(0,0,0,sprite.getColor().a*0.95f);
+
+			//setVisible(false);
 		}
 
 	}
