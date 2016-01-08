@@ -30,7 +30,6 @@ public class ExplosiveWallActor extends WallActor {
 
 	public void explode() {
 		explosionAnimation = new Animation(1 / 2f, textureAtlasRegions);
-
 		stateTime = 0;
 	}
 
@@ -39,6 +38,7 @@ public class ExplosiveWallActor extends WallActor {
 		super.act(delta);
 
 		if (explosionAnimation != null) {
+			deactivate();
 			stateTime += delta;
 			if (!explosionAnimation.isAnimationFinished(stateTime)) {
 				sprite.setRegion(explosionAnimation.getKeyFrame(stateTime));

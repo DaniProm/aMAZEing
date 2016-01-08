@@ -2,8 +2,6 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,22 +14,23 @@ public class StarActor extends GameActor {
 
 	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
 
-	static boolean doNothing = false;
 
-	//protected static Texture textureStar = null, texture=new Texture("star.png");
-	//protected static TextureAtlas textureAtlasStar;
 	protected static Animation animationStar;
-
 	private float stFrame = 0;
-
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasStar = new TextureAtlas("StarAtlas.atlas").getRegions();
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlas = new TextureAtlas("StarAtlas.atlas").getRegions();
 
 	public StarActor() {
 		//sprite = new Sprite(texture);
-		sprite = new Sprite(textureAtlasStar.get(0));
-		sprite.setRegion(textureAtlasStar.get(0));
-		animationStar = new Animation(1 / 15f, textureAtlasStar, Animation.PlayMode.LOOP);
+		sprite = new Sprite(textureAtlas.get(0));
+		sprite.setRegion(textureAtlas.get(0));
+		animationStar = new Animation(1 / 30f, textureAtlas, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
+		music.setOnCompletionListener(new Music.OnCompletionListener() {
+			@Override
+			public void onCompletion(Music music) {
+				delete();
+			}
+		});
 	}
 
 	@Override
@@ -40,23 +39,13 @@ public class StarActor extends GameActor {
 		sprite.setPosition(x+0.25f,y+0.25f);
 	}
 
-	/*
-	public void starRotating(){
-		textureStar = new Texture("starAtlas.png");
-		sprite = new Sprite(textureStar);
-		sprite.setSize(1, 1);
-		textureAtlasStar = new TextureAtlas("StarAtlas.png");
-
-
-		stFrame++;
-		sprite.draw(batch);
-	}*/
 
 	public void collect() {
 		if(hasCollected) return;
-		else doNothing = true;
+		setZIndex(Integer.MAX_VALUE);
 		hasCollected = true;
 		++((GameStage)getStage()).collectedStars;
+		music.play();
 	}
 
 	private boolean hasCollected = false;
@@ -65,14 +54,14 @@ public class StarActor extends GameActor {
 	public void act(final float delta) {
 		if(!hasCollected) super.act(delta);
 		else {
-			setVisible(false);
-			music.play();
-			music.setOnCompletionListener(new Music.OnCompletionListener() {
-				@Override
-				public void onCompletion(Music music) {
-					delete();
-				}
-			});
+			deactivate();
+			float width=getWidth();
+			setSize(getWidth() * 1.02f, getHeight() * 1.02f);
+			setPosition(getX()-(getWidth()-width)/2, getY()-(getWidth()-width)/2);
+			sprite.setAlpha(sprite.getColor().a*0.97f);
+			//sprite.setColor(0,0,0,sprite.getColor().a*0.95f);
+
+			//setVisible(false);
 		}
 
 	}
