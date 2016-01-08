@@ -39,4 +39,18 @@ public class BallActor extends GameActor {
 
 	}
 
+	private float prevBallPositionX=0f;
+	private float prevBallPositionY=0f;
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		float BallPositionX = body.getPosition().x;
+		float BallPositionY = body.getPosition().y;
+		Gdx.app.log("asd", String.valueOf(prevBallPositionX - BallPositionX));
+		sprite.rotate((prevBallPositionX - BallPositionX)*100.0f);
+		prevBallPositionX = BallPositionX;
+		prevBallPositionY = BallPositionY;
+
+	}
 }
