@@ -19,8 +19,8 @@ public class MyScreen implements Screen {
 	protected final SpriteBatch batch = new SpriteBatch();
 	protected final static float WORLD_WIDTH = 160, WORLD_HEIGHT = 90;
 	protected OrthographicCamera camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
-	//protected Viewport viewport = new ScreenViewport(camera);
-	protected Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+	protected Viewport viewport = new ScreenViewport(camera);
+	//protected Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
 
 	protected static BitmapFont font;

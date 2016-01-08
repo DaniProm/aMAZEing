@@ -182,13 +182,13 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return world;
 	}
 
-	static final float BALL_HORIZON = 320;
+	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson még
 
 	public void updateCamera(final OrthographicCamera camera) {
 
-		float left = 0, right = 0, bottom = 0, top = 0, height, width;
-
 		if (balls.size() > 0) {
+			float left, right, bottom, top, height, width;
+
 			BallActor ball;
 			ball = balls.get(0);
 
@@ -205,24 +205,26 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				else if (y < bottom) bottom = y;
 			}
 
-			top -= GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
+			top += GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
 			bottom += GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
 
-			left -= GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
+			left += GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
 			right += GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
+
+
+			height = Math.max(top - bottom, BALL_HORIZON);
+			width = Math.max(right - left, BALL_HORIZON);
+
+			camera.position.x = (right + left) / 2;
+			camera.position.y = (top + bottom) / 2;
+
+			camera.zoom = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 
 		}
 
-		height = Math.max(top - bottom, BALL_HORIZON);
-		width = Math.max(right - left, BALL_HORIZON);
-
-		camera.position.x = (right + left) / 2;
-		camera.position.y = (top + bottom) / 2;
-
-		camera.zoom = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 	}
 
-	private float additionalZoom = 0.01f;
+	private float additionalZoom = 1;
 
 
 	private float keyGravityX = 0, keyGravityY = 0;
@@ -235,16 +237,16 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 //Teszteléshez
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			if (keyGravityX < 10) keyGravityX += 1f;
+			if (keyGravityX < 10) keyGravityX += .8f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			if (keyGravityX > -10) keyGravityX -= 1f;
+			if (keyGravityX > -10) keyGravityX -= .8f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			if (keyGravityY > -10) keyGravityY -= 1f;
+			if (keyGravityY > -10) keyGravityY -= .8f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			if (keyGravityY < 10) keyGravityY += 1f;
+			if (keyGravityY < 10) keyGravityY += .8f;
 		}
 		if (keyGravityX != 0 || keyGravityY != 0) {
 			//keyGravityX*=0.1f;
@@ -454,7 +456,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = initialDistance / distance / 100;
+		additionalZoom = initialDistance / distance;
 		// TODO
 		return false;
 	}
