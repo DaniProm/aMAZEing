@@ -1,14 +1,15 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 
 public class DoorActor extends GameActor {
@@ -25,18 +26,11 @@ public class DoorActor extends GameActor {
 
 		setTouchable(Touchable.enabled);
 		addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				setVisible(false);
-
-				timer.scheduleTask(new Timer.Task() {
-					@Override
-					public void run() {
-						setVisible(true);
-					}
-				}, 3);
-			}
-		});
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                open();
+            }
+        });
 
 		addListener(new ActorGestureListener() {
 			@Override
@@ -53,5 +47,18 @@ public class DoorActor extends GameActor {
 		});
 
 	}
+
+    public void open() {
+        setVisible(false);
+
+        timer.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+
+                setVisible(true);
+            }
+        }, 3);
+
+    }
 
 }

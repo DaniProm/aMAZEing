@@ -262,23 +262,23 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
                     Vector2 gravity = world.getGravity();
 
                     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                        if (gravity.x < 10) gravity.x += .5f;
+                        if (gravity.x < 10) gravity.x += .75f;
                     } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                        if (gravity.x > -10) gravity.x -= .5f;
+                        if (gravity.x > -10) gravity.x -= .75f;
                     }
 
-                    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                        if (gravity.y > -10) gravity.y -= .5f;
-                    } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                        if (gravity.y < 10) gravity.y += .5f;
+                    if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                        if (gravity.y > -10) gravity.y -= .75f;
+                    } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                        if (gravity.y < 10) gravity.y += .75f;
                     }
 
                     world.setGravity(gravity);
                 } else {
 
                     world.setGravity(new Vector2(
-                            ((float) Gdx.input.getX() / Gdx.graphics.getWidth() - .5f) * 10,
-                            -((float) Gdx.input.getY() / Gdx.graphics.getHeight() - .5f) * 10
+                            ((float) Gdx.input.getX() / Gdx.graphics.getWidth() - .5f) * 20,
+                            -((float) Gdx.input.getY() / Gdx.graphics.getHeight() - .5f) * 20
                     ));
 
                 }
