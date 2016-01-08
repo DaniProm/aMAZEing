@@ -2,8 +2,6 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,19 +15,15 @@ public class StarActor extends GameActor {
 	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
 
 
-	//protected static Texture textureStar = null, texture=new Texture("star.png");
-	//protected static TextureAtlas textureAtlasStar;
 	protected static Animation animationStar;
-
 	private float stFrame = 0;
-
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasStar = new TextureAtlas("StarAtlas.atlas").getRegions();
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlas = new TextureAtlas("StarAtlas.atlas").getRegions();
 
 	public StarActor() {
 		//sprite = new Sprite(texture);
-		sprite = new Sprite(textureAtlasStar.get(0));
-		sprite.setRegion(textureAtlasStar.get(0));
-		animationStar = new Animation(1 / 30f, textureAtlasStar, Animation.PlayMode.LOOP);
+		sprite = new Sprite(textureAtlas.get(0));
+		sprite.setRegion(textureAtlas.get(0));
+		animationStar = new Animation(1 / 30f, textureAtlas, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
 		music.setOnCompletionListener(new Music.OnCompletionListener() {
 			@Override
@@ -45,17 +39,6 @@ public class StarActor extends GameActor {
 		sprite.setPosition(x+0.25f,y+0.25f);
 	}
 
-	/*
-	public void starRotating(){
-		textureStar = new Texture("starAtlas.png");
-		sprite = new Sprite(textureStar);
-		sprite.setSize(1, 1);
-		textureAtlasStar = new TextureAtlas("StarAtlas.png");
-
-
-		stFrame++;
-		sprite.draw(batch);
-	}*/
 
 	public void collect() {
 		if(hasCollected) return;
