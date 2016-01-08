@@ -66,9 +66,9 @@ public abstract class GameActor extends Actor implements Disposable {
 	protected static Shape getTileShape(float scale) {
 		final PolygonShape shape = new PolygonShape();
 		shape.setAsBox(
-	          1 / 2 * scale,
-	          1 / 2 * scale,
-	          new Vector2(1 / 2, 1 / 2),
+	          .5f * scale,
+	          .5f * scale,
+	          new Vector2(.5f, .5f),
 	          0
 		);
 		return shape;
@@ -79,9 +79,9 @@ public abstract class GameActor extends Actor implements Disposable {
 		scale /= 2; // to radius
 
 		final CircleShape shape = new CircleShape();
-		shape.setRadius(1 * scale);
-		shape.setPosition(new Vector2(1 / 2, 1 / 2));
-		return shape;
+		shape.setRadius(scale);
+		shape.setPosition(new Vector2(.5f, .5f));
+        return shape;
 	}
 
 	protected static Shape getCircleShape() {

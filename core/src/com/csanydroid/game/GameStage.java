@@ -60,6 +60,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final ArrayList<BallActor> balls = new ArrayList<BallActor>();
 	private final ArrayList<HoleActor> holes = new ArrayList<HoleActor>();
 
+    private int width, height;
+
 	public byte totalStars, collectedStars;
 
 	public void removeBall(BallActor ball) {
@@ -184,6 +186,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson még
 
+	public void initCamera(final OrthographicCamera camera) {
+
+	}
+
 	public void updateCamera(final OrthographicCamera camera) {
 
 		if (balls.size() > 0) {
@@ -205,11 +211,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				else if (y < bottom) bottom = y;
 			}
 
-			top += 1 / 2 + BALL_HORIZON;
-			bottom += 1 / 2 - BALL_HORIZON;
+			top += .5f + BALL_HORIZON;
+			bottom += .5f - BALL_HORIZON;
 
-			left += 1 / 2 - BALL_HORIZON;
-			right += 1 / 2 + BALL_HORIZON;
+			left += .5f - BALL_HORIZON;
+			right += .5f + BALL_HORIZON;
 
 
 			height = Math.max(top - bottom, BALL_HORIZON);
@@ -218,12 +224,12 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			float newValue;
 
 			newValue = (right + left) / 2;
-			camera.position.x += (newValue - camera.position.x) / 3;
+			camera.position.x += (newValue - camera.position.x) / 20;
 			newValue = (top + bottom) / 2;
-			camera.position.y += (newValue - camera.position.y) / 3;
+			camera.position.y += (newValue - camera.position.y) / 20;
 
 			newValue = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
-			camera.zoom += (newValue - camera.zoom) / 3;
+			camera.zoom += (newValue - camera.zoom) / 30f;
 
 		}
 
@@ -415,8 +421,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			super(text, LABEL_STYLE);
 
 			setFontScale(0.007f); //Ennyin volt jó...
-			setPosition(x * 1, -y * 1);
-			setSize(1 * width, 1);
+			setPosition(x, -y);
+			setSize(width, 1);
 
 			setAlignment(Align.center);
 			setWrap(true);
