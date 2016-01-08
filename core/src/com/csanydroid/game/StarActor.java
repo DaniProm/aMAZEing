@@ -4,22 +4,57 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Array;
 
 public class StarActor extends GameActor {
-
-	protected static Texture texture = new Texture("star.png");
+	private Batch batch;
 
 	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
 
+	static boolean doNothing = false;
+
+	//protected static Texture textureStar = null, texture=new Texture("star.png");
+	//protected static TextureAtlas textureAtlasStar;
+	protected static Animation animationStar;
+
+	private float stFrame = 0;
+
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlasStar = new TextureAtlas("StarAtlas.atlas").getRegions();
+
 	public StarActor() {
-		sprite = new Sprite(texture);
-		setSize(1, 1);
+		//sprite = new Sprite(texture);
+		sprite = new Sprite(textureAtlasStar.get(0));
+		sprite.setRegion(textureAtlasStar.get(0));
+		animationStar = new Animation(1 / 15f, textureAtlasStar, Animation.PlayMode.LOOP);
+		setSize(0.5f, 0.5f);
 	}
+
+	@Override
+	public void setPosition(float x, float y) {
+		super.setPosition(x, y);
+		sprite.setPosition(x+0.25f,y+0.25f);
+	}
+
+	/*
+	public void starRotating(){
+		textureStar = new Texture("starAtlas.png");
+		sprite = new Sprite(textureStar);
+		sprite.setSize(1, 1);
+		textureAtlasStar = new TextureAtlas("StarAtlas.png");
+
+
+		stFrame++;
+		sprite.draw(batch);
+	}*/
 
 	public void collect() {
 		if(hasCollected) return;
+		else doNothing = true;
 		hasCollected = true;
 		++((GameStage)getStage()).collectedStars;
 	}
@@ -40,6 +75,14 @@ public class StarActor extends GameActor {
 			});
 		}
 
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		stFrame+=Gdx.graphics.getDeltaTime();
+		sprite.setRegion(animationStar.getKeyFrame(stFrame));
+		super.draw(batch, parentAlpha);
+		//if(doNothing) starRotating();
 	}
 
 	@Override
