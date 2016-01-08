@@ -205,10 +205,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				else if (y < bottom) bottom = y;
 			}
 
-			top += GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
+			top -= GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
 			bottom += GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
 
-			left += GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
+			left -= GameScreen.TILE_SIZE / 2 - BALL_HORIZON;
 			right += GameScreen.TILE_SIZE / 2 + BALL_HORIZON;
 
 		}
@@ -249,7 +249,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		if (keyGravityX != 0 || keyGravityY != 0) {
 			//keyGravityX*=0.1f;
 			//keyGravityY*=0.1f;
-			world.setGravity(new Vector2(keyGravityX * 2, -keyGravityY * 2));
+			world.setGravity(new Vector2(keyGravityX, -keyGravityY));
 		}
 //Teszteléshez
 		world.step(delta, 1, 1);
@@ -313,7 +313,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 							bodyType = BodyDef.BodyType.StaticBody;
 							break;
 						case ':': // explosive wall
-							actor = new ExplosiveWallActor(9.0f);
+							actor = new ExplosiveWallActor(1.0f);
 							bodyType = BodyDef.BodyType.StaticBody;
 							break;
 						case 'O': // ball
