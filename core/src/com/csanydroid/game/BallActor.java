@@ -13,16 +13,17 @@ import com.badlogic.gdx.utils.Array;
 public class BallActor extends GameActor {
 
 	// http://stackoverflow.com/questions/30812250/how-can-i-use-the-accelerometer-for-detecting-jump-in-libgdx
-	protected static Texture texture = new Texture("ball8.png");
+	//protected static Texture texture = new Texture("ball8.png");
 
 	protected static Animation animationStar;
 	private float stFrame = 0;
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlas = new TextureAtlas("ballx.atlas").getRegions();
+	//protected static Array<TextureAtlas.AtlasRegion> textureAtlas = new TextureAtlas("ballcsd.atlas").getRegions();
+	protected static TextureAtlas textureAtlas = new TextureAtlas("ballcsd.atlas");
 
 
 	public BallActor() {
-		sprite = new Sprite(textureAtlas.get(0));
-		sprite.setRegion(textureAtlas.get(0));
+		sprite = new Sprite(textureAtlas.getRegions().get(0));
+		sprite.setRegion(textureAtlas.getRegions().get(0));
 		//animationStar = new Animation(1 / 30f, textureAtlas, Animation.PlayMode.LOOP);
 		setSize(1, 1);
 	}
@@ -41,6 +42,8 @@ public class BallActor extends GameActor {
 
 	private float prevBallPositionX=0f;
 	private float prevBallPositionY=0f;
+	private float ballRotateX=0;
+	private float ballRotateY=0;
 
 	@Override
 	public void act(float delta) {
@@ -48,9 +51,21 @@ public class BallActor extends GameActor {
 		float BallPositionX = body.getPosition().x;
 		float BallPositionY = body.getPosition().y;
 		Gdx.app.log("asd", String.valueOf(prevBallPositionX - BallPositionX));
-		sprite.rotate((prevBallPositionX - BallPositionX)*100.0f);
+		//sprite.rotate((prevBallPositionX - BallPositionX)*100.0f);
+		ballRotateX += (prevBallPositionX - BallPositionX)*100f;
+		ballRotateY += (prevBallPositionY - BallPositionY)*100f;
+		if (ballRotateX>=9)
+		{
+			ballRotateX = 0;
+		}
+		if (ballRotateY>=9)
+		{
+			ballRotateY = 0;
+		}
+		sprite.setRegion(textureAtlas.getRegions().get(((int)ballRotateX) * 9 + (int)ballRotateY));
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;
 
 	}
 }
+
