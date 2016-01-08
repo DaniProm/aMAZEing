@@ -60,7 +60,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final ArrayList<BallActor> balls = new ArrayList<BallActor>();
 	private final ArrayList<HoleActor> holes = new ArrayList<HoleActor>();
 
-    private int width, height;
+    private int mazeWidth, mazeHeight;
 
 	public byte totalStars, collectedStars;
 
@@ -186,8 +186,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson még
 
-	public void initCamera(final OrthographicCamera camera) {
-
+	public void lookAtMaze(final OrthographicCamera camera) {
+        camera.position.x = mazeWidth / 2f;
+        camera.position.y = mazeHeight / -2f;
+        camera.zoom = additionalZoom * Math.max(mazeHeight / camera.viewportHeight, mazeWidth / camera.viewportWidth);
 	}
 
 	public void updateCamera(final OrthographicCamera camera) {
@@ -224,47 +226,67 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			float newValue;
 
 			newValue = (right + left) / 2;
-			camera.position.x += (newValue - camera.position.x) / 20;
+			camera.position.x += (newValue - camera.position.x) / 10;
 			newValue = (top + bottom) / 2;
-			camera.position.y += (newValue - camera.position.y) / 20;
+			camera.position.y += (newValue - camera.position.y) / 10;
 
 			newValue = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 			camera.zoom += (newValue - camera.zoom) / 30f;
 
-		}
+		} else {
+            lookAtMaze(camera);
+        }
 
 	}
 
 	private float additionalZoom = 1;
 
-
-	private float keyGravityX = 0, keyGravityY = 0;
+    boolean controlWithMouse = false;
 
 	@Override
 	public void act(float delta) {
 		if (world == null) return;
 
-		world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
+        switch (Gdx.app.getType()) {
+            case Android:
+                world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
+                break;
+            case Desktop:
 
-//Teszteléshez
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			if (keyGravityX < 10) keyGravityX += .8f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			if (keyGravityX > -10) keyGravityX -= .8f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			if (keyGravityY > -10) keyGravityY -= .8f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			if (keyGravityY < 10) keyGravityY += .8f;
-		}
-		if (keyGravityX != 0 || keyGravityY != 0) {
-			//keyGravityX*=0.1f;
-			//keyGravityY*=0.1f;
-			world.setGravity(new Vector2(keyGravityX, -keyGravityY));
-		}
-//Teszteléshez
+                if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+                    controlWithMouse = !controlWithMouse;
+                    Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
+                }
+
+                if(!controlWithMouse) {
+                    Vector2 gravity = world.getGravity();
+
+                    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                        if (gravity.x < 10) gravity.x += .5f;
+                    } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                        if (gravity.x > -10) gravity.x -= .5f;
+                    }
+
+                    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                        if (gravity.y > -10) gravity.y -= .5f;
+                    } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                        if (gravity.y < 10) gravity.y += .5f;
+                    }
+
+                    world.setGravity(gravity);
+                } else {
+
+                    world.setGravity(new Vector2(
+                            ((float) Gdx.input.getX() / Gdx.graphics.getWidth() - .5f) * 10,
+                            -((float) Gdx.input.getY() / Gdx.graphics.getHeight() - .5f) * 10
+                    ));
+
+                }
+
+                break;
+        }
+
+
 		world.step(delta, 1, 1);
 
 		super.act(delta);
@@ -286,7 +308,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		} else if (actor instanceof StarActor) {
 			++totalStars;
 		} else if (actor instanceof Scribble) {
-			//actor.setZIndex(0);
+			actor.setZIndex(0);
 		}
 
 	}
@@ -295,6 +317,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	private void loadMaze(String maze) {
 
+        mazeWidth = 0;
+        mazeHeight = 0;
 		try {
 			BufferedReader reader = new BufferedReader(Gdx.files.internal("mazes/" + maze + ".txt").reader());
 			//final float height = Gdx.graphics.getHeight(); - Nem szükséges, mert a pálya nem függ a képernyőtől. Inkább játszunk a kamerával...
@@ -303,7 +327,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			line = reader.readLine(); // maze description
 
-			for (int y = 0; null != (line = reader.readLine()); ) {
+            int y = 0;
+			while( null != (line = reader.readLine()) ) {
 				if (line.compareTo("") == 0) break;
 
 				y++;
@@ -375,7 +400,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					}
 
 					if (actor != null) {
-
 						//actor.setPosition(x * GameScreen.TILE_SIZE, height - y * GameScreen.TILE_SIZE);
 						actor.setPosition(x, -y);
 
@@ -388,7 +412,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					++x;
 				}
 
+                if(x > mazeWidth) mazeWidth = x;
+
 			}
+
+            mazeHeight = y;
 
 			if (showScribbles) {
 				final Pattern pattern = Pattern.compile("(\\d+),(\\d+):(\\d) (.*)");

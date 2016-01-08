@@ -55,6 +55,10 @@ public abstract class GameActor extends Actor implements Disposable {
 		body.setActive(visible);
 	}
 
+    public void deactivate() {
+        body.setActive(false);
+    }
+
 	protected Shape getShape() {
 		return getTileShape();
 	}
