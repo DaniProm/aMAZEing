@@ -50,10 +50,10 @@ public class BallActor extends GameActor {
 		super.act(delta);
 		float BallPositionX = body.getPosition().x;
 		float BallPositionY = body.getPosition().y;
-		Gdx.app.log("asd", String.valueOf(prevBallPositionX - BallPositionX));
+		//Gdx.app.log("asd", String.valueOf(prevBallPositionX - BallPositionX));
 		//sprite.rotate((prevBallPositionX - BallPositionX)*100.0f);
-		ballRotateX += (prevBallPositionX - BallPositionX)*100f;
-		ballRotateY += (prevBallPositionY - BallPositionY)*100f;
+		ballRotateX += (prevBallPositionX - BallPositionX)*5f;
+		ballRotateY -= (prevBallPositionY - BallPositionY)*5f;
 		if (ballRotateX>=9)
 		{
 			ballRotateX = 0;
@@ -62,7 +62,15 @@ public class BallActor extends GameActor {
 		{
 			ballRotateY = 0;
 		}
-		sprite.setRegion(textureAtlas.getRegions().get(((int)ballRotateX) * 9 + (int)ballRotateY));
+		if (ballRotateX<0)
+		{
+			ballRotateX=8.99999f;
+		}
+		if (ballRotateY<0)
+		{
+			ballRotateY=8.99999f;
+		}
+		sprite.setRegion(textureAtlas.getRegions().get(((int)ballRotateY) * 9 + (int)ballRotateX));
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;
 
