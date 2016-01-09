@@ -1,9 +1,9 @@
-6. pálya - Ismerkedés az elemekkel, ajtó
+7. pálya - Ismerkedés az elemekkel, feketelyuk
 ............
-.    %     .
+.    @     .
 .O   .   * .
-.    .     .
+.    :    @.
 ............
 
-1,3:4 Az ajtón csak a kinyitás után tudsz áthaladni. Kattints rá!
+1,3:4 Óvakodj a feketelyukaktól!
 6,3:4 Gyűjtsd be a csillagot!

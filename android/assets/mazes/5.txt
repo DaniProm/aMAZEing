@@ -1,9 +1,9 @@
-5. pálya - Ismerkedés az elemekkel, süllyesztő
+6. pálya - Ismerkedés az elemekkel, ajtó
 ............
-.     X   *.
-.O        X.
-.          .
+.    %     .
+.O   .   * .
+.    .     .
 ............
 
-1,3:4 Óvakodj a süllyesztőktől!
+1,3:4 Az ajtón csak a kinyitás után tudsz áthaladni. Kattints rá!
 6,3:4 Gyűjtsd be a csillagot!

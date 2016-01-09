@@ -1,9 +1,9 @@
-3. pálya - Ismerkedés az elemekkel, tócsa
+5. pálya - Ismerkedés az elemekkel, süllyesztő
 ............
-.O   ~  ~ *.
-............
+.     X   *.
+.O        X.
 .          .
 ............
 
-1,3:4 Ha érinted a tócsát, lelassulsz!
+1,3:4 Óvakodj a süllyesztőktől!
 6,3:4 Gyűjtsd be a csillagot!
