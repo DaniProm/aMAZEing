@@ -16,7 +16,7 @@ public class GameScreen extends MyScreen {
 
 	};
 
-	GameScreen(String maze) throws IOException {
+	GameScreen(String maze) throws Exception {
 		super();
 		gameStage = new GameStage(viewport, batch, maze);
         gameStage.lookAtMaze(camera);

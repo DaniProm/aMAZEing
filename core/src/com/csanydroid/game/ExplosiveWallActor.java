@@ -15,7 +15,7 @@ public class ExplosiveWallActor extends WallActor {
 	protected final float strength;
 
 	private Animation explosionAnimation = null;
-	private float stateTime;
+	private float stateTime = 0;
 
 	public ExplosiveWallActor(float strength) {
 		sprite = new Sprite(texture);
@@ -30,7 +30,6 @@ public class ExplosiveWallActor extends WallActor {
 
 	public void explode() {
 		explosionAnimation = new Animation(1 / 2f, textureAtlasRegions);
-		stateTime = 0;
 	}
 
 	@Override
