@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class BallActor extends GameActor {
 
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("ballcsd.atlas").getRegions();
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("ballcsd4.atlas").getRegions();
 
 	public BallActor() {
 		sprite = new Sprite(textureAtlasRegions.first());
@@ -38,41 +39,66 @@ public class BallActor extends GameActor {
 
 	private float prevBallPositionX=0f;
 	private float prevBallPositionY=0f;
-	private float ballRotateX=0;
-	private float ballRotateY=0;
+	private float ballPictureRotation=0f;
+	private float prevBallAngle = 0f;
+	private float ballAngle = 0f;
+	private boolean ballInverzeRotation = false;
+	private float targetRotation = 0f;
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		float BallPositionX = body.getPosition().x;
 		float BallPositionY = body.getPosition().y;
-		//Gdx.app.log("asd", String.valueOf(prevBallPositionX - BallPositionX));
-		//sprite.rotate((prevBallPositionX - BallPositionX)*100.0f);
-		ballRotateX += (prevBallPositionX - BallPositionX)*5f;
-		ballRotateY -= (prevBallPositionY - BallPositionY)*5f;
-		if (ballRotateX>=9)
-		{
-			ballRotateX = 0;
-		}
-		if (ballRotateY>=9)
-		{
-			ballRotateY = 0;
-		}
-		if (ballRotateX<0)
-		{
-			ballRotateX=8.99999f;
-		}
-		if (ballRotateY<0)
-		{
-			ballRotateY=8.99999f;
-		}
-		sprite.setRegion(textureAtlasRegions.get(((int) ballRotateY) * 9 + (int) ballRotateX));
+		float distanceX = prevBallPositionX - BallPositionX;
+		float distanceY = prevBallPositionY - BallPositionY;
 
-		// szerintem hibásak a forgási irányok a képben (pl. a 6. sor nekem úgy tűnik, hogy a saját tengelye körül is forog)
-		// sprite.setRegion(textureAtlasRegions.get((/*8 - */(int)(((-y / CIRCUMFERENCE) * 9 % 9))) * 9 + (/*8 - */(int)((x / CIRCUMFERENCE) * 9 % 9))));
+		float distance = (float) Math.sqrt((double) (distanceX * distanceX + distanceY * distanceY));
+		if (distance!=0.0) {
+			ballAngle = (float) Math.acos(distanceX / distance);
+			if (Math.abs(ballAngle - prevBallAngle)>MathUtils.PI/2)
+			{
+				ballInverzeRotation = !ballInverzeRotation;
+			}
+			if (ballInverzeRotation) {
+				targetRotation = 180 - MathUtils.radiansToDegrees * ballAngle;
+
+				ballPictureRotation -= distance / (MathUtils.PI / textureAtlasRegions.size);
+			}
+			else
+			{
+				targetRotation = MathUtils.radiansToDegrees * ballAngle;
+				ballPictureRotation += distance / (MathUtils.PI / textureAtlasRegions.size);
+			}
+			float actualRotation = sprite.getRotation();
+			float rotation = 0;
+			if (Math.abs(actualRotation-targetRotation)>10)
+			{
+				if (actualRotation<targetRotation) rotation = 10; else rotation= -10;
+			}
+			else
+			{
+				if (actualRotation!=targetRotation)
+				{
+					if (actualRotation<targetRotation)	{
+						rotation = Math.abs(actualRotation - targetRotation) /2;
+					} else	{
+						rotation = -Math.abs(actualRotation - targetRotation) /2;
+					}
+				}
+			}
+			//sprite.setRotation(targetRotation);
+			sprite.rotate(rotation);
+			if (ballPictureRotation < 0) ballPictureRotation= (float)textureAtlasRegions.size-0.00001f;
+			if (ballPictureRotation >= textureAtlasRegions.size) ballPictureRotation = 0f;
+			sprite.setRegion(textureAtlasRegions.get(((int)(ballPictureRotation))));
+		}
+
+//				Gdx.app.log("asd", String.valueOf(sprite.getRotation()));
 
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;
+		prevBallAngle = ballAngle;
 
 	}
 }
