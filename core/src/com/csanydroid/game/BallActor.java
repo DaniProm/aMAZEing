@@ -3,6 +3,7 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,10 +17,28 @@ import java.util.ArrayList;
 public class BallActor extends GameActor {
 
 	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("ballcsd4.atlas").getRegions();
+	protected static Texture textureLight = new Texture("balllight.png");
+	protected static Texture textureShadow = new Texture("ballshadow.png");
+	protected Sprite spriteLight;
+	protected Sprite spriteShadow;
+
+	private float prevBallPositionX=0f;
+	private float prevBallPositionY=0f;
+	private float ballPictureRotation=0.8f;
+	private float prevBallAngle = 0f;
+	private float ballAngle = 0f;
+	private boolean ballInverzeRotation = false;
+	private float targetRotation = 0f;
+
+
+	private static final float ballZoom = 0.93f;
+
 
 	public BallActor() {
 		sprite = new Sprite(textureAtlasRegions.first());
 		sprite.setRegion(textureAtlasRegions.first());
+		spriteLight = new Sprite(textureLight);
+		spriteShadow = new Sprite(textureShadow);
 		setSize(1, 1);
 	}
 
@@ -37,13 +56,6 @@ public class BallActor extends GameActor {
 
 	}
 
-	private float prevBallPositionX=0f;
-	private float prevBallPositionY=0f;
-	private float ballPictureRotation=0f;
-	private float prevBallAngle = 0f;
-	private float ballAngle = 0f;
-	private boolean ballInverzeRotation = false;
-	private float targetRotation = 0f;
 
 	@Override
 	public void act(float delta) {
@@ -72,18 +84,18 @@ public class BallActor extends GameActor {
 			}
 			float actualRotation = sprite.getRotation();
 			float rotation = 0;
-			if (Math.abs(actualRotation-targetRotation)>10)
+			if (Math.abs(actualRotation-targetRotation)>20)
 			{
-				if (actualRotation<targetRotation) rotation = 10; else rotation= -10;
+				if (actualRotation<targetRotation) rotation = 5; else rotation= -5;
 			}
 			else
 			{
 				if (actualRotation!=targetRotation)
 				{
 					if (actualRotation<targetRotation)	{
-						rotation = Math.abs(actualRotation - targetRotation) /2;
+						rotation = Math.abs(actualRotation - targetRotation) /5;
 					} else	{
-						rotation = -Math.abs(actualRotation - targetRotation) /2;
+						rotation = -Math.abs(actualRotation - targetRotation) /5;
 					}
 				}
 			}
@@ -100,6 +112,33 @@ public class BallActor extends GameActor {
 		prevBallPositionY = BallPositionY;
 		prevBallAngle = ballAngle;
 
+	}
+
+	@Override
+	public void setPosition(float x, float y) {
+		super.setPosition(x, y);
+		sprite.setPosition(x + (getWidth()-sprite.getWidth()) / 2,y + (getHeight()-sprite.getHeight()) / 2);
+		spriteShadow.setPosition(x, y);
+		spriteLight.setPosition(x + (getWidth()-sprite.getWidth()) / 2,y + (getHeight()-sprite.getHeight()) / 2);
+	}
+
+
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		spriteShadow.draw(batch);
+		super.draw(batch, parentAlpha);
+		spriteLight.draw(batch);
+	}
+
+	@Override
+	public void setSize(float width, float height) {
+		super.setSize(width, height);
+		sprite.setSize(width*ballZoom, height*ballZoom);
+		sprite.setOrigin(width*ballZoom / 2, height*ballZoom / 2);
+		spriteShadow.setSize(width, height);
+		spriteShadow.setOrigin(width / 2, height / 2);
+		spriteLight.setSize(width*ballZoom, height*ballZoom);
+		spriteLight.setOrigin(width*ballZoom / 2, height*ballZoom / 2);
 	}
 }
 
