@@ -10,28 +10,24 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
+
 public class BallActor extends GameActor {
 
-	// http://stackoverflow.com/questions/30812250/how-can-i-use-the-accelerometer-for-detecting-jump-in-libgdx
-	//protected static Texture texture = new Texture("ball8.png");
-
-	protected static Animation animationStar;
-	private float stFrame = 0;
-	//protected static Array<TextureAtlas.AtlasRegion> textureAtlas = new TextureAtlas("ballcsd.atlas").getRegions();
-	protected static TextureAtlas textureAtlas = new TextureAtlas("ballcsd.atlas");
-
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("ballcsd.atlas").getRegions();
 
 	public BallActor() {
-		sprite = new Sprite(textureAtlas.getRegions().get(0));
-		sprite.setRegion(textureAtlas.getRegions().get(0));
-		//animationStar = new Animation(1 / 30f, textureAtlas, Animation.PlayMode.LOOP);
+		sprite = new Sprite(textureAtlasRegions.first());
+		sprite.setRegion(textureAtlasRegions.first());
 		setSize(1, 1);
 	}
 
+	private static final float DIAMETER = .9f, CIRCUMFERENCE = DIAMETER * (float)Math.PI;
+
 	@Override
-    protected Shape getShape() {
-		return getCircleShape(.9f);
-    }
+	protected Shape getShape() {
+		return getCircleShape(DIAMETER);
+	}
 
 	@Override
 	public void delete() {
@@ -70,7 +66,11 @@ public class BallActor extends GameActor {
 		{
 			ballRotateY=8.99999f;
 		}
-		sprite.setRegion(textureAtlas.getRegions().get(((int)ballRotateY) * 9 + (int)ballRotateX));
+		sprite.setRegion(textureAtlasRegions.get(((int) ballRotateY) * 9 + (int) ballRotateX));
+
+		// szerintem hibásak a forgási irányok a képben (pl. a 6. sor nekem úgy tűnik, hogy a saját tengelye körül is forog)
+		// sprite.setRegion(textureAtlasRegions.get((/*8 - */(int)(((-y / CIRCUMFERENCE) * 9 % 9))) * 9 + (/*8 - */(int)((x / CIRCUMFERENCE) * 9 % 9))));
+
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;
 

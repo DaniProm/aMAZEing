@@ -14,16 +14,15 @@ public class StarActor extends GameActor {
 
 	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
 
-
-	protected static Animation animationStar;
-	private float stFrame = 0;
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlas = new TextureAtlas("StarAtlas.atlas").getRegions();
+	protected static Animation animation;
+	private float stateTime = 0;
+	private boolean hasCollected = false;
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("star.atlas").getRegions();
 
 	public StarActor() {
-		//sprite = new Sprite(texture);
-		sprite = new Sprite(textureAtlas.get(0));
-		sprite.setRegion(textureAtlas.get(0));
-		animationStar = new Animation(1 / 30f, textureAtlas, Animation.PlayMode.LOOP);
+		sprite = new Sprite(textureAtlasRegions.first());
+		sprite.setRegion(textureAtlasRegions.first());
+		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
 		music.setOnCompletionListener(new Music.OnCompletionListener() {
 			@Override
@@ -36,22 +35,24 @@ public class StarActor extends GameActor {
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		sprite.setPosition(x+0.25f,y+0.25f);
+		sprite.setPosition(x + 0.25f, y+0.25f);
 	}
-
 
 	public void collect() {
 		if(hasCollected) return;
 		setZIndex(Integer.MAX_VALUE);
 		hasCollected = true;
-		++((GameStage)getStage()).collectedStars;
+		((GameStage)getStage()).collectStar();
 		music.play();
 	}
 
-	private boolean hasCollected = false;
-
 	@Override
 	public void act(final float delta) {
+
+		stateTime += delta;
+
+		sprite.setRegion(animation.getKeyFrame(stateTime));
+
 		if(!hasCollected) super.act(delta);
 		else {
 			deactivate();
@@ -63,15 +64,6 @@ public class StarActor extends GameActor {
 
 			//setVisible(false);
 		}
-
-	}
-
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-		stFrame+=Gdx.graphics.getDeltaTime();
-		sprite.setRegion(animationStar.getKeyFrame(stFrame));
-		super.draw(batch, parentAlpha);
-		//if(doNothing) starRotating();
 	}
 
 	@Override

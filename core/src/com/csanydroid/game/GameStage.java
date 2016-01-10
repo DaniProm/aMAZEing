@@ -62,7 +62,19 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
     private int mazeWidth, mazeHeight;
 
-	public byte totalStars, collectedStars;
+	public int getMazeWidth() {
+		return mazeWidth;
+	}
+
+	public int getMazeHeight() {
+		return mazeHeight;
+	}
+
+	private byte totalStars, collectedStars;
+
+	public void collectStar() {
+		++collectedStars;
+	}
 
 	public void removeBall(BallActor ball) {
 		Gdx.input.vibrate(250);
@@ -170,12 +182,12 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-	public GameStage(Viewport viewport, Batch batch, String maze) {
+	public GameStage(Viewport viewport, Batch batch, String maze) throws Exception {
 		super(viewport, batch);
 		loadMaze(maze);
 	}
 
-	public GameStage(Viewport viewport, String maze) {
+	public GameStage(Viewport viewport, String maze) throws Exception {
 		super(viewport);
 		loadMaze(maze);
 	}
@@ -315,7 +327,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	boolean showScribbles = true;
 
-	private void loadMaze(String maze) {
+	private void loadMaze(String maze) throws Exception {
 
         mazeWidth = 0;
         mazeHeight = 0;
@@ -384,7 +396,9 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 							int j;
 							if (ch >= 'a' && ch <= 'f') j = ch - 'a';
 							else if (ch >= 'A' && ch <= 'F') j = ch - 'A';
-							else break;
+							else {
+								throw new Exception("Invalid maze.");
+							}
 
 							actor = new WormholeActor();
 							bodyType = BodyDef.BodyType.KinematicBody;
@@ -428,8 +442,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 						new Scribble(matcher.group(4), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)) + 1, Integer.parseInt(matcher.group(3)));
 					} catch(IllegalStateException e) {
-
-						Gdx.app.log("tokens", "invalid");
+						throw new Exception("Invalid maze.");
 					}
 
 				}
