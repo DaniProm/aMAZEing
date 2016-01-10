@@ -1,7 +1,7 @@
-1. pálya
+2. pálya - Teleport
 ...........
 .O   .   A.
-.   A.*   .
+.X  A.*   .
 ...........
 
 1,1:4 Teleportálj a falon túlra!

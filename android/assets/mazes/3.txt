@@ -1,9 +1,8 @@
-3. pálya - Ismerkedés az elemekkel, tócsa
+4. pálya - Ismerkedés az elemekkel, tócsa
 ............
-.O   ~  ~ *.
-............
+.O      ~ *.
+.    ~ X   .
 .          .
 ............
 
 1,3:4 Ha érinted a tócsát, lelassulsz!
-6,3:4 Gyűjtsd be a csillagot!

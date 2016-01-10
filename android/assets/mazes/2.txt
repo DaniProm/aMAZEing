@@ -1,9 +1,8 @@
-2. pálya - Fal áttörés
+3. pálya - Fal áttörés
 ...........
 .O   :    .
 .    :    .
-.    :   *.
+.X   :   *.
 ...........
 
 1,2:4 Gyorsulj fel, és törd át a falat!
-6,2:4 Gyűjtsd be a csillagot!
