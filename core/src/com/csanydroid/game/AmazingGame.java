@@ -35,7 +35,7 @@ public class AmazingGame extends Game implements ApplicationListener {
 			System.out.println(e.getMessage()+" Dani buta volt... MEGINT!! >.<''");
 		}*/
 		try {
-			setScreen(new GameScreen("1"));
+			setScreen(new GameScreen("7"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
