@@ -3,6 +3,7 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -57,6 +58,12 @@ public class WormholeActor extends GameActor {
 	public void transportBall(BallActor ball) {
 		if (active >= 0) return; // not active
 		balls.add(ball);
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+
 	}
 
 	@Override
