@@ -84,6 +84,11 @@ private float prevBallAngle2=0f;
 				targetRotation = MathUtils.radiansToDegrees * ballAngle;
 				ballPictureRotation += distance / (MathUtils.PI / (float)textureAtlasRegions.size);
 			}
+            /*if (sprite.getRotation())
+            {
+
+            }*/
+            Gdx.app.log("asd", String.valueOf(sprite.getRotation()));
 			float actualRotation = sprite.getRotation();
 			float rotation = 0;
 			if (Math.abs(actualRotation-targetRotation)>20)
@@ -108,7 +113,7 @@ private float prevBallAngle2=0f;
 			sprite.setRegion(textureAtlasRegions.get(((int)(ballPictureRotation))));
 		}
 
-				//Gdx.app.log("asd", String.valueOf(ballAngle));
+
 
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;
