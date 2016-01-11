@@ -70,7 +70,7 @@ private float prevBallAngle2=0f;
 		if (distance!=0.0) {
 			ballAngle = (float) Math.acos(distanceX / distance);
 			ballAngle2 = (float) Math.acos(distanceY / distance);
-			if (Math.abs(ballAngle - prevBallAngle)>MathUtils.PI/2 || Math.abs(ballAngle2 - prevBallAngle2)>MathUtils.PI/2)
+			if (Math.abs(ballAngle - prevBallAngle)>=MathUtils.PI/2 || Math.abs(ballAngle2 - prevBallAngle2)>=MathUtils.PI/2)
 			{
 				ballInverzeRotation = !ballInverzeRotation;
 			}
@@ -108,7 +108,7 @@ private float prevBallAngle2=0f;
 			sprite.setRegion(textureAtlasRegions.get(((int)(ballPictureRotation))));
 		}
 
-				Gdx.app.log("asd", String.valueOf(ballAngle));
+				//Gdx.app.log("asd", String.valueOf(ballAngle));
 
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;

@@ -458,18 +458,29 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	private class Scribble extends Label {
 
+		private float elapsedTime = 0f;
+		private static final float magnify = 0.0005f;
+		private static final float fontScale = 0.007f;
+
+		@Override
+		public void act(float delta) {
+			elapsedTime += delta;
+			super.act(delta);
+			setFontScale(fontScale + (float)Math.sin(elapsedTime * 5.0f) * magnify);
+		}
+
 		Scribble(String text, int x, int y, int width) {
 			super(text, LABEL_STYLE);
 
-			setFontScale(0.007f); //Ennyin volt jó...
+			setFontScale(fontScale); //Ennyin volt jó...
 			setPosition(x, -y);
 			setSize(width, 1);
-
 			setAlignment(Align.center);
 			setWrap(true);
 			setVisible(true);
 
 			addActor(this);
+
 		}
 	}
 
