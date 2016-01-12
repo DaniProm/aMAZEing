@@ -2,21 +2,23 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-
 public class BallActor extends GameActor {
 
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("ballcsd4.atlas").getRegions();
+	protected static Array<Array<TextureAtlas.AtlasRegion>> textureAtlasRegions = new Array<Array<TextureAtlas.AtlasRegion>>();
+	static
+	{
+		textureAtlasRegions.add(new TextureAtlas("ballgreen.atlas").getRegions());
+		textureAtlasRegions.add(new TextureAtlas("ballred.atlas").getRegions());
+		textureAtlasRegions.add(new TextureAtlas("ballorange.atlas").getRegions());
+		textureAtlasRegions.add(new TextureAtlas("ballblue.atlas").getRegions());
+	}
 	protected static Texture textureLight = new Texture("balllight.png");
 	protected static Texture textureShadow = new Texture("ballshadow.png");
 	protected Sprite spriteLight;
@@ -30,13 +32,18 @@ public class BallActor extends GameActor {
 	private boolean ballInverzeRotation = false;
 	private float targetRotation = 0f;
 
+	private static int createdBallsNumber = 0;
+	private int ballColorIndex = 0;
+
 
 	private static final float ballZoom = 0.93f;
 
 
 	public BallActor() {
-		sprite = new Sprite(textureAtlasRegions.first());
-		sprite.setRegion(textureAtlasRegions.first());
+		ballColorIndex = createdBallsNumber % textureAtlasRegions.size;
+		createdBallsNumber++;
+		sprite = new Sprite(textureAtlasRegions.get(ballColorIndex).first());
+		sprite.setRegion(textureAtlasRegions.get(ballColorIndex).first());
 		spriteLight = new Sprite(textureLight);
 		spriteShadow = new Sprite(textureShadow);
 		setSize(1, 1);
@@ -118,12 +125,12 @@ public class BallActor extends GameActor {
 			}
 			if (ballInverzeRotation) {
 				targetRotation = MathUtils.radiansToDegrees * ballAngle;
-				ballPictureRotation -= distance / (MathUtils.PI / (float)textureAtlasRegions.size);
+				ballPictureRotation -= distance / (MathUtils.PI / (float)textureAtlasRegions.get(ballColorIndex).size);
 			}
 			else
 			{
 				targetRotation = MathUtils.radiansToDegrees * ballAngle  - 180;
-				ballPictureRotation += distance / (MathUtils.PI / (float)textureAtlasRegions.size);
+				ballPictureRotation += distance / (MathUtils.PI / (float)textureAtlasRegions.get(ballColorIndex).size);
 			}
 
 			float rotation = targetRotation;
@@ -149,9 +156,9 @@ public class BallActor extends GameActor {
 
 			sprite.setRotation(rotation);
 			//sprite.setRotation(targetRotation);
-			if (ballPictureRotation < 0) ballPictureRotation= (float)textureAtlasRegions.size-0.00001f;
-			if (ballPictureRotation >= textureAtlasRegions.size) ballPictureRotation = 0f;
-			sprite.setRegion(textureAtlasRegions.get(((int)(ballPictureRotation))));
+			if (ballPictureRotation < 0) ballPictureRotation= (float)textureAtlasRegions.get(ballColorIndex).size-0.00001f;
+			if (ballPictureRotation >= textureAtlasRegions.get(ballColorIndex).size) ballPictureRotation = 0f;
+			sprite.setRegion(textureAtlasRegions.get(ballColorIndex).get(((int) (ballPictureRotation))));
 		}
 
 
