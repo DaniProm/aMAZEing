@@ -56,6 +56,20 @@ public class BallActor extends GameActor {
 
 	}
 
+	public static float minAngleRad(float a, float b)
+	{
+		return Math.min(Math.min(Math.abs(a  - b), Math.abs((a - MathUtils.PI2) - b)), Math.abs(a - (b - MathUtils.PI2)));
+	}
+	public static float minAngleDeg(float a, float b)
+	{
+		return Math.min(Math.min(Math.abs(a  - b), Math.abs((a - 180) - b)), Math.abs(a - (b - 180)));
+	}
+
+	public static float absAngleDeg(float a)
+	{
+		return (a+36000) % 360;
+	}
+
 private float prevBallAngle2=0f;
 	private float ballAngle2=0f;
 	@Override
@@ -67,47 +81,76 @@ private float prevBallAngle2=0f;
 		float distanceY = prevBallPositionY - BallPositionY;
 
 		float distance = (float) Math.sqrt((double) (distanceX * distanceX + distanceY * distanceY));
-		if (distance!=0.0) {
-			ballAngle = (float) Math.acos(distanceX / distance);
-			ballAngle2 = (float) Math.acos(distanceY / distance);
-			if (Math.abs(ballAngle - prevBallAngle)>=MathUtils.PI/2 || Math.abs(ballAngle2 - prevBallAngle2)>=MathUtils.PI/2)
+		if (distance>0.01) {
+			//Gdx.app.log("Time", String.valueOf(elapsedTime));
+			if (distanceX <= 0 && distanceY <= 0) {
+				//Gdx.app.log("Irany", "Jobbra, fel");
+				ballAngle = MathUtils.PI - (float) Math.acos(distanceX / distance);
+			}
+			else {
+				if (distanceX <= 0 && distanceY >= 0) {
+					ballAngle = MathUtils.PI  + (float) Math.acos(distanceX / distance);
+
+					//Gdx.app.log("Irany", "Jobbra, le");
+				}
+				else {
+					if (distanceX >= 0 && distanceY <= 0) {
+						//Gdx.app.log("Irany", "Balra, fel");
+						ballAngle = MathUtils.PI - (float) Math.acos(distanceX / distance);
+
+					}
+					else {
+						if (distanceX >= 0 && distanceY >= 0) {
+							ballAngle = MathUtils.PI  + (float) Math.acos(distanceX / distance);
+							//Gdx.app.log("Irany", "Balra, le");
+						}
+						else
+						{
+							//Gdx.app.log("Irany", "----");
+						}
+					}
+				}
+			}
+			float actualRotation = sprite.getRotation();
+			float rotationAngle = minAngleRad(ballAngle, prevBallAngle)* MathUtils.radiansToDegrees;// Math.min(Math.min(Math.abs(ballAngle  - prevBallAngle), Math.abs((ballAngle - MathUtils.PI2) - prevBallAngle)), Math.abs(ballAngle - (prevBallAngle - MathUtils.PI2)))* MathUtils.radiansToDegrees;
+			if (rotationAngle>90)
 			{
 				ballInverzeRotation = !ballInverzeRotation;
+				Gdx.app.log("Fordult", String.valueOf(ballInverzeRotation));
 			}
 			if (ballInverzeRotation) {
-				targetRotation = 180 - MathUtils.radiansToDegrees * ballAngle;
-
+				targetRotation = MathUtils.radiansToDegrees * ballAngle;
 				ballPictureRotation -= distance / (MathUtils.PI / (float)textureAtlasRegions.size);
 			}
 			else
 			{
-				targetRotation = MathUtils.radiansToDegrees * ballAngle;
+				targetRotation = MathUtils.radiansToDegrees * ballAngle  - 180;
 				ballPictureRotation += distance / (MathUtils.PI / (float)textureAtlasRegions.size);
 			}
-            /*if (sprite.getRotation())
-            {
 
-            }*/
-            Gdx.app.log("asd", String.valueOf(sprite.getRotation()));
-			float actualRotation = sprite.getRotation();
-			float rotation = 0;
-			if (Math.abs(actualRotation-targetRotation)>20)
+			float rotation = targetRotation;
+			if (minAngleDeg(absAngleDeg(actualRotation), absAngleDeg(targetRotation))<130)
 			{
-				if (actualRotation<targetRotation) rotation = 5; else rotation= -5;
-			}
-			else
-			{
-				if (actualRotation!=targetRotation)
+				if (minAngleDeg(absAngleDeg(actualRotation), absAngleDeg(targetRotation))>20)
 				{
-					if (actualRotation<targetRotation)	{
-						rotation = Math.abs(actualRotation - targetRotation) /5;
-					} else	{
-						rotation = -Math.abs(actualRotation - targetRotation) /5;
+					if (absAngleDeg(targetRotation)>absAngleDeg(actualRotation))
+					{
+						rotation = actualRotation + 10;
+					}
+					else
+					{
+						rotation = actualRotation - 10;
 					}
 				}
+				else
+				{
+					rotation = (absAngleDeg(actualRotation) + absAngleDeg(targetRotation)) / 2;
+				}
 			}
+			Gdx.app.log("Actual: ",String.valueOf(absAngleDeg(actualRotation)) + " Target:" + String.valueOf(absAngleDeg(targetRotation)));
+
+			sprite.setRotation(rotation);
 			//sprite.setRotation(targetRotation);
-			sprite.rotate(rotation);
 			if (ballPictureRotation < 0) ballPictureRotation= (float)textureAtlasRegions.size-0.00001f;
 			if (ballPictureRotation >= textureAtlasRegions.size) ballPictureRotation = 0f;
 			sprite.setRegion(textureAtlasRegions.get(((int)(ballPictureRotation))));
@@ -118,7 +161,7 @@ private float prevBallAngle2=0f;
 		prevBallPositionX = BallPositionX;
 		prevBallPositionY = BallPositionY;
 		prevBallAngle = ballAngle;
-		prevBallAngle2 = ballAngle2;
+		//prevBallAngle2 = ballAngle2;
 
 	}
 
