@@ -106,6 +106,8 @@ public abstract class GameActor extends Actor implements Disposable {
 
 	final public void applyWorld(World world, BodyDef.BodyType bodyType) {
 
+		if(world == null) return;
+
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.restitution = 0;
 		fixtureDef.density = bodyType == BodyDef.BodyType.StaticBody ? 10 : 1;

@@ -47,7 +47,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-
 	protected static final Label.LabelStyle LABEL_STYLE;
 
 	static	{
@@ -60,15 +59,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final ArrayList<BallActor> balls = new ArrayList<BallActor>();
 	private final ArrayList<HoleActor> holes = new ArrayList<HoleActor>();
 
-    private int mazeWidth, mazeHeight;
-
-	public int getMazeWidth() {
-		return mazeWidth;
+	public Maze getMaze() {
+		return maze;
 	}
 
-	public int getMazeHeight() {
-		return mazeHeight;
-	}
+	private final Maze maze;
 
 	private byte totalStars, collectedStars;
 
@@ -182,13 +177,9 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-	public GameStage(Viewport viewport, Batch batch, String maze) throws Exception {
+	public GameStage(Viewport viewport, Batch batch, Maze maze) {
 		super(viewport, batch);
-		loadMaze(maze);
-	}
-
-	public GameStage(Viewport viewport, String maze) throws Exception {
-		super(viewport);
+		this.maze = maze;
 		loadMaze(maze);
 	}
 
@@ -196,12 +187,12 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return world;
 	}
 
-	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson még
+	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson
 
 	public void lookAtMaze(final OrthographicCamera camera) {
-        camera.position.x = mazeWidth / 2f;
-        camera.position.y = mazeHeight / -2f;
-        camera.zoom = additionalZoom * Math.max(mazeHeight / camera.viewportHeight, mazeWidth / camera.viewportWidth);
+        camera.position.x = maze.getWidth() / 2f;
+        camera.position.y = maze.getHeight() / -2f;
+        camera.zoom = additionalZoom * Math.max(maze.getHeight() / camera.viewportHeight, maze.getWidth() / camera.viewportWidth);
 	}
 
 	public void updateCamera(final OrthographicCamera camera) {
@@ -325,154 +316,105 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-	boolean showScribbles = true;
+	private void loadMaze(Maze maze) {
 
-	private void loadMaze(String maze) throws Exception {
+		maze.load(new Maze.MazeObjectLoader() {
 
-        mazeWidth = 0;
-        mazeHeight = 0;
-		try {
-			BufferedReader reader = new BufferedReader(Gdx.files.internal("mazes/" + maze + ".txt").reader());
-			//final float height = Gdx.graphics.getHeight(); - Nem szükséges, mert a pálya nem függ a képernyőtől. Inkább játszunk a kamerával...
 			WormholeActor[] wormholes = new WormholeActor['F' - 'A' + 1];
-			String line;
 
-			line = reader.readLine(); // maze description
+			@Override
+			public void createObject(final Maze.MazeObject o) {
 
-            int y = 0;
-			while( null != (line = reader.readLine()) ) {
-				if (line.compareTo("") == 0) break;
 
-				y++;
-				int x = 0;
-				for (int i = 0; i < line.length(); i++) {
-					GameActor actor = null;
-					BodyDef.BodyType bodyType = null;
-					final char ch = line.charAt(i);
-					switch (ch) {
-						case ' ':
-							break; // space
-						case '\t':
-							--x;
-							break;
-						case '<':
-							x -= 2;
-							break;
-						case '.': // wall
-							actor = new WallActor();
-							bodyType = BodyDef.BodyType.StaticBody;
-							break;
-						case ':': // explosive wall
-							actor = new ExplosiveWallActor(1.0f);
-							bodyType = BodyDef.BodyType.StaticBody;
-							break;
-						case 'O': // ball
-							actor = new BallActor();
-							bodyType = BodyDef.BodyType.DynamicBody;
-							break;
-						case 'X': // hole
-							actor = new HoleActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '%': // door
-							actor = new DoorActor();
-							bodyType = BodyDef.BodyType.StaticBody;
-							break;
-						case '@': // black hole
-							actor = new BlackHoleActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '~': // puddle
-							actor = new PuddleActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '*': // bonus star
-							actor = new StarActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						default:
-
-							// wormhole
-							int j;
-							if (ch >= 'a' && ch <= 'f') j = ch - 'a';
-							else if (ch >= 'A' && ch <= 'F') j = ch - 'A';
-							else {
-								throw new Exception("Invalid maze.");
-							}
-
-							actor = new WormholeActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-
-							if (wormholes[j] == null) {
-								wormholes[j] = (WormholeActor) actor;
-							} else {
-								((WormholeActor) actor).setEndpoint(wormholes[j]);
-								wormholes[j].setEndpoint((WormholeActor) actor);
-							}
-
-							break;
-					}
-
-					if (actor != null) {
-						//actor.setPosition(x * GameScreen.TILE_SIZE, height - y * GameScreen.TILE_SIZE);
-						actor.setPosition(x, -y);
-
-						actor.applyWorld(world, bodyType);
-
-						addActor(actor);
-
-					}
-
-					++x;
+				if(o.getType() == Maze.ObjectType.SCRIBBLE) {
+					new Scribble((String)o.getParams()[0], o.getX(), o.getY(), (Integer)o.getParams()[1]);
+					return;
 				}
 
-                if(x > mazeWidth) mazeWidth = x;
+				GameActor actor;
+				BodyDef.BodyType bodyType;
 
-			}
+				switch (o.getType()) {
+					case WALL:
+						actor = new WallActor();
+						bodyType = BodyDef.BodyType.StaticBody;
+						break;
+					case EXPLOSIVE_WALL:
+						actor = new ExplosiveWallActor((Float)o.getParams()[0]);
+						bodyType = BodyDef.BodyType.StaticBody;
+						break;
+					case BALL:
+						actor = new BallActor();
+						bodyType = BodyDef.BodyType.DynamicBody;
+						break;
+					case HOLE:
+						actor = new HoleActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case BLACK_HOLE:
+						actor = new BlackHoleActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case WORMHOLE:
+						int j = (Integer)o.getParams()[0];
+						actor = new WormholeActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
 
-            mazeHeight = y;
+						if (wormholes[j] == null) {
+							wormholes[j] = (WormholeActor) actor;
+						} else {
+							((WormholeActor) actor).setEndpoint(wormholes[j]);
+							wormholes[j].setEndpoint((WormholeActor) actor);
+						}
 
-			if (showScribbles) {
-				final Pattern pattern = Pattern.compile("(\\d+),(\\d+):(\\d) (.*)");
-				// read scribbles
-				for (int i = 0; null != (line = reader.readLine()); i++) {
-					try {
-						Matcher matcher = pattern.matcher(line);
-						matcher.find();
-
-						new Scribble(matcher.group(4), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)) + 1, Integer.parseInt(matcher.group(3)));
-					} catch(IllegalStateException e) {
-						throw new Exception("Invalid maze.");
-					}
-
+						break;
+					case PUDDLE:
+						actor = new PuddleActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case STAR:
+						actor = new StarActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case DOOR:
+						actor = new DoorActor();
+						bodyType = BodyDef.BodyType.StaticBody;
+						break;
+					default:
+						return;
 				}
 
+				actor.setPosition(o.getX(), -o.getY());
+
+				actor.applyWorld(world, bodyType);
+
+				addActor(actor);
+
+
+				Gdx.app.log("mazeloader", o.toString());
+
 			}
+		});
 
-			reader.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private class Scribble extends Label {
 
 		private float elapsedTime = 0f;
-		private static final float magnify = 0.0005f;
-		private static final float fontScale = 0.007f;
+		private static final float MAGNIFY = 0.0005f;
+		private static final float FONT_SCALE = 0.007f; //Ennyin volt jó...
 
 		@Override
 		public void act(float delta) {
 			elapsedTime += delta;
 			super.act(delta);
-			setFontScale(fontScale + (float)Math.sin(elapsedTime * 5.0f) * magnify);
+			setFontScale(FONT_SCALE + (float)Math.sin(elapsedTime * 5.0f) * MAGNIFY);
 		}
 
 		Scribble(String text, int x, int y, int width) {
 			super(text, LABEL_STYLE);
 
-			setFontScale(fontScale); //Ennyin volt jó...
+			setFontScale(FONT_SCALE);
 			setPosition(x, -y);
 			setSize(width, 1);
 			setAlignment(Align.center);
