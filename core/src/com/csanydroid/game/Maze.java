@@ -83,23 +83,6 @@ public class Maze {
 
 		generateMaze(0,0, maze, size);
 
-		// stars
-		for(final int n = (int)(Math.random() * 2 * size);starsCount < n;) {
-			final int
-					x = (int)(Math.random() * size),
-					y = (int)(Math.random() * size);
-
-			if(Math.random() < .5) {
-				if ((maze[x][y] & 1) != 0) {
-					new MazeObject(ObjectType.STAR, 2 * x, 2 * y - 1);
-				}
-			} else {
-				if ((maze[x][y] & 8) != 0) {
-					new MazeObject(ObjectType.STAR, 2 * x - 1, 2 * y);
-				}
-			}
-		}
-
 		// doors
 		for(int n = (int)(Math.random() * size);n > 0;) {
 			final int
@@ -118,6 +101,61 @@ public class Maze {
 
 		}
 
+		// stars
+		for(final int n = (int)(Math.random() * 4 * size);starsCount < n;) {
+			final int
+					x = (int)(Math.random() * size),
+					y = (int)(Math.random() * size);
+
+			if(Math.random() < .5) {
+				if ((maze[x][y] & 1) != 0) {
+					new MazeObject(ObjectType.STAR, 2 * x, 2 * y - 1);
+				}
+			} else {
+				if ((maze[x][y] & 8) != 0) {
+					new MazeObject(ObjectType.STAR, 2 * x - 1, 2 * y);
+				}
+			}
+		}
+
+		// puddles
+		for(int n = (int)(Math.random() * 3 * size);n > 0;) {
+			final int
+					x = (int)(Math.random() * size),
+					y = (int)(Math.random() * size);
+
+			if(Math.random() < .5) {
+				if ((maze[x][y] & 1) == 0) continue;
+				new MazeObject(ObjectType.PUDDLE, 2 * x, 2 * y - 1);
+			} else {
+				if ((maze[x][y] & 8) == 0) continue;
+				new MazeObject(ObjectType.PUDDLE, 2 * x - 1, 2 * y);
+			}
+
+			--n;
+		}
+
+
+		// puddles
+		{
+			ArrayList<Character> chars = new ArrayList<Character>(Arrays.asList('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'));
+			Collections.shuffle(chars);
+			while(chars.size() > 0) {
+				final int
+						x = (int)(Math.random() * size),
+						y = (int)(Math.random() * size);
+
+				if(Math.random() < .5) {
+					if ((maze[x][y] & 1) == 0) continue;
+					new MazeObject(ObjectType.SCRIBBLE, 2 * x, 2 * y - 1, Character.toString(chars.remove(0)), 1);
+				} else {
+					if ((maze[x][y] & 8) == 0) continue;
+					new MazeObject(ObjectType.SCRIBBLE, 2 * x - 1, 2 * y, Character.toString(chars.remove(0)), 1);
+				}
+
+			}
+
+		}
 
 		for (int y = 0; y < size; y++) {
 
@@ -151,6 +189,7 @@ public class Maze {
 		new MazeObject(ObjectType.WALL, 2 * size - 3, 2 * size + 1);
 		new MazeObject(ObjectType.WALL, 2 * size - 2, 2 * size + 1);
 		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size + 1);
+		new MazeObject(ObjectType.DOOR, 2 * size - 2, 2 * size - 1);
 		new MazeObject(ObjectType.HOLE, 2 * size - 2, 2 * size);
 
 	}

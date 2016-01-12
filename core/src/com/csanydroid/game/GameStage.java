@@ -192,7 +192,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	public void lookAtMaze(final OrthographicCamera camera) {
         camera.position.x = maze.getWidth() / 2f;
         camera.position.y = maze.getHeight() / -2f;
-        camera.zoom = additionalZoom * Math.max(maze.getHeight() / camera.viewportHeight, maze.getWidth() / camera.viewportWidth);
+        camera.zoom = Math.max(maze.getHeight() / camera.viewportHeight, maze.getWidth() / camera.viewportWidth);
 	}
 
 	public void updateCamera(final OrthographicCamera camera) {
@@ -461,7 +461,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = initialDistance / distance;
+		additionalZoom = Math.min(initialDistance / distance, 2.5f);
 		// TODO
 		return false;
 	}
