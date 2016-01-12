@@ -36,7 +36,8 @@ public class AmazingGame extends Game implements ApplicationListener {
 		}*/
 
 
-		Maze.findMaze("7").beginPlay();
+	//	Maze.findMaze("1").beginPlay();
+		Maze.createRandomMaze().beginPlay();
 		//showScreen(Screens.MENU);
 	}
 

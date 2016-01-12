@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,7 +69,134 @@ public class Maze {
 
 	private int starsCount = 0;
 
+	public static Maze createRandomMaze() {
+		return new Maze("A", "B", 10);
+	}
+
+	private Maze(String name, String description, int size) {
+		this.name = name;
+		this.description = description;
+
+		new MazeObject(ObjectType.BALL, 0, 0);
+
+		final int [][] maze = new int[size][size];
+
+		generateMaze(0,0, maze, size);
+
+		// stars
+		for(final int n = (int)(Math.random() * 2 * size);starsCount < n;) {
+			final int
+					x = (int)(Math.random() * size),
+					y = (int)(Math.random() * size);
+
+			if(Math.random() < .5) {
+				if ((maze[x][y] & 1) != 0) {
+					new MazeObject(ObjectType.STAR, 2 * x, 2 * y - 1);
+				}
+			} else {
+				if ((maze[x][y] & 8) != 0) {
+					new MazeObject(ObjectType.STAR, 2 * x - 1, 2 * y);
+				}
+			}
+		}
+
+		// doors
+		for(int n = (int)(Math.random() * size);n > 0;) {
+			final int
+					x = (int)(Math.random() * size),
+					y = (int)(Math.random() * size);
+
+			if(Math.random() < .5) {
+				if ((maze[x][y] & 1) == 0) continue;
+				new MazeObject(ObjectType.DOOR, 2 * x, 2 * y - 1);
+			} else {
+				if ((maze[x][y] & 8) == 0) continue;
+				new MazeObject(ObjectType.DOOR, 2 * x - 1, 2 * y);
+			}
+
+			--n;
+
+		}
+
+
+		for (int y = 0; y < size; y++) {
+
+			for (int x = 0; x < size; x++) {
+				new MazeObject(ObjectType.WALL, 2 * x - 1, 2 * y - 1);
+
+				if((maze[x][y] & 1) == 0) { // north edge
+					new MazeObject(ObjectType.WALL, 2 * x, 2 * y - 1);
+				}
+
+				if((maze[x][y] & 8) == 0){ // west edge
+					new MazeObject(ObjectType.WALL, 2 * x - 1, 2 * y);
+
+				}
+			}
+
+			new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * y);
+			new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * y - 1);
+		}
+
+		// bottom wall
+		for(int x = 0;true;++x) {
+			new MazeObject(ObjectType.WALL, 2 * x - 1, 2 * size - 1);
+			if(x + 1 >= size) break;
+			new MazeObject(ObjectType.WALL, 2 * x, 2 * size - 1);
+		}
+
+		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size - 1);
+		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size);
+		new MazeObject(ObjectType.WALL, 2 * size - 3, 2 * size);
+		new MazeObject(ObjectType.WALL, 2 * size - 3, 2 * size + 1);
+		new MazeObject(ObjectType.WALL, 2 * size - 2, 2 * size + 1);
+		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size + 1);
+		new MazeObject(ObjectType.HOLE, 2 * size - 2, 2 * size);
+
+	}
+
+	private void generateMaze(int cx, int cy, int [][] maze, int size) {
+		DIR[] dirs = DIR.values();
+		Collections.shuffle(Arrays.asList(dirs));
+		for (DIR dir : dirs) {
+			int nx = cx + dir.dx;
+			int ny = cy + dir.dy;
+			if (between(nx, size) && between(ny, size) && (maze[nx][ny] == 0)) {
+				maze[cx][cy] |= dir.bit;
+				maze[nx][ny] |= dir.opposite.bit;
+				generateMaze(nx, ny, maze, size);
+			}
+		}
+	}
+
+	private static boolean between(int v, int upper) {
+		return (v >= 0) && (v < upper);
+	}
+
+	private enum DIR {
+		N(1, 0, -1), S(2, 0, 1), E(4, 1, 0), W(8, -1, 0);
+		private final int bit;
+		private final int dx;
+		private final int dy;
+		private DIR opposite;
+
+		static {
+			N.opposite = S;
+			S.opposite = N;
+			E.opposite = W;
+			W.opposite = E;
+		}
+
+		DIR(int bit, int dx, int dy) {
+			this.bit = bit;
+			this.dx = dx;
+			this.dy = dy;
+		}
+	};
+
+
 	private Maze(String name) {
+
 		this.name = name;
 
 		try {
@@ -154,8 +282,6 @@ public class Maze {
 
 			}
 
-			Gdx.app.log("maze", "maze loaded: " + getName());
-
 			reader.close();
 
 		} catch (IOException ignored) { }
@@ -179,6 +305,14 @@ public class Maze {
 
 	public enum ObjectType {
 		WALL, EXPLOSIVE_WALL, BALL, HOLE, BLACK_HOLE, WORMHOLE, PUDDLE, STAR, DOOR, SCRIBBLE;
+	}
+
+	public MazeObject findMazeObject(int x, int y) {
+		for (MazeObject object : this.objects) {
+			if(object.x == x && object.y == y) return object;
+		}
+
+		return null;
 	}
 
 	public class MazeObject {

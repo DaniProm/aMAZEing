@@ -70,8 +70,6 @@ public class BallActor extends GameActor {
 		return (a+36000) % 360;
 	}
 
-private float prevBallAngle2=0f;
-	private float ballAngle2=0f;
 	@Override
 	public void act(float delta) {
 		super.act(delta);
