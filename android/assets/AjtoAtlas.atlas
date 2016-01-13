@@ -2,7 +2,6 @@ ajto.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-
 0
   rotate: false
   xy: 0, 0

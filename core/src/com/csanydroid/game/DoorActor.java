@@ -2,6 +2,7 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,11 +15,16 @@ import com.badlogic.gdx.utils.Timer;
 
 public class DoorActor extends GameActor {
 
-	protected static Texture texture = new Texture("door.png");
-	private static Timer timer = new Timer();
+	//protected static Texture texture = new Texture("ajto.png");
+	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("AjtoAtlas.atlas").getRegions();
+	//TextureAtlas textureAtlasTeleport = new TextureAtlas("ajtoAtlas.atlas");
+	//Animation animationTeleport = new Animation(1 / 30f, textureAtlasTeleport.getRegions());
+	private float timeOpen = -1;
+	private int animationFrame=0;
+	//private static Timer timer = new Timer();
 
 	public DoorActor() {
-		sprite = new Sprite(texture);
+		sprite = new Sprite(textureAtlasRegions.get(0));
 		setSize(1, 1);
 	}
 
@@ -48,9 +54,40 @@ public class DoorActor extends GameActor {
 
 	}
 
-    public void open() {
-        setVisible(false);
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		if (timeOpen>=0)
+		{
+			if (animationFrame<textureAtlasRegions.size) {
+				sprite.setRegion(textureAtlasRegions.get(animationFrame));
+				animationFrame++;
+			}
+			timeOpen+=delta;
+		}
+		if (timeOpen > 3)
+		{
+			timeOpen = -1;
+		}
+		if (timeOpen<0) {
+			if (animationFrame>0)
+			{
+				animationFrame--;
+				sprite.setRegion(textureAtlasRegions.get(animationFrame));
+				if (animationFrame==0)
+				{
+					activate();
+				}
+			}
+		}
+	}
 
+	public void open() {
+        //setVisible(false);
+		deactivate();
+
+		timeOpen = 0;
+/*
         timer.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
@@ -58,7 +95,7 @@ public class DoorActor extends GameActor {
                 setVisible(true);
             }
         }, 3);
-
+*/
     }
 
 }
