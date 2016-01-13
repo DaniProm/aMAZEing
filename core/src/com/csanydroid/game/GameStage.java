@@ -413,6 +413,16 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		Valami teszt = new Valami();
+		teszt.setPosition(-2, -2);
+		teszt.applyWorld(world, BodyDef.BodyType.StaticBody);
+		addActor(teszt);
+
+		Valami2 t = new Valami2();
+		t.setPosition(2,2);
+		t.applyWorld(world, BodyDef.BodyType.StaticBody);
+		addActor(t);
 	}
 
 	private class Scribble extends Label {

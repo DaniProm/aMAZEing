@@ -1,4 +1,4 @@
-tp.png
+teleport.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -34,6 +34,20 @@ repeat: none
 4
   rotate: false
   xy: 512, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 640, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 768, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
