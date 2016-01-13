@@ -346,12 +346,29 @@ public class Maze {
         return objects;
     }
 
-    public void beginPlay() {
+    public void beginPlay() throws Exception {
+	    /*
+	   if (!isUnlocked()) {
+		    throw new Exception("Maze is locked.");
+	    }
+*/
 
-		((AmazingGame) Gdx.app.getApplicationListener())
-				.setScreen(new GameScreen(this));
+	    ((AmazingGame) Gdx.app.getApplicationListener())
+			    .setScreen(new GameScreen(this));
+
+	    {
+		    final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
+		    ag.prefs.putBoolean("known/" + getName(), true);
+		    ag.prefs.flush();
+	    }
 
 	}
+
+	public boolean isKnown() {
+		final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
+		return ag.prefs.getBoolean("known/" + getName());
+	}
+
 
     public void setLock(boolean lock) {
         final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
@@ -359,7 +376,7 @@ public class Maze {
         ag.prefs.flush();
     }
 
-    public boolean isLocked() {
+    public boolean isUnlocked() {
         final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
         return ag.prefs.getBoolean("level/" + getName());
     }

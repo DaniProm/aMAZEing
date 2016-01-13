@@ -38,6 +38,7 @@ public class MenuScreen extends MyScreen{
             }
 
         };
+
         System.out.println("Log: 'GameMdenu' meghíva.");
         Table table = new Table();
         table.setFillParent(true);

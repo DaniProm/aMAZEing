@@ -39,7 +39,6 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 
         System.out.println("Log: 'Tábla' létrehozva.");
 
-        TextButton button;
        /* Label label = new Label("Pályák", LABEL_STYLE);
         label.setAlignment(Align.center, Align.center);
         stage.add...
@@ -50,57 +49,59 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 
         final float ROW_HEIGHT = 75f;
 
-        // gombok hozzáadása
-
-
-        button = new TextButton("Vissza", MyScreen.TEXT_BUTTON_STYLE);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Log: Klikk a 'Kilépés' gombra.");
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
-            }
-        });
-        button.setPosition(0, 0);
-
-        stage.addActor(button);
 
         /*table.add(mazeActor);
         stage.addActor(mazeActor);*/
 
         //table.add(mazeActor);
         //stage.addActor(mazeActor);
-
+stage.setDebugAll(true);
         Table table = new Table();
-        table.setFillParent(true);
-        for (final Maze maze : Maze.getMazes()) {
+
+       for (final Maze maze : Maze.getMazes()) {
 
             MazeActor mazeActor = new MazeActor(maze);
             //mazeActor.setPosition(Gdx.graphics.getWidth() / 4, Gdx.graphics.getWidth() / 4);
             //mazeActor.setPosition(0,0);
-            mazeActor.setSize(128, 128);
+            mazeActor.setSize(256, 256);
 
-            /*
+/*
             button = new TextButton(String.format("#%d pálya: ", maze.getMazeIndex() + 1, maze.getDescription()), MyScreen.TEXT_BUTTON_STYLE);
+	      //  button.setSize(400, 200);
             button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    maze.beginPlay();
-                }
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+		            maze.beginPlay();
+	            }
             });
-            table.add(button);
-            */
-            table.add(mazeActor);
+            table.add(button).height(200);
+*/
+           table.add(mazeActor).pad(12);
+
             table.row();
 
         }
 
-        table.layout();
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setFillParent(true);
         scrollPane.layout();
 
         stage.addActor(scrollPane);
+
+	    // gombok hozzáadása
+
+
+	    TextButton button = new TextButton("Vissza", MyScreen.TEXT_BUTTON_STYLE);
+	    button.addListener(new ClickListener() {
+		    @Override
+		    public void clicked(InputEvent event, float x, float y) {
+			    System.out.println("Log: Klikk a 'Kilépés' gombra.");
+			    ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+		    }
+	    });
+	    button.setPosition(0, 0);
+
+	    stage.addActor(button);
 
         /*mazeActor = new MazeActor(false);
         mazeActor.setPosition(mazeActor.getX(), mazeActor.getY());

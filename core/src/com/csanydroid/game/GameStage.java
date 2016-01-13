@@ -41,7 +41,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		parameter.size = 32;
 		parameter.kerning = false;
 		parameter.characters = DEFAULT_CHARS;
-		parameter.color = Color.valueOf("#8a8a8a");
+		parameter.color = Color.valueOf("#f0f0f0");
 		scribbleFont = generator.generateFont(parameter);
 		generator.dispose();
 
@@ -426,7 +426,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			setAlignment(Align.center);
 			setWrap(true);
 			setVisible(true);
-
+			setColor(.9f, .9f, .9f, 1);
 			addActor(this);
 
 		}
