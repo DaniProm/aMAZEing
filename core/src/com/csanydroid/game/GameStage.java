@@ -185,6 +185,12 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		super(viewport, batch);
 		this.maze = maze;
 		loadMaze(maze);
+		int bgsize = maze.getWidth() > maze.getHeight() ? maze.getWidth() : maze.getHeight();
+		Gdx.app.log("bgsize", bgsize + "");
+		BackgroundActor backgroundActor = new BackgroundActor();
+		backgroundActor.setSize(bgsize + 4, bgsize + 4);
+		backgroundActor.setPosition(-2f + (bgsize - maze.getWidth()) / 2, -bgsize - 2f + (bgsize - maze.getHeight()) / 2);
+		addActor(backgroundActor);
 	}
 
 	public World getWorld() {
