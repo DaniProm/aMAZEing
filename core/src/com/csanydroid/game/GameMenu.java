@@ -31,7 +31,7 @@ public class GameMenu extends MyScreen{
                 switch (keycode) {
                     case Input.Keys.ESCAPE:
                     case Input.Keys.BACK:
-                        System.exit(0);
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameMazes());
                         break;
                 }
                 return false;

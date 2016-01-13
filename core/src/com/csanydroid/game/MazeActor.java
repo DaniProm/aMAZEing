@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class MazeActor extends Actor {
-    Texture texture = new Texture("hole.png");
-    Texture texture2 = new Texture("wormhole.png");
+    Texture texture = new Texture("level1TestPic.png");
+    Texture texture2 = new Texture("lock.png");
     Sprite spriteMaze;
     Sprite spriteLock;
 
@@ -34,7 +34,6 @@ public class MazeActor extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         spriteMaze.draw(batch, parentAlpha);
-        //spriteLock.draw(batch, parentAlpha);
     }
 
     @Override
@@ -48,8 +47,6 @@ public class MazeActor extends Actor {
         super.setSize(width, height);
         spriteMaze.setSize(width, height);
         spriteMaze.setOrigin(width / 2, height / 2);
-//        spriteLock.setSize(width, height);
-        //spriteLock.setOrigin(width / 2, height / 2);
     }
 
 

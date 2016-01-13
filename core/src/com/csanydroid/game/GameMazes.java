@@ -18,6 +18,7 @@ public class GameMazes extends MyScreen implements ApplicationListener{
     SpriteBatch batch = new SpriteBatch();
     Stage stage;
     MazeActor mazeActor;
+    TextButton button;
     GameMazes(){
         super();
         stage = new Stage() {
@@ -26,7 +27,7 @@ public class GameMazes extends MyScreen implements ApplicationListener{
                 switch (keycode) {
                     case Input.Keys.ESCAPE:
                     case Input.Keys.BACK:
-                        System.exit(0);
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameMenu());
                         break;
                 }
                 return false;
@@ -67,13 +68,28 @@ public class GameMazes extends MyScreen implements ApplicationListener{
         stage.addActor(button);
 
         mazeActor = new MazeActor(true);//szint képet fog csinálni
-        mazeActor.setPosition(1024/4, 768/4);
-        mazeActor.setSize(128, 128);
-        table.add(mazeActor);
-        stage.addActor(mazeActor);
-        //mazeActor = new MazeActor(false);
-        //mazeActor.setPosition(mazeActor.getX(), mazeActor.getY());
+        mazeActor.setPosition(1024 / 4, 768 / 4);
+        mazeActor.setSize(256, 256);
+        //table.add(mazeActor);
         //stage.addActor(mazeActor);
+
+        for (final Maze maze: Maze.getMazes()) {
+
+            button = new TextButton(maze.getName(), MyScreen.TEXT_BUTTON_STYLE);
+            button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    maze.beginPlay();
+                }
+            });
+            table.add(button);
+            table.row();
+
+
+        }
+        /*mazeActor = new MazeActor(false);
+        mazeActor.setPosition(mazeActor.getX(), mazeActor.getY());
+        stage.addActor(mazeActor);*/
 
     }
 
