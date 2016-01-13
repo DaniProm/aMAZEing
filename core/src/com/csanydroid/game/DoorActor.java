@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -21,15 +25,29 @@ public class DoorActor extends GameActor {
 	//Animation animationTeleport = new Animation(1 / 30f, textureAtlasTeleport.getRegions());
 	private float timeOpen = -1;
 	private int animationFrame=0;
-	//private static Timer timer = new Timer();
 
 	public DoorActor() {
-		sprite = new Sprite(textureAtlasRegions.get(0));
+		sprite = new Sprite(textureAtlasRegions.first());
 		setSize(1, 1);
-		//setHorizontal(false);
 	}
+    /*
 
-	{
+    @Override
+    public void applyWorld(World world, BodyDef.BodyType bodyType) {
+        super.applyWorld(world, bodyType);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = getShape();
+        fixtureDef.isSensor = true;
+
+        body.createFixture(fixtureDef);
+
+        fixtureDef.shape.dispose();
+
+    }
+    */
+
+    {
 
 		setTouchable(Touchable.enabled);
 		addListener(new ClickListener() {
@@ -39,6 +57,7 @@ public class DoorActor extends GameActor {
             }
         });
 
+        /*
 		addListener(new ActorGestureListener() {
 			@Override
 			public boolean longPress(Actor actor, float x, float y) {
@@ -52,52 +71,63 @@ public class DoorActor extends GameActor {
 			@Override
 			public void zoom(InputEvent event, float initialDistance, float distance) { }
 		});
-
+*/
 	}
 
-	public void setHorizontal(boolean v)
+	public void setOrientation(boolean horizontal)
 	{
-		if (v) {
+		if (horizontal) {
 			sprite.setRotation(0);
-		}
-		else
-		{
+		} else {
 			sprite.setRotation(90);
 		}
 	}
 
+    private boolean canClose() {
+
+        for(Contact contact : world.getContactList()) {
+            Fixture fixtureA = contact.getFixtureA();
+            Fixture fixtureB = contact.getFixtureB();
+
+
+        }
+        return true;
+    }
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		if (timeOpen>=0)
+
+		if (timeOpen >= 0)
 		{
-			if (animationFrame<textureAtlasRegions.size-1) {
+            // nyitódik
+			if (animationFrame < textureAtlasRegions.size - 1) {
 				animationFrame++;
 				sprite.setRegion(textureAtlasRegions.get(animationFrame));
 			}
-			timeOpen+=delta;
+			timeOpen += delta;
 		}
-		if (timeOpen > 3)
-		{
-			timeOpen = -1;
-		}
-		if (timeOpen<0) {
-			if (animationFrame>0)
+
+		if (timeOpen > 3) {
+            if(canClose()) {
+                timeOpen = -1;
+                body.getFixtureList().get(0).setSensor(false);
+            }
+		} if (timeOpen < 0) {
+            // csukódik
+			if (animationFrame > 0)
 			{
 				animationFrame--;
 				sprite.setRegion(textureAtlasRegions.get(animationFrame));
-				if (animationFrame==0)
-				{
-					activate();
-				}
 			}
 		}
+
 	}
 
 	public void open() {
         //setVisible(false);
-		deactivate();
+
+        body.getFixtureList().get(0).setSensor(true);
 
 		timeOpen = 0;
 /*

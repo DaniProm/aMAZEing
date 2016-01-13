@@ -71,7 +71,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		++collectedStars;
 	}
 
-	public void removeBall(BallActor ball) {
+    public byte getCollectedStars() {
+        return collectedStars;
+    }
+
+    public void removeBall(BallActor ball) {
 		Gdx.input.vibrate(250);
 		balls.remove(ball);
 
@@ -265,15 +269,19 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
                     Vector2 gravity = world.getGravity();
 
                     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                        if (gravity.x < 10) gravity.x += .75f;
+                        gravity.x = 5;
                     } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                        if (gravity.x > -10) gravity.x -= .75f;
+                        gravity.x = -5;
+                    } else {
+                        gravity.x = 0;
                     }
 
                     if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                        if (gravity.y > -10) gravity.y -= .75f;
+                        gravity.y = -5;
                     } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                        if (gravity.y < 10) gravity.y += .75f;
+                        gravity.y = 5;
+                    } else {
+                        gravity.y = 0;
                     }
 
                     world.setGravity(gravity);
@@ -318,13 +326,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	private void loadMaze(Maze maze) {
 
-		maze.load(new Maze.MazeObjectLoader() {
-
-			WormholeActor[] wormholes = new WormholeActor['F' - 'A' + 1];
-
-			@Override
-			public void createObject(final Maze.MazeObject o) {
-
+        WormholeActor[] wormholes = new WormholeActor['F' - 'A' + 1];
+        for (Maze.MazeObject o : maze.getObjects()) {
 
 				if(o.getType() == Maze.ObjectType.SCRIBBLE) {
 					new Scribble((String)o.getParams()[0], o.getX(), o.getY(), (Integer)o.getParams()[1]);
@@ -378,6 +381,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 						break;
 					case DOOR:
 						actor = new DoorActor();
+                        ((DoorActor)actor).setOrientation((Boolean)o.getParams()[0]);
 						bodyType = BodyDef.BodyType.StaticBody;
 						break;
 					default:
@@ -390,11 +394,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 				addActor(actor);
 
-
-				Gdx.app.log("mazeloader", o.toString());
-
 			}
-		});
 
 	}
 

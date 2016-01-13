@@ -69,6 +69,9 @@ public class Maze {
 
 	private int starsCount = 0;
 
+    private int ballsToSurvive = 0;
+
+
 	public static Maze createRandomMaze() {
 		return new Maze("A", "B", 10);
 	}
@@ -325,20 +328,28 @@ public class Maze {
 
 		} catch (IOException ignored) { }
 
+        for (MazeObject object : this.objects) {
+            if(object.type == ObjectType.DOOR) {
+
+                MazeObject o1 = findMazeObject(object.getX() - 1, object.getY());
+                MazeObject o2 = findMazeObject(object.getX() + 1, object.getY());
+                boolean vertical = (o1 == null || o1.type != ObjectType.WALL) || (o2 == null || o2.type != ObjectType.WALL);
+
+                object.setParams(new Object[] {!vertical});
+
+            }
+        }
+
 	}
 
-	public void beginPlay() {
+    public ArrayList<MazeObject> getObjects() {
+        return objects;
+    }
+
+    public void beginPlay() {
 
 		((Game) Gdx.app.getApplicationListener())
 				.setScreen(new GameScreen(this));
-
-	}
-
-	public void load(MazeObjectLoader mazeObjectLoader) {
-
-		for (MazeObject object : this.objects) {
-			mazeObjectLoader.createObject(object);
-		}
 
 	}
 
@@ -373,13 +384,17 @@ public class Maze {
 			return type;
 		}
 
-		private final Object[] params;
+		private Object[] params;
 
 		public Object[] getParams() {
 			return params;
 		}
 
-		private MazeObject(ObjectType type, int x, int y, Object... params) {
+        public void setParams(Object[] params) {
+            this.params = params;
+        }
+
+        private MazeObject(ObjectType type, int x, int y, Object... params) {
 			this.type = type;
 			this.x = x;
 			this.y = y;
@@ -397,10 +412,6 @@ public class Maze {
 			objects.add(this);
 		}
 
-	}
-
-	interface MazeObjectLoader {
-		void createObject(final MazeObject o);
 	}
 
 }

@@ -108,16 +108,7 @@ public abstract class GameActor extends Actor implements Disposable {
 		dispose();
 	}
 
-	final public void applyWorld(World world, BodyDef.BodyType bodyType) {
-
-		if(world == null) return;
-
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.restitution = 0;
-		fixtureDef.density = bodyType == BodyDef.BodyType.StaticBody ? 10 : 1;
-		fixtureDef.friction = bodyType == BodyDef.BodyType.StaticBody ? 0 : 1;
-		fixtureDef.shape = getShape();
-		fixtureDef.isSensor = bodyType == BodyDef.BodyType.KinematicBody;
+	public void applyWorld(World world, BodyDef.BodyType bodyType) {
 
 		if (bodyType == BodyDef.BodyType.KinematicBody) {
 			bodyType = BodyDef.BodyType.StaticBody;
@@ -133,10 +124,14 @@ public abstract class GameActor extends Actor implements Disposable {
 		body.setUserData(this);
 		body.setLinearDamping(0);
 
-		//final Shape shape = getShape();
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.restitution = 0;
+        fixtureDef.density = bodyType == BodyDef.BodyType.StaticBody ? 10 : 1;
+        fixtureDef.friction = bodyType == BodyDef.BodyType.StaticBody ? 0 : 1;
+        fixtureDef.shape = getShape();
+
 		body.createFixture(fixtureDef);
 
-		// shape.dispose();
 		fixtureDef.shape.dispose();
 
 	}

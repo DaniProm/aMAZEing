@@ -1,7 +1,7 @@
 4. pálya - Ismerkedés az elemekkel, tócsa
 ............
-.O      ~ *.
-.    ~ X   .
+.       ~ *.
+.O ~<*~<*~<* X   .
 .          .
 ............
 
