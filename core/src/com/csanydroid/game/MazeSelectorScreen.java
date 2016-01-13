@@ -77,8 +77,8 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 
             MazeActor mazeActor = new MazeActor(maze);
             //mazeActor.setPosition(Gdx.graphics.getWidth() / 4, Gdx.graphics.getWidth() / 4);
-            mazeActor.setPosition(0,0);
-            mazeActor.setSize(Gdx.graphics.getWidth() / 4, Gdx.graphics.getWidth() / 4);
+            //mazeActor.setPosition(0,0);
+            mazeActor.setSize(128, 128);
 
             /*
             button = new TextButton(String.format("#%d pálya: ", maze.getMazeIndex() + 1, maze.getDescription()), MyScreen.TEXT_BUTTON_STYLE);

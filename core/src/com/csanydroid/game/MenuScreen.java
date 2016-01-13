@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
@@ -84,9 +85,9 @@ public class MenuScreen extends MyScreen{
 
         actor = new BallActor();
         actor.setSize(128, 128);
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        camera.translate(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2);
-        viewport = new ScreenViewport(camera);
+        camera = new OrthographicCamera(1024,768);
+        camera.translate(512,384);
+        viewport = new ExtendViewport(1024, 768, camera);
         stage.setViewport(viewport);
         //stage.addActor(actor);
     }
