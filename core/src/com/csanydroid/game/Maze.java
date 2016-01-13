@@ -328,15 +328,14 @@ public class Maze {
 
 		} catch (IOException ignored) { }
 
-
         for (MazeObject object : this.objects) {
             if(object.type == ObjectType.DOOR) {
 
                 MazeObject o1 = findMazeObject(object.getX() - 1, object.getY());
                 MazeObject o2 = findMazeObject(object.getX() + 1, object.getY());
-                boolean horizontal = (o1 == null || o1.type != ObjectType.WALL) || (o2 == null || o2.type != ObjectType.WALL);
+                boolean vertical = (o1 == null || o1.type != ObjectType.WALL) || (o2 == null || o2.type != ObjectType.WALL);
 
-                object.setParams(new Object[] {horizontal});
+                object.setParams(new Object[] {!vertical});
 
             }
         }

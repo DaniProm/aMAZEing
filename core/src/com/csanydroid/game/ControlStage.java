@@ -59,10 +59,9 @@ public class ControlStage extends Stage {
             final float step = STAR_BAR_WIDTH / (i - 1);
             float x = 0;
             do {
-                double angle = Math.toRadians(elapsedTime * 10 + i * 20) % MathUtils.PI2;
-                if(x == 0) Gdx.app.log("angle", angle + "");
+                double angle = Math.toRadians(elapsedTime * 60 + i * 20) % MathUtils.PI2;
                 if(angle < 0 || angle > Math.PI) angle = 0;
-                batch.draw(starTexture, x, 0 - (float)Math.sin(angle) * (STAR_WIDTH / 2), STAR_WIDTH, STAR_WIDTH);
+                batch.draw(starTexture, x, 0 - (float)Math.sin(angle) * (STAR_WIDTH / 4), STAR_WIDTH, STAR_WIDTH);
 
                 x += step;
             } while (--i > 0);

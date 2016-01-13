@@ -381,6 +381,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 						break;
 					case DOOR:
 						actor = new DoorActor();
+                        ((DoorActor)actor).setOrientation((Boolean)o.getParams()[0]);
 						bodyType = BodyDef.BodyType.StaticBody;
 						break;
 					default:
