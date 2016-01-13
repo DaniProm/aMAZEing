@@ -86,7 +86,7 @@ public class BallActor extends GameActor {
 		float distanceY = prevBallPositionY - BallPositionY;
 
 		float distance = (float) Math.sqrt((double) (distanceX * distanceX + distanceY * distanceY));
-		if (distance>0.01) {
+		if (distance>0) {
 			//Gdx.app.log("Time", String.valueOf(elapsedTime));
 			if (distanceX <= 0 && distanceY <= 0) {
 				//Gdx.app.log("Irany", "Jobbra, fel");
@@ -121,7 +121,7 @@ public class BallActor extends GameActor {
 			if (rotationAngle>90)
 			{
 				ballInverzeRotation = !ballInverzeRotation;
-				Gdx.app.log("Fordult", String.valueOf(ballInverzeRotation));
+				//Gdx.app.log("Fordult", String.valueOf(ballInverzeRotation));
 			}
 			if (ballInverzeRotation) {
 				targetRotation = MathUtils.radiansToDegrees * ballAngle;
@@ -152,7 +152,7 @@ public class BallActor extends GameActor {
 					rotation = (absAngleDeg(actualRotation) + absAngleDeg(targetRotation)) / 2;
 				}
 			}
-			Gdx.app.log("Actual: ",String.valueOf(absAngleDeg(actualRotation)) + " Target:" + String.valueOf(absAngleDeg(targetRotation)));
+			//Gdx.app.log("Actual: ",String.valueOf(absAngleDeg(actualRotation)) + " Target:" + String.valueOf(absAngleDeg(targetRotation)));
 
 			sprite.setRotation(rotation);
 			//sprite.setRotation(targetRotation);

@@ -10,8 +10,6 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
 public class StarActor extends GameActor {
-	private Batch batch;
-
 	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
 
 	protected static Animation animation;
