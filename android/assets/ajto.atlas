@@ -1,4 +1,4 @@
-teleport.png
+ajto.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -48,6 +48,13 @@ repeat: none
 6
   rotate: false
   xy: 768, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 896, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
