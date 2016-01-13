@@ -26,7 +26,7 @@ public class DoorActor extends GameActor {
 	public DoorActor() {
 		sprite = new Sprite(textureAtlasRegions.get(0));
 		setSize(1, 1);
-		setHorizontal(false);
+		//setHorizontal(false);
 	}
 
 	{
