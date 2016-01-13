@@ -14,71 +14,27 @@ import java.io.IOException;
 
 public class AmazingGame extends Game implements ApplicationListener {
 
+	public static int screenValue = 0;
 	public static AmazingGame amazingGame = new AmazingGame();
 
-
 	@Override
 	public void create() {
-		/*try {
-			mScreens = new Screen[]{
-					new GameMenu(),
-					new GameScreen("1"),
-					new GameScreen("2"),
-					new GameScreen("3"),
-					new GameScreen("4"),
-					new GameScreen("5"),
-					new GameScreen("6"),
-					new GameScreen("7"),
-			};
+		try {
+			setScreen(new GameMenu());
 		}
-		catch (Exception e){
-			System.out.println(e.getMessage()+" Dani buta volt... MEGINT!! >.<''");
-		}*/
-
-
-	//	Maze.findMaze("1").beginPlay();
-		Maze.findMaze("star").beginPlay();
-		//showScreen(Screens.MENU);
-	}
-
-
-
-
-		/*
-		public static SpaceGame sGame = new SpaceGame();
-
-	private static Screen[] mScreens;
-
-	public enum Screens {
-		MENU(0), HELP(1), GAME(2), STAT(3), EGGS(4);
-
-		private int value;
-
-		Screens(int value) {
-			this.value = value;
-		}
-	}
-
-	public void showScreen(Screens screen) {
-		setScreen(mScreens[screen.value]);
+		catch (Exception e) {e.printStackTrace();}
 	}
 
 	@Override
-	public void create() {
-		mScreens = new Screen[]{
-           		new ScreenMenu(),
-           		new ScreenHelp(),
-           		new ScreenGame(),
-				new ScreenStatictics(),
-				new ScreenEasterEggs()
-		};
-
-		showScreen(Screens.MENU);
+	public void render() {
+		super.render();
+		try {
+			/*if (screenValue == 1) setScreen(new GameScreen(Maze.findMaze("1")));
+			if (screenValue == 2) setScreen(new GameScreen(Maze.findMaze("2")));
+			if (screenValue == 3) setScreen(new GameScreen(Maze.findMaze("3")));
+			if (screenValue == 4) setScreen(new GameScreen(Maze.findMaze("4")));
+			if (screenValue == 5) setScreen(new GameScreen(Maze.findMaze("5")));
+			if (screenValue == 6) setScreen(new GameScreen(Maze.findMaze("6")));*/
+		} catch (Exception e) {}
 	}
-		 */
-
-
-
-	}
-
-
+}

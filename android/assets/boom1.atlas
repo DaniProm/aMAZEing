@@ -1,4 +1,4 @@
-teleport.png
+boom1.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -9,7 +9,7 @@ repeat: none
   orig: 128, 128
   offset: 0, 0
   index: -1
-  1
+1
   rotate: false
   xy: 128, 0
   size: 128, 128
@@ -47,6 +47,41 @@ repeat: none
 6
   rotate: false
   xy: 768, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 896, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 1024, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+9
+  rotate: false
+  xy: 1152, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 1280, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 1408, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

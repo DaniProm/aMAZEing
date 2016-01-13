@@ -1,5 +1,7 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.utils.Align;
 public class GameMenu extends MyScreen{
     Stage stage;
     private final Sound s = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
+    AmazingGame ag = new AmazingGame();
     public GameMenu(){
       super();
         stage = new Stage() {
@@ -30,10 +33,13 @@ public class GameMenu extends MyScreen{
                 }
                 return false;
             }
+
         };
+        System.out.println("Log: 'GameMenu' meghíva.");
         Table table = new Table();
         table.setFillParent(true);
-        stage.addActor(table);
+
+        System.out.println("Log: 'Tábla' létrehozva.");
 
         TextButton button;
         Label label = new Label("aMAZEing", LABEL_STYLE); // Ha már magyar a kezelőfelület, akkor ez is lehetne magyar
@@ -41,6 +47,7 @@ public class GameMenu extends MyScreen{
         table.add(label)
                 .width(500f)
                 .height(130f);
+        System.out.println("Log: 'Label' létrehozva.");
 
         // gombok hozzáadása
 
@@ -50,14 +57,51 @@ public class GameMenu extends MyScreen{
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               // AmazingGame.amazingGame.showScreen(AmazingGame.Screens.LVL1);
+                Maze.findMaze("1").beginPlay();
+                System.out.println("Log: Klikk az '1.szint' gombra.");
+            }
+        });
+        table.add(button);
+        table.row().height(ROW_HEIGHT);
+        System.out.println("Log: '1.szint' gomb létrehozva.");
 
+        button = new TextButton("Második szint", MyScreen.TEXT_BUTTON_STYLE);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Maze.findMaze("2").beginPlay();
+                System.out.println("Log: Klikk az '2.szint' gombra.");
+            }
+        });
+        table.add(button);
+        table.row().height(ROW_HEIGHT);
+        System.out.println("Log: '2.szint' gomb létrehozva.");
+
+        button = new TextButton("Teszt szint", MyScreen.TEXT_BUTTON_STYLE);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Maze.findMaze("test").beginPlay();
+                System.out.println("Log: Klikk az 'Test szint' gombra.");
+            }
+        });
+        table.add(button);
+        table.row().height(ROW_HEIGHT);
+        System.out.println("Log: '3.szint' gomb létrehozva.");
+
+        button = new TextButton("Kilépés", MyScreen.TEXT_BUTTON_STYLE);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Log: Klikk a 'Kilépés' gombra.");
+                System.exit(0);
             }
         });
         table.row().height(ROW_HEIGHT);
         table.add(button);
-
-
+        System.out.println("Log: 'Kilépés' gomb létrehozva.");
+        stage.addActor(table);
+        System.out.println("Log: A 'table' hozzáadva a 'stage'hez");
     }
     @Override
     public void resize(int width, int height) {
@@ -75,9 +119,9 @@ public class GameMenu extends MyScreen{
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        s.setVolume(1,0.5f);
+        /*s.setVolume(1,0.5f);
         s.play();
-        s.setLooping(1,true);
+        s.setLooping(1,true);*/
     }
 
 
@@ -86,8 +130,8 @@ public class GameMenu extends MyScreen{
     public void render(float delta) {
         super.render(delta);
         batch.begin();
-        Gdx.gl20.glClearColor(0f,0f,0f,0f);
-        stage.act(Gdx.graphics.getDeltaTime());
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        //stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
         batch.end();
     }
