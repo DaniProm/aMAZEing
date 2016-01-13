@@ -16,35 +16,25 @@ public class AmazingGame extends Game implements ApplicationListener {
 
 	public static int screenValue = 0;
 	public static AmazingGame amazingGame = new AmazingGame();
-	Screen LVL1, LVL2, LVL3, LVL4, LVL5, LVL6, LVL7, LVLTest;
+
 	@Override
 	public void create() {
 		try {
 			setScreen(new GameMenu());
-			/*LVL1 = new GameScreen("0");
-			LVL2 = new GameScreen("1");
-			LVL3 = new GameScreen("2");
-			LVL4 = new GameScreen("3");
-			LVL5 = new GameScreen("4");
-			LVL6 = new GameScreen("5");
-			LVL7 = new GameScreen("6");
-			LVLTest = new GameScreen("test");*/
-
 		}
 		catch (Exception e) {e.printStackTrace();}
 	}
-
-	public void showScreen(Screen screen) {}
 
 	@Override
 	public void render() {
 		super.render();
 		try {
-			if (screenValue == 1) this.setScreen(new GameScreen("1"));
-			if (screenValue == 2) this.setScreen(new GameScreen("2"));
-			if (screenValue == 3) this.setScreen(new GameScreen("3"));
-			if (screenValue == 4) this.setScreen(new GameScreen("4"));
-			if (screenValue == 5) this.setScreen(new GameScreen("5"));
+			/*if (screenValue == 1) setScreen(new GameScreen(Maze.findMaze("1")));
+			if (screenValue == 2) setScreen(new GameScreen(Maze.findMaze("2")));
+			if (screenValue == 3) setScreen(new GameScreen(Maze.findMaze("3")));
+			if (screenValue == 4) setScreen(new GameScreen(Maze.findMaze("4")));
+			if (screenValue == 5) setScreen(new GameScreen(Maze.findMaze("5")));
+			if (screenValue == 6) setScreen(new GameScreen(Maze.findMaze("6")));*/
 		} catch (Exception e) {}
 	}
 }

@@ -2,7 +2,6 @@ teleport.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-
 0
   rotate: false
   xy: 0, 0
@@ -10,7 +9,7 @@ repeat: none
   orig: 128, 128
   offset: 0, 0
   index: -1
-1
+  1
   rotate: false
   xy: 128, 0
   size: 128, 128
