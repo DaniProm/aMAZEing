@@ -20,7 +20,8 @@ public class AmazingGame extends Game implements ApplicationListener {
 	@Override
 	public void create() {
 		try {
-			setScreen(new GameMenu());
+			Maze.findMaze("test").beginPlay();
+			//setScreen(new GameMenu());
 		}
 		catch (Exception e) {e.printStackTrace();}
 	}

@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class BallActor extends GameActor {
 
+	private float Timer = -1;
+	private float scale = 1;
 	protected static Array<Array<TextureAtlas.AtlasRegion>> textureAtlasRegions = new Array<Array<TextureAtlas.AtlasRegion>>();
 	static
 	{
@@ -69,7 +71,7 @@ public class BallActor extends GameActor {
 	}
 	public static float minAngleDeg(float a, float b)
 	{
-		return Math.min(Math.min(Math.abs(a  - b), Math.abs((a - 180) - b)), Math.abs(a - (b - 180)));
+		return Math.min(Math.min(Math.abs(a - b), Math.abs((a - 180) - b)), Math.abs(a - (b - 180)));
 	}
 
 	public static float absAngleDeg(float a)
@@ -168,6 +170,40 @@ public class BallActor extends GameActor {
 		prevBallAngle = ballAngle;
 		//prevBallAngle2 = ballAngle2;
 
+
+
+		// Teleport //
+
+		if (Timer>=0) {
+			Timer+=delta;
+		}
+		if (Timer>=0 && Timer<=0.5)
+		{
+			scale+=0.1f;setSize(scale, scale);
+		}
+		if (Timer>0.5 && Timer<=1.5)
+		{
+			scale-=0.2f;setSize(scale, scale);
+		}
+		if (Timer > 1.5f && tx!=-10000) {
+			body.setTransform(tx, ty, 0);
+			tx = -10000;
+			ty = -10000;
+		}
+		if (Timer > 1.5) {
+			scale += 0.1f;
+			setSize(scale, scale);
+		}
+		if (Timer > 3)
+		{
+			Timer = -1;
+			activate();
+			wa.setActive(1);
+			wb.setActive(1);
+			setSize(1, 1);
+		}
+
+		// Teleport //
 	}
 
 	@Override
@@ -193,8 +229,25 @@ public class BallActor extends GameActor {
 		sprite.setOrigin(width*ballZoom / 2, height*ballZoom / 2);
 		spriteShadow.setSize(width, height);
 		spriteShadow.setOrigin(width / 2, height / 2);
-		spriteLight.setSize(width*ballZoom, height*ballZoom);
-		spriteLight.setOrigin(width*ballZoom / 2, height*ballZoom / 2);
+		spriteLight.setSize(width * ballZoom, height * ballZoom);
+		spriteLight.setOrigin(width * ballZoom / 2, height * ballZoom / 2);
 	}
+
+
+	private float tx= -10000;
+	private float ty= -10000;
+	private WormholeActor wa = null;
+	private WormholeActor wb = null;
+	public void Teleport(float x, float y, WormholeActor a, WormholeActor b)
+	{
+		deactivate();
+		wa = a;
+		wb = b;
+		tx = x;
+		ty = y;
+		Timer=0;
+		scale=1;
+	}
+
 }
 

@@ -99,7 +99,7 @@ public class WormholeActor extends GameActor {
 		sprite.setSize(size, size);
 		Vector2 v = body.getPosition();
 		sprite.setPosition(v.x + (1 - size) / 2, v.y + (1 - size) / 2);
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		sprite.rotate(1);
 		if (balls.size() > 0) {
 			// H: Emlékeztessetek, hogy ezzel kapcsolatban meg kell beszélni valamit!
@@ -107,15 +107,24 @@ public class WormholeActor extends GameActor {
 			balls.clear();
 
 			Vector2 newPos = endpoint.body.getPosition();
-			ball.body.setTransform(newPos.x /* + 100 / PIX2M */, newPos.y, 0);
+			//ball.body.setTransform(newPos.x /* + 100 / PIX2M */, newPos.y, 0);
+			ball.Teleport(newPos.x, newPos.y, this, endpoint);
 
 			// play transport sound
-			sound.play();
-
+			//sound.play();
+/*
 			active = 1;
-			endpoint.active = 1;
+			endpoint.active = 1;*/
 		}
 
+	}
+
+	public float getActive() {
+		return active;
+	}
+
+	public void setActive(float active) {
+		this.active = active;
 	}
 	/*private class Scribble extends Label {
 
