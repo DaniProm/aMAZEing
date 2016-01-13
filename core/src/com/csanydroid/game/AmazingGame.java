@@ -14,71 +14,37 @@ import java.io.IOException;
 
 public class AmazingGame extends Game implements ApplicationListener {
 
+	public static int screenValue = 0;
 	public static AmazingGame amazingGame = new AmazingGame();
-
-
+	Screen LVL1, LVL2, LVL3, LVL4, LVL5, LVL6, LVL7, LVLTest;
 	@Override
 	public void create() {
-		/*try {
-			mScreens = new Screen[]{
-					new GameMenu(),
-					new GameScreen("1"),
-					new GameScreen("2"),
-					new GameScreen("3"),
-					new GameScreen("4"),
-					new GameScreen("5"),
-					new GameScreen("6"),
-					new GameScreen("7"),
-			};
+		try {
+			setScreen(new GameMenu());
+			/*LVL1 = new GameScreen("0");
+			LVL2 = new GameScreen("1");
+			LVL3 = new GameScreen("2");
+			LVL4 = new GameScreen("3");
+			LVL5 = new GameScreen("4");
+			LVL6 = new GameScreen("5");
+			LVL7 = new GameScreen("6");
+			LVLTest = new GameScreen("test");*/
+
 		}
-		catch (Exception e){
-			System.out.println(e.getMessage()+" Dani buta volt... MEGINT!! >.<''");
-		}*/
-
-
-	//	Maze.findMaze("1").beginPlay();
-		Maze.createRandomMaze().beginPlay();
-		//showScreen(Screens.MENU);
+		catch (Exception e) {e.printStackTrace();}
 	}
 
-
-
-
-		/*
-		public static SpaceGame sGame = new SpaceGame();
-
-	private static Screen[] mScreens;
-
-	public enum Screens {
-		MENU(0), HELP(1), GAME(2), STAT(3), EGGS(4);
-
-		private int value;
-
-		Screens(int value) {
-			this.value = value;
-		}
-	}
-
-	public void showScreen(Screens screen) {
-		setScreen(mScreens[screen.value]);
-	}
+	public void showScreen(Screen screen) {}
 
 	@Override
-	public void create() {
-		mScreens = new Screen[]{
-           		new ScreenMenu(),
-           		new ScreenHelp(),
-           		new ScreenGame(),
-				new ScreenStatictics(),
-				new ScreenEasterEggs()
-		};
-
-		showScreen(Screens.MENU);
+	public void render() {
+		super.render();
+		try {
+			if (screenValue == 1) this.setScreen(new GameScreen("1"));
+			if (screenValue == 2) this.setScreen(new GameScreen("2"));
+			if (screenValue == 3) this.setScreen(new GameScreen("3"));
+			if (screenValue == 4) this.setScreen(new GameScreen("4"));
+			if (screenValue == 5) this.setScreen(new GameScreen("5"));
+		} catch (Exception e) {}
 	}
-		 */
-
-
-
-	}
-
-
+}

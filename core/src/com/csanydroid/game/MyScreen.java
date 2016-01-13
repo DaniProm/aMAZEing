@@ -94,7 +94,7 @@ public class MyScreen implements Screen {
 
 	static {
 		LABEL_STYLE = new Label.LabelStyle();
-		LABEL_STYLE.font = FONT_256_BYTES; // 45
+		LABEL_STYLE.font = FONT_HOBO_STD; // 45
 		LABEL_STYLE.fontColor = Color.WHITE;
 	}
 
@@ -102,7 +102,7 @@ public class MyScreen implements Screen {
 
 	static {
 		LABEL_STYLE_TOP = new Label.LabelStyle();
-		LABEL_STYLE_TOP.font = FONT_HOBO_STD_TOP;
+		LABEL_STYLE_TOP.font = FONT_HOBO_STD;
 		LABEL_STYLE_TOP.fontColor = Color.WHITE;
 	}
 
@@ -110,7 +110,7 @@ public class MyScreen implements Screen {
 
 	static {
 		LABEL_STYLE2 = new Label.LabelStyle();
-		LABEL_STYLE2.font = FONT_CALIBRI; //40
+		LABEL_STYLE2.font = FONT_HOBO_STD; //40
 		LABEL_STYLE2.fontColor = Color.WHITE;
 	}
 
