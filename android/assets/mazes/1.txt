@@ -1,0 +1,8 @@
+2. pálya - Teleport
+...........
+.O   .   A.
+.X  A.*   .
+...........
+
+1,1:4 Teleportálj a falon túlra!
+6,2:4 Gyűjtsd be a csillagot!

@@ -16,10 +16,10 @@ public class GameScreen extends MyScreen {
 
 	};
 
-	GameScreen(String maze) throws IOException {
+	GameScreen(Maze maze) {
 		super();
 		gameStage = new GameStage(viewport, batch, maze);
-        gameStage.initCamera(camera);
+        gameStage.lookAtMaze(camera);
 
 		GestureDetector gd = new GestureDetector(20, 0.5f, 2, 0.15f, gameStage);
 		InputMultiplexer im = new InputMultiplexer(gd, gameStage);

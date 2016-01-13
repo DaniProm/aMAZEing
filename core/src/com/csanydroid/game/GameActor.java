@@ -55,6 +55,10 @@ public abstract class GameActor extends Actor implements Disposable {
 		body.setActive(visible);
 	}
 
+    public void deactivate() {
+        body.setActive(false);
+    }
+
 	protected Shape getShape() {
 		return getTileShape();
 	}
@@ -101,6 +105,8 @@ public abstract class GameActor extends Actor implements Disposable {
 	}
 
 	final public void applyWorld(World world, BodyDef.BodyType bodyType) {
+
+		if(world == null) return;
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.restitution = 0;

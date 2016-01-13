@@ -1,0 +1,8 @@
+6. pálya - Ismerkedés az elemekkel, feketelyuk
+............
+.    @     .
+.O   .X  * .
+.    :    @.
+............
+
+1,3:4 Óvakodj a feketelyukaktól!

@@ -47,7 +47,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-
 	protected static final Label.LabelStyle LABEL_STYLE;
 
 	static	{
@@ -60,9 +59,17 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final ArrayList<BallActor> balls = new ArrayList<BallActor>();
 	private final ArrayList<HoleActor> holes = new ArrayList<HoleActor>();
 
-    private int width, height;
+	public Maze getMaze() {
+		return maze;
+	}
 
-	public byte totalStars, collectedStars;
+	private final Maze maze;
+
+	private byte totalStars, collectedStars;
+
+	public void collectStar() {
+		++collectedStars;
+	}
 
 	public void removeBall(BallActor ball) {
 		Gdx.input.vibrate(250);
@@ -170,13 +177,9 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-	public GameStage(Viewport viewport, Batch batch, String maze) {
+	public GameStage(Viewport viewport, Batch batch, Maze maze) {
 		super(viewport, batch);
-		loadMaze(maze);
-	}
-
-	public GameStage(Viewport viewport, String maze) {
-		super(viewport);
+		this.maze = maze;
 		loadMaze(maze);
 	}
 
@@ -184,10 +187,12 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return world;
 	}
 
-	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson még
+	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson
 
-	public void initCamera(final OrthographicCamera camera) {
-
+	public void lookAtMaze(final OrthographicCamera camera) {
+        camera.position.x = maze.getWidth() / 2f;
+        camera.position.y = maze.getHeight() / -2f;
+        camera.zoom = Math.max(maze.getHeight() / camera.viewportHeight, maze.getWidth() / camera.viewportWidth);
 	}
 
 	public void updateCamera(final OrthographicCamera camera) {
@@ -224,47 +229,67 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			float newValue;
 
 			newValue = (right + left) / 2;
-			camera.position.x += (newValue - camera.position.x) / 20;
+			camera.position.x += (newValue - camera.position.x) / 10;
 			newValue = (top + bottom) / 2;
-			camera.position.y += (newValue - camera.position.y) / 20;
+			camera.position.y += (newValue - camera.position.y) / 10;
 
 			newValue = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 			camera.zoom += (newValue - camera.zoom) / 30f;
 
-		}
+		} else {
+            lookAtMaze(camera);
+        }
 
 	}
 
 	private float additionalZoom = 1;
 
-
-	private float keyGravityX = 0, keyGravityY = 0;
+    boolean controlWithMouse = false;
 
 	@Override
 	public void act(float delta) {
 		if (world == null) return;
 
-		world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
+        switch (Gdx.app.getType()) {
+            case Android:
+                world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
+                break;
+            case Desktop:
 
-//Teszteléshez
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			if (keyGravityX < 10) keyGravityX += .8f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			if (keyGravityX > -10) keyGravityX -= .8f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			if (keyGravityY > -10) keyGravityY -= .8f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			if (keyGravityY < 10) keyGravityY += .8f;
-		}
-		if (keyGravityX != 0 || keyGravityY != 0) {
-			//keyGravityX*=0.1f;
-			//keyGravityY*=0.1f;
-			world.setGravity(new Vector2(keyGravityX, -keyGravityY));
-		}
-//Teszteléshez
+                if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+                    controlWithMouse = !controlWithMouse;
+                    Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
+                }
+
+                if(!controlWithMouse) {
+                    Vector2 gravity = world.getGravity();
+
+                    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                        if (gravity.x < 10) gravity.x += .75f;
+                    } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                        if (gravity.x > -10) gravity.x -= .75f;
+                    }
+
+                    if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                        if (gravity.y > -10) gravity.y -= .75f;
+                    } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                        if (gravity.y < 10) gravity.y += .75f;
+                    }
+
+                    world.setGravity(gravity);
+                } else {
+
+                    world.setGravity(new Vector2(
+                            ((float) Gdx.input.getX() / Gdx.graphics.getWidth() - .5f) * 20,
+                            -((float) Gdx.input.getY() / Gdx.graphics.getHeight() - .5f) * 20
+                    ));
+
+                }
+
+                break;
+        }
+
+
 		world.step(delta, 1, 1);
 
 		super.act(delta);
@@ -286,159 +311,118 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		} else if (actor instanceof StarActor) {
 			++totalStars;
 		} else if (actor instanceof Scribble) {
-			//actor.setZIndex(0);
+			actor.setZIndex(0);
 		}
 
 	}
 
-	boolean showScribbles = true;
+	private void loadMaze(Maze maze) {
 
-	private void loadMaze(String maze) {
+		maze.load(new Maze.MazeObjectLoader() {
 
-		try {
-			BufferedReader reader = new BufferedReader(Gdx.files.internal("mazes/" + maze + ".txt").reader());
-			//final float height = Gdx.graphics.getHeight(); - Nem szükséges, mert a pálya nem függ a képernyőtől. Inkább játszunk a kamerával...
 			WormholeActor[] wormholes = new WormholeActor['F' - 'A' + 1];
-			String line;
 
-			line = reader.readLine(); // maze description
+			@Override
+			public void createObject(final Maze.MazeObject o) {
 
-			for (int y = 0; null != (line = reader.readLine()); ) {
-				if (line.compareTo("") == 0) break;
 
-				y++;
-				int x = 0;
-				for (int i = 0; i < line.length(); i++) {
-					GameActor actor = null;
-					BodyDef.BodyType bodyType = null;
-					final char ch = line.charAt(i);
-					switch (ch) {
-						case ' ':
-							break; // space
-						case '\t':
-							--x;
-							break;
-						case '<':
-							x -= 2;
-							break;
-						case '.': // wall
-							actor = new WallActor();
-							bodyType = BodyDef.BodyType.StaticBody;
-							break;
-						case ':': // explosive wall
-							actor = new ExplosiveWallActor(1.0f);
-							bodyType = BodyDef.BodyType.StaticBody;
-							break;
-						case 'O': // ball
-							actor = new BallActor();
-							bodyType = BodyDef.BodyType.DynamicBody;
-							break;
-						case 'X': // hole
-							actor = new HoleActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '%': // door
-							actor = new DoorActor();
-							bodyType = BodyDef.BodyType.StaticBody;
-							break;
-						case '@': // black hole
-							actor = new BlackHoleActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '~': // puddle
-							actor = new PuddleActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						case '*': // bonus star
-							actor = new StarActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-							break;
-						default:
-
-							// wormhole
-							int j;
-							if (ch >= 'a' && ch <= 'f') j = ch - 'a';
-							else if (ch >= 'A' && ch <= 'F') j = ch - 'A';
-							else break;
-
-							actor = new WormholeActor();
-							bodyType = BodyDef.BodyType.KinematicBody;
-
-							if (wormholes[j] == null) {
-								wormholes[j] = (WormholeActor) actor;
-							} else {
-								((WormholeActor) actor).setEndpoint(wormholes[j]);
-								wormholes[j].setEndpoint((WormholeActor) actor);
-							}
-
-							break;
-					}
-
-					if (actor != null) {
-
-						//actor.setPosition(x * GameScreen.TILE_SIZE, height - y * GameScreen.TILE_SIZE);
-						actor.setPosition(x, -y);
-
-						actor.applyWorld(world, bodyType);
-
-						addActor(actor);
-
-					}
-
-					++x;
+				if(o.getType() == Maze.ObjectType.SCRIBBLE) {
+					new Scribble((String)o.getParams()[0], o.getX(), o.getY(), (Integer)o.getParams()[1]);
+					return;
 				}
 
-			}
+				GameActor actor;
+				BodyDef.BodyType bodyType;
 
-			if (showScribbles) {
-				final Pattern pattern = Pattern.compile("(\\d+),(\\d+):(\\d) (.*)");
-				// read scribbles
-				for (int i = 0; null != (line = reader.readLine()); i++) {
-					try {
-						Matcher matcher = pattern.matcher(line);
-						matcher.find();
+				switch (o.getType()) {
+					case WALL:
+						actor = new WallActor();
+						bodyType = BodyDef.BodyType.StaticBody;
+						break;
+					case EXPLOSIVE_WALL:
+						actor = new ExplosiveWallActor((Float)o.getParams()[0]);
+						bodyType = BodyDef.BodyType.StaticBody;
+						break;
+					case BALL:
+						actor = new BallActor();
+						bodyType = BodyDef.BodyType.DynamicBody;
+						break;
+					case HOLE:
+						actor = new HoleActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case BLACK_HOLE:
+						actor = new BlackHoleActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case WORMHOLE:
+						int j = (Integer)o.getParams()[0];
+						actor = new WormholeActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
 
-						new Scribble(matcher.group(4), Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)) + 1, Integer.parseInt(matcher.group(3)));
-					} catch(IllegalStateException e) {
+						if (wormholes[j] == null) {
+							wormholes[j] = (WormholeActor) actor;
+						} else {
+							((WormholeActor) actor).setEndpoint(wormholes[j]);
+							wormholes[j].setEndpoint((WormholeActor) actor);
+						}
 
-						Gdx.app.log("tokens", "invalid");
-					}
-
+						break;
+					case PUDDLE:
+						actor = new PuddleActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case STAR:
+						actor = new StarActor();
+						bodyType = BodyDef.BodyType.KinematicBody;
+						break;
+					case DOOR:
+						actor = new DoorActor();
+						bodyType = BodyDef.BodyType.StaticBody;
+						break;
+					default:
+						return;
 				}
 
+				actor.setPosition(o.getX(), -o.getY());
+
+				actor.applyWorld(world, bodyType);
+
+				addActor(actor);
+
+
+				Gdx.app.log("mazeloader", o.toString());
+
 			}
+		});
 
-			reader.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		Valami teszt = new Valami();
-		teszt.setPosition(-2, -2);
-		teszt.applyWorld(world, BodyDef.BodyType.StaticBody);
-		addActor(teszt);
-
-		Valami2 t = new Valami2();
-		t.setPosition(2,2);
-		t.applyWorld(world, BodyDef.BodyType.StaticBody);
-		addActor(t);
 	}
 
 	private class Scribble extends Label {
 
+		private float elapsedTime = 0f;
+		private static final float MAGNIFY = 0.0005f;
+		private static final float FONT_SCALE = 0.007f; //Ennyin volt jó...
+
+		@Override
+		public void act(float delta) {
+			elapsedTime += delta;
+			super.act(delta);
+			setFontScale(FONT_SCALE + (float)Math.sin(elapsedTime * 5.0f) * MAGNIFY);
+		}
+
 		Scribble(String text, int x, int y, int width) {
 			super(text, LABEL_STYLE);
 
-			setFontScale(0.007f); //Ennyin volt jó...
+			setFontScale(FONT_SCALE);
 			setPosition(x, -y);
 			setSize(width, 1);
-
 			setAlignment(Align.center);
 			setWrap(true);
 			setVisible(true);
 
 			addActor(this);
+
 		}
 	}
 
@@ -477,7 +461,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = initialDistance / distance;
+		additionalZoom = Math.min(initialDistance / distance, 2.5f);
 		// TODO
 		return false;
 	}
