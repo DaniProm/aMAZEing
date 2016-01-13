@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,13 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /** A játék menüje*/
 public class GameMenu extends MyScreen{
     Stage stage;
     private final Sound s = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
-    AmazingGame ag = new AmazingGame();
+    GameActor actor;
     public GameMenu(){
       super();
         stage = new Stage() {
@@ -53,41 +56,17 @@ public class GameMenu extends MyScreen{
 
         final float ROW_HEIGHT = 75f;
 
-        button = new TextButton("Első szint", MyScreen.TEXT_BUTTON_STYLE);
+        button = new TextButton("Játék indítása", MyScreen.TEXT_BUTTON_STYLE);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Maze.findMaze("1").beginPlay();
-                System.out.println("Log: Klikk az '1.szint' gombra.");
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameMazes());
+                System.out.println("Log: Klikk a 'Játék indítása' gombra.");
             }
         });
-        table.add(button);
-        table.row().height(ROW_HEIGHT);
-        System.out.println("Log: '1.szint' gomb létrehozva.");
-
-        button = new TextButton("Második szint", MyScreen.TEXT_BUTTON_STYLE);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Maze.findMaze("2").beginPlay();
-                System.out.println("Log: Klikk az '2.szint' gombra.");
-            }
-        });
-        table.add(button);
-        table.row().height(ROW_HEIGHT);
-        System.out.println("Log: '2.szint' gomb létrehozva.");
-
-        button = new TextButton("Teszt szint", MyScreen.TEXT_BUTTON_STYLE);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Maze.findMaze("test").beginPlay();
-                System.out.println("Log: Klikk az 'Test szint' gombra.");
-            }
-        });
-        table.add(button);
-        table.row().height(ROW_HEIGHT);
-        System.out.println("Log: '3.szint' gomb létrehozva.");
+        table.row();
+        table.add(button).height(ROW_HEIGHT);
+        System.out.println("Log: 'Játék indítása' gomb létrehozva.");
 
         button = new TextButton("Kilépés", MyScreen.TEXT_BUTTON_STYLE);
         button.addListener(new ClickListener() {
@@ -102,6 +81,14 @@ public class GameMenu extends MyScreen{
         System.out.println("Log: 'Kilépés' gomb létrehozva.");
         stage.addActor(table);
         System.out.println("Log: A 'table' hozzáadva a 'stage'hez");
+
+        actor = new BallActor();
+        actor.setSize(128, 128);
+        camera = new OrthographicCamera(1024,768);
+        camera.translate(512,384);
+        viewport = new ExtendViewport(1024, 768, camera);
+        stage.setViewport(viewport);
+        //stage.addActor(actor);
     }
     @Override
     public void resize(int width, int height) {
@@ -131,7 +118,7 @@ public class GameMenu extends MyScreen{
         super.render(delta);
         batch.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0);
-        //stage.act(Gdx.graphics.getDeltaTime());
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
         batch.end();
     }
