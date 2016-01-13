@@ -1,21 +1,14 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 
 public class DoorActor extends GameActor {
 
@@ -30,22 +23,6 @@ public class DoorActor extends GameActor {
 		sprite = new Sprite(textureAtlasRegions.first());
 		setSize(1, 1);
 	}
-    /*
-
-    @Override
-    public void applyWorld(World world, BodyDef.BodyType bodyType) {
-        super.applyWorld(world, bodyType);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = getShape();
-        fixtureDef.isSensor = true;
-
-        body.createFixture(fixtureDef);
-
-        fixtureDef.shape.dispose();
-
-    }
-    */
 
     {
 
@@ -83,16 +60,6 @@ public class DoorActor extends GameActor {
 		}
 	}
 
-    private boolean canClose() {
-
-        for(Contact contact : world.getContactList()) {
-            Fixture fixtureA = contact.getFixtureA();
-            Fixture fixtureB = contact.getFixtureB();
-
-
-        }
-        return true;
-    }
 
 	@Override
 	public void act(float delta) {
@@ -105,15 +72,16 @@ public class DoorActor extends GameActor {
 				animationFrame++;
 				sprite.setRegion(textureAtlasRegions.get(animationFrame));
 			}
+
 			timeOpen += delta;
 		}
 
 		if (timeOpen > 3) {
-            if(canClose()) {
+            if(!isTouchBall()) {
                 timeOpen = -1;
-                body.getFixtureList().get(0).setSensor(false);
+               setSensor(false);
             }
-		} if (timeOpen < 0) {
+		} else if (timeOpen < 0) {
             // csukódik
 			if (animationFrame > 0)
 			{
@@ -127,7 +95,7 @@ public class DoorActor extends GameActor {
 	public void open() {
         //setVisible(false);
 
-        body.getFixtureList().get(0).setSensor(true);
+        setSensor(true);
 
 		timeOpen = 0;
 /*

@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -23,6 +25,33 @@ public abstract class GameActor extends Actor implements Disposable {
 	protected Sprite sprite;
 
 	//protected FixtureDef fd = new FixtureDef();
+
+    protected boolean isTouchBall() {
+
+        for(Contact contact : world.getContactList()) {
+            final Fixture fixtureA = contact.getFixtureA(), fixtureB = contact.getFixtureB();
+
+            if(fixtureA.getBody().getUserData() == this) {
+                if(fixtureB.getBody().getUserData() instanceof BallActor) {
+                    return true;
+                }
+
+            } else if(fixtureB.getBody().getUserData() == this) {
+                if(fixtureA.getBody().getUserData() instanceof BallActor) {
+                    return true;
+                }
+
+            }
+
+
+        }
+
+        return false;
+    }
+
+    protected void setSensor(boolean sensor) {
+        body.getFixtureList().get(0).setSensor(sensor);
+    }
 
 	@Override
 	public void setPosition(float x, float y) {
@@ -122,7 +151,7 @@ public abstract class GameActor extends Actor implements Disposable {
 		body = world.createBody(bodyDef);
 		body.setFixedRotation(true);//bodyType == BodyDef.BodyType.StaticBody);
 		body.setUserData(this);
-		body.setLinearDamping(0);
+		body.setLinearDamping(0.1f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.restitution = 0;

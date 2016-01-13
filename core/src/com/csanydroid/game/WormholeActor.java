@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -69,9 +71,16 @@ public class WormholeActor extends GameActor {
 		});*/
 	}
 
-	@Override
+    @Override
+    public void applyWorld(World world, BodyDef.BodyType bodyType) {
+        super.applyWorld(world, bodyType);
+
+        setSensor(true);
+    }
+
+    @Override
 	protected Shape getShape() {
-		return getCircleShape(.75f);
+		return getCircleShape(.25f);
 	}
 
 	public void setEndpoint(WormholeActor endpoint) {this.endpoint = endpoint;}

@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class StarActor extends GameActor {
@@ -30,7 +32,13 @@ public class StarActor extends GameActor {
 		});
 	}
 
-	@Override
+    @Override
+    public void applyWorld(World world, BodyDef.BodyType bodyType) {
+        super.applyWorld(world, bodyType);
+        setSensor(true);
+    }
+
+    @Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
 		sprite.setPosition(x + 0.25f, y+0.25f);

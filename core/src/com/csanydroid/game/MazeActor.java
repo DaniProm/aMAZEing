@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class MazeActor extends Actor {
-    Texture texture = new Texture("level1TestPic.png");
-    Texture texture2 = new Texture("lock.png");
+    Texture texture = new Texture("door.png"); // level1TestPic
+    Texture texture2 = new Texture("door.png"); // lock
     Sprite spriteMaze;
     Sprite spriteLock;
 

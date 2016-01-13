@@ -179,11 +179,13 @@ public class BallActor extends GameActor {
 		}
 		if (Timer>=0 && Timer<=0.5)
 		{
-			scale+=0.1f;setSize(scale, scale);
+			scale+=0.1f;
+            setSize(scale, scale);
 		}
 		if (Timer>0.5 && Timer<=1.5)
 		{
-			scale-=0.2f;setSize(scale, scale);
+			scale-=0.2f;
+            sprite.setSize(scale, scale);
 		}
 		if (Timer > 1.5f && tx!=-10000) {
 			body.setTransform(tx, ty, 0);
