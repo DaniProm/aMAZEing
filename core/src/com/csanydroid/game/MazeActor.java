@@ -10,30 +10,34 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class MazeActor extends Actor {
-    Texture texture = new Texture("door.png"); // level1TestPic
-    Texture texture2 = new Texture("door.png"); // lock
-    Sprite spriteMaze;
-    Sprite spriteLock;
+    private static Texture lockTexture = new Texture("lock.png");
+    private final Sprite spriteMaze;
+    private final Maze maze;
 
-
-    MazeActor(boolean b){
+    MazeActor(Maze maze){
         super();
-        if(b)makeLevelPic(); //Ha true, akkor a szint képét csinálja
-        else makeLockPic();
-    }
+        this.maze = maze;
 
-    private void makeLevelPic() {
+        Texture texture = new Texture("level1TestPic.png");
         spriteMaze = new Sprite(texture);
-    }
 
-    private void makeLockPic(){
-        spriteLock = new Sprite(texture2);
+
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+
         spriteMaze.draw(batch, parentAlpha);
+
+        if(maze.isLocked()) {
+            lockTexture.getHeight();
+
+            batch.draw(lockTexture,
+                    (spriteMaze.getWidth() - lockTexture.getWidth()) / 2,
+                    (spriteMaze.getHeight()) - lockTexture.getHeight() / 2);
+        }
+
     }
 
     @Override
@@ -48,6 +52,5 @@ public class MazeActor extends Actor {
         spriteMaze.setSize(width, height);
         spriteMaze.setOrigin(width / 2, height / 2);
     }
-
 
 }

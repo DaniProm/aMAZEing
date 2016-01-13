@@ -1,10 +1,8 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,16 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 /** A játék menüje*/
-public class GameMenu extends MyScreen{
+public class MenuScreen extends MyScreen{
     Stage stage;
     private final Sound s = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
+
     GameActor actor;
-    public GameMenu(){
+
+    public MenuScreen(){
       super();
         stage = new Stage() {
             @Override
@@ -31,14 +30,14 @@ public class GameMenu extends MyScreen{
                 switch (keycode) {
                     case Input.Keys.ESCAPE:
                     case Input.Keys.BACK:
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameMazes());
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());
                         break;
                 }
                 return false;
             }
 
         };
-        System.out.println("Log: 'GameMenu' meghíva.");
+        System.out.println("Log: 'GameMdenu' meghíva.");
         Table table = new Table();
         table.setFillParent(true);
 
@@ -60,7 +59,7 @@ public class GameMenu extends MyScreen{
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new GameMazes());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());
                 System.out.println("Log: Klikk a 'Játék indítása' gombra.");
             }
         });
@@ -76,6 +75,7 @@ public class GameMenu extends MyScreen{
                 System.exit(0);
             }
         });
+
         table.row().height(ROW_HEIGHT);
         table.add(button);
         System.out.println("Log: 'Kilépés' gomb létrehozva.");
@@ -84,15 +84,17 @@ public class GameMenu extends MyScreen{
 
         actor = new BallActor();
         actor.setSize(128, 128);
-        camera = new OrthographicCamera(1024,768);
-        camera.translate(512,384);
-        viewport = new ExtendViewport(1024, 768, camera);
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        camera.translate(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2);
+        viewport = new ScreenViewport(camera);
         stage.setViewport(viewport);
         //stage.addActor(actor);
     }
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
         stage.getViewport().update(width, height);
     }
 

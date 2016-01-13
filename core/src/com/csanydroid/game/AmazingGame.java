@@ -1,26 +1,20 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Interpolation;
-
-import java.io.IOException;
+import com.badlogic.gdx.Preferences;
 
 public class AmazingGame extends Game implements ApplicationListener {
 
-	public static int screenValue = 0;
-	public static AmazingGame amazingGame = new AmazingGame();
+    public Preferences prefs;
 
-	@Override
+    @Override
 	public void create() {
+        prefs = Gdx.app.getPreferences("AmazingGame");
+        Gdx.app.log("dsda", prefs + "");
 		try {
-			setScreen(new GameMenu());
+			setScreen(new MenuScreen());
 		}
 		catch (Exception e) {e.printStackTrace();}
 	}

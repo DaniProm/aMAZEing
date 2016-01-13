@@ -348,10 +348,25 @@ public class Maze {
 
     public void beginPlay() {
 
-		((Game) Gdx.app.getApplicationListener())
+		((AmazingGame) Gdx.app.getApplicationListener())
 				.setScreen(new GameScreen(this));
 
 	}
+
+    public void setLock(boolean lock) {
+        final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
+        ag.prefs.putBoolean("level/" + getName(), lock);
+        ag.prefs.flush();
+    }
+
+    public boolean isLocked() {
+        final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
+        return ag.prefs.getBoolean("level/" + getName());
+    }
+
+    public int getMazeIndex() {
+        return mazes.indexOf(this);
+    }
 
 	public enum ObjectType {
 		WALL, EXPLOSIVE_WALL, BALL, HOLE, BLACK_HOLE, WORMHOLE, PUDDLE, STAR, DOOR, SCRIBBLE;

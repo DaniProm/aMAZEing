@@ -28,15 +28,6 @@ public class ControlStage extends Stage {
         this.batch = getBatch();
     }
 
-    @Override
-    public void act() {
-        super.act();
-
-
-
-    }
-
-
     private final static float STAR_WIDTH = 30, STAR_BAR_WIDTH = 200;
 
     Batch batch;

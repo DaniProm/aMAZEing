@@ -93,8 +93,6 @@ public class DoorActor extends GameActor {
 	}
 
 	public void open() {
-        //setVisible(false);
-
         setSensor(true);
 
 		timeOpen = 0;

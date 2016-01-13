@@ -32,7 +32,7 @@ public class WormholeActor extends GameActor {
 	private float active = 0;
 	private WormholeActor endpoint = null;
 
-	private float elapsedTime = 0f;
+	private float elapsedTime = (float)Math.random() * 1000;
 	private static final float MAGNIFY = 1f;
 	private static final float FONT_SCALE = 0.007f;
 
