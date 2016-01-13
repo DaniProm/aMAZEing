@@ -26,6 +26,7 @@ public class DoorActor extends GameActor {
 	public DoorActor() {
 		sprite = new Sprite(textureAtlasRegions.get(0));
 		setSize(1, 1);
+		setHorizontal(false);
 	}
 
 	{
@@ -54,14 +55,26 @@ public class DoorActor extends GameActor {
 
 	}
 
+	public void setHorizontal(boolean v)
+	{
+		if (v) {
+			sprite.setRotation(0);
+		}
+		else
+		{
+			sprite.setRotation(90);
+		}
+	}
+
+
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		if (timeOpen>=0)
 		{
-			if (animationFrame<textureAtlasRegions.size) {
-				sprite.setRegion(textureAtlasRegions.get(animationFrame));
+			if (animationFrame<textureAtlasRegions.size-1) {
 				animationFrame++;
+				sprite.setRegion(textureAtlasRegions.get(animationFrame));
 			}
 			timeOpen+=delta;
 		}
