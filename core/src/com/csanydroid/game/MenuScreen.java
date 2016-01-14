@@ -23,7 +23,7 @@ public class MenuScreen extends MyScreen{
 
     GameActor actor;
 
-    public MenuScreen(){
+	public MenuScreen() {
       super();
         stage = new Stage() {
             @Override

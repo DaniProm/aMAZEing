@@ -11,11 +11,10 @@ import java.util.ArrayDeque;
 /* Ez fog elnyelni*/
 public class BlackHoleActor extends GameActor {
 
-	protected static Texture texture = new Texture("black_hole.png");
 	private ArrayDeque<BallActor> balls = new ArrayDeque<BallActor>();
 
 	public BlackHoleActor() {
-		sprite = new Sprite(texture);
+		sprite = new Sprite(Assets.manager.get(Assets.BLACK_HOLE));
 		setSize(1, 1);
 	}
 
@@ -37,8 +36,5 @@ public class BlackHoleActor extends GameActor {
 		}
 
 	}
-
-	@Override
-	public void dispose() { }
 
 }

@@ -23,8 +23,6 @@ import java.util.ArrayDeque;
 
 public class WormholeActor extends GameActor {
 
-
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("teleport.atlas").getRegions();
 	protected static Animation animation;
 	private float stateTime = 0;
 
@@ -59,6 +57,9 @@ public class WormholeActor extends GameActor {
 	// protected static TextureAtlas textureAtlasTeleport;
 
 	public WormholeActor() {
+
+		final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.WORMHOLE_ATLAS).getRegions();
+
 		sprite = new Sprite(textureAtlasRegions.first());
 		sprite.setRegion(textureAtlasRegions.first());
 		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
@@ -163,8 +164,4 @@ public class WormholeActor extends GameActor {
 		}
 	}*/
 
-	@Override
-	public void dispose() {
-		sound.dispose();
-	}
 }

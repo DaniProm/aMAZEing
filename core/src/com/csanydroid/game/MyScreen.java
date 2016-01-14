@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
 public class MyScreen implements Screen {
 
 	protected final SpriteBatch batch = new SpriteBatch();
@@ -25,11 +24,10 @@ public class MyScreen implements Screen {
 	//protected Viewport viewport = new ScreenViewport(camera);
 	protected Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 	private static String CHARS = "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_*<>#&@{}[],-.";
-	protected static BitmapFont FONT_256_BYTES, FONT_HOBO_STD, FONT_HOBO_STD_TOP, FONT_CALIBRI;
+	protected static BitmapFont FONT_HOBO_STD, /*FONT_HOBO_STD_TOP, */FONT_CALIBRI;
 
-
-
-
+	public MyScreen() { }
+/*
 	protected static BitmapFont font;
 	static {
 
@@ -39,10 +37,10 @@ public class MyScreen implements Screen {
 		parameter.kerning = false;
 		parameter.color = Color.BLACK;
 		parameter.characters = CHARS;
-		font = generator.generateFont(parameter);
+		//font = generator.generateFont(parameter);
 		generator.dispose();
 
-	}
+	}*/
 
 	static {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
@@ -54,7 +52,7 @@ public class MyScreen implements Screen {
 		generator.dispose();
 	}
 
-	static {
+	/*static {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 55;
@@ -62,7 +60,7 @@ public class MyScreen implements Screen {
 		FONT_HOBO_STD_TOP = generator.generateFont(parameter);
 		FONT_HOBO_STD_TOP.setColor(0, 0, 0, 1f);
 		generator.dispose();
-	}
+	}*/
 
 	static {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
@@ -112,10 +110,6 @@ public class MyScreen implements Screen {
 		LABEL_STYLE2 = new Label.LabelStyle();
 		LABEL_STYLE2.font = FONT_HOBO_STD; //40
 		LABEL_STYLE2.fontColor = Color.WHITE;
-	}
-
-	public MyScreen() {
-
 	}
 
 	@Override

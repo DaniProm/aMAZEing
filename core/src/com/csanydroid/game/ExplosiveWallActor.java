@@ -8,28 +8,21 @@ import com.badlogic.gdx.utils.Array;
 
 public class ExplosiveWallActor extends WallActor {
 
-	// H: szerintem valami másik kép kellene, mert eléggé zavaró mozgás közben
-	protected static Texture texture = new Texture("expwall1.png");
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("boom1.atlas").getRegions();
-
 	protected final float strength;
 
 	private Animation explosionAnimation = null;
 	private float stateTime = 0;
 
 	public ExplosiveWallActor(float strength) {
-		sprite = new Sprite(texture);
+		sprite = new Sprite(Assets.manager.get(Assets.EXPLOSIVE_WALL));
 		sprite.setSize(1, 1);
 
 		this.strength = strength;
 	}
 
-	public float getStrength() {
-		return strength;
-	}
-
-	public void explode() {
-		explosionAnimation = new Animation(1 / 10f, textureAtlasRegions);
+	public void ballCollide(float externStrength) {
+		if(externStrength < this.strength) return;
+		explosionAnimation = new Animation(1 / 10f, Assets.manager.get(Assets.EXPLOSION_ATLAS).getRegions());
 	}
 
 	@Override

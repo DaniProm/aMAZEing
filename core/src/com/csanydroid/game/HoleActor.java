@@ -15,14 +15,12 @@ public class HoleActor extends GameActor {
 
 	private BallActor ballToSwallow;
 
-	protected static Texture texture = new Texture("hole.png");
-
 	public boolean hasSwallowedBall() {
 		return hasSwallowedBall;
 	}
 
 	public HoleActor() {
-		sprite = new Sprite(texture);
+		sprite = new Sprite(Assets.manager.get(Assets.HOLE));
 		setSize(1, 1);
 	}
 

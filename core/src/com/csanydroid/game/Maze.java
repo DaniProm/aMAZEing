@@ -351,7 +351,9 @@ public class Maze {
 	   if (!isUnlocked()) {
 		    throw new Exception("Maze is locked.");
 	    }
-*/
+		*/
+
+	    Gdx.app.log("maze", "begin play: " + getName());
 
 	    ((AmazingGame) Gdx.app.getApplicationListener())
 			    .setScreen(new GameScreen(this));

@@ -91,7 +91,7 @@ stage.setDebugAll(true);
 	    // gombok hozzáadása
 
 
-	    TextButton button = new TextButton("Vissza", MyScreen.TEXT_BUTTON_STYLE);
+	    TextButton button = new TextButton("Vissza", TEXT_BUTTON_STYLE);
 	    button.addListener(new ClickListener() {
 		    @Override
 		    public void clicked(InputEvent event, float x, float y) {

@@ -17,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
 
 // Disposable: Textúrák takarítása, de csak azok, amelyek nem statikusak!
-public abstract class GameActor extends Actor implements Disposable {
+public abstract class GameActor extends Actor {
+
+
 
 	protected float elapsedTime = 0;
 	protected Body body;
@@ -134,7 +136,6 @@ public abstract class GameActor extends Actor implements Disposable {
 	public void delete() {
 		detachWorld();
 		super.remove();
-		dispose();
 	}
 
 	public void applyWorld(World world, BodyDef.BodyType bodyType) {
@@ -174,8 +175,6 @@ public abstract class GameActor extends Actor implements Disposable {
 
 	}
 
-	@Override
-	public void dispose() { }
 
 	{
 		setBounds(0,0,1,1);

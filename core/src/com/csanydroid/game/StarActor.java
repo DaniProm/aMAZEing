@@ -1,9 +1,7 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -12,14 +10,14 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class StarActor extends GameActor {
-	private final Music music = Gdx.audio.newMusic(Gdx.files.internal("teleport.mp3"));
+	private final Music music = Assets.manager.get(Assets.STAR_MUSIC);
 
 	protected static Animation animation;
 	private float stateTime = 0;
 	private boolean hasCollected = false;
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("star.atlas").getRegions();
 
 	public StarActor() {
+		final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.STAR_ATLAS).getRegions();
 		sprite = new Sprite(textureAtlasRegions.first());
 		sprite.setRegion(textureAtlasRegions.first());
 		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
@@ -41,7 +39,7 @@ public class StarActor extends GameActor {
     @Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		sprite.setPosition(x + 0.25f, y+0.25f);
+		sprite.setPosition(x + 0.25f, y + 0.25f);
 	}
 
 	public void collect() {
@@ -70,11 +68,6 @@ public class StarActor extends GameActor {
 
 			//setVisible(false);
 		}
-	}
-
-	@Override
-	public void dispose() {
-		music.dispose();
 	}
 
 	@Override

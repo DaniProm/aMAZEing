@@ -12,12 +12,10 @@ import com.badlogic.gdx.utils.Array;
 
 public class DoorActor extends GameActor {
 
-	//protected static Texture texture = new Texture("ajto.png");
-	protected static Array<TextureAtlas.AtlasRegion> textureAtlasRegions = new TextureAtlas("AjtoAtlas.atlas").getRegions();
-	//TextureAtlas textureAtlasTeleport = new TextureAtlas("ajtoAtlas.atlas");
-	//Animation animationTeleport = new Animation(1 / 30f, textureAtlasTeleport.getRegions());
 	private float timeOpen = -1;
 	private int animationFrame=0;
+
+	private final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.DOOR_ATLAS).getRegions();
 
 	public DoorActor() {
 		sprite = new Sprite(textureAtlasRegions.first());

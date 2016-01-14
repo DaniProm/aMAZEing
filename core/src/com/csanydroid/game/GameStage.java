@@ -2,6 +2,8 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,6 +35,18 @@ import java.util.regex.Pattern;
 public class GameStage extends Stage implements GestureDetector.GestureListener {
 	private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
 	protected static BitmapFont scribbleFont;
+
+	@Override
+	public boolean keyDown(int keyCode) {
+		switch (keyCode) {
+			case Input.Keys.BACK:
+				((AmazingGame) Gdx.app.getApplicationListener())
+						.setScreen(new MenuScreen());
+				break;
+		}
+
+		return false;
+	}
 
 	static {
 		// http://www.fontsquirrel.com/fonts/list/language/hungarian
@@ -135,9 +149,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				                         } else if (other instanceof WormholeActor) {
 					                         ((WormholeActor) other).transportBall(ball);
 				                         } else if (other instanceof ExplosiveWallActor) {
-					                         if (ball.body.getLinearVelocity().len() >= ((ExplosiveWallActor) other).getStrength()) {
-						                         ((ExplosiveWallActor) other).explode();
-					                         }
+					                         ((ExplosiveWallActor) other).ballCollide(ball.body.getLinearVelocity().len());
 				                         } else if (other instanceof HoleActor) {
 					                         ((HoleActor) other).swallowBall(ball);
 				                         } else if (other instanceof StarActor) {
@@ -185,12 +197,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		super(viewport, batch);
 		this.maze = maze;
 		loadMaze(maze);
-		int bgsize = maze.getWidth() > maze.getHeight() ? maze.getWidth() : maze.getHeight();
-		Gdx.app.log("bgsize", bgsize + "");
-		BackgroundActor backgroundActor = new BackgroundActor();
-		backgroundActor.setSize(bgsize + 4, bgsize + 4);
-		backgroundActor.setPosition(-2f + (bgsize - maze.getWidth()) / 2, -bgsize - 2f + (bgsize - maze.getHeight()) / 2);
-		addActor(backgroundActor);
+
+		addActor(new BackgroundActor(maze));
 	}
 
 	public World getWorld() {

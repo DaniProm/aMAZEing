@@ -13,41 +13,36 @@ public class BallActor extends GameActor {
 
 	private float Timer = -1;
 	private float scale = 1;
-	protected static Array<Array<TextureAtlas.AtlasRegion>> textureAtlasRegions = new Array<Array<TextureAtlas.AtlasRegion>>();
-	static
-	{
-		textureAtlasRegions.add(new TextureAtlas("ballgreen.atlas").getRegions());
-		textureAtlasRegions.add(new TextureAtlas("ballred.atlas").getRegions());
-		textureAtlasRegions.add(new TextureAtlas("ballorange.atlas").getRegions());
-		textureAtlasRegions.add(new TextureAtlas("ballblue.atlas").getRegions());
-	}
-	protected static Texture textureLight = new Texture("balllight.png");
-	protected static Texture textureShadow = new Texture("ballshadow.png");
+	private final Array<TextureAtlas.AtlasRegion> textureAtlasRegions;
+
 	protected Sprite spriteLight;
 	protected Sprite spriteShadow;
 
-	private float prevBallPositionX=0f;
-	private float prevBallPositionY=0f;
+	private float prevBallPositionX=0, prevBallPositionY=0;
 	private float ballPictureRotation=0.8f;
-	private float prevBallAngle = 0f;
-	private float ballAngle = 0f;
+	private float ballAngle = 0, prevBallAngle = 0;
 	private boolean ballInverzeRotation = false;
-	private float targetRotation = 0f;
 
-	private static int createdBallsNumber = 0;
-	private int ballColorIndex = 0;
-
+	//private static int createdBallsNumber = 0;
 
 	private static final float ballZoom = 0.93f;
 
-
 	public BallActor() {
-		ballColorIndex = createdBallsNumber % textureAtlasRegions.size;
-		createdBallsNumber++;
-		sprite = new Sprite(textureAtlasRegions.get(ballColorIndex).first());
-		sprite.setRegion(textureAtlasRegions.get(ballColorIndex).first());
-		spriteLight = new Sprite(textureLight);
-		spriteShadow = new Sprite(textureShadow);
+		final TextureAtlas[] textureAtlases = new TextureAtlas[] {
+			 Assets.manager.get(Assets.BALL_BLUE_ATLAS),
+             Assets.manager.get(Assets.BALL_GREEN_ATLAS),
+             Assets.manager.get(Assets.BALL_ORANGE_ATLAS),
+             Assets.manager.get(Assets.BALL_RED_ATLAS),
+		};
+		//ballColorIndex = createdBallsNumber % textureAtlasRegions.size;
+
+		textureAtlasRegions = textureAtlases[(int)(Math.random() * textureAtlases.length)].getRegions();
+
+		//createdBallsNumber++;
+		sprite = new Sprite(textureAtlasRegions.first());
+		sprite.setRegion(textureAtlasRegions.first());
+		spriteLight = new Sprite(Assets.manager.get(Assets.BALL_LIGHT));
+		spriteShadow = new Sprite(Assets.manager.get(Assets.BALL_SHADOW));
 		setSize(1, 1);
 	}
 
@@ -125,14 +120,16 @@ public class BallActor extends GameActor {
 				ballInverzeRotation = !ballInverzeRotation;
 				//Gdx.app.log("Fordult", String.valueOf(ballInverzeRotation));
 			}
+
+			float targetRotation;
 			if (ballInverzeRotation) {
 				targetRotation = MathUtils.radiansToDegrees * ballAngle;
-				ballPictureRotation -= distance / (MathUtils.PI / (float)textureAtlasRegions.get(ballColorIndex).size);
+				ballPictureRotation -= distance / (MathUtils.PI / (float)textureAtlasRegions.size);
 			}
 			else
 			{
 				targetRotation = MathUtils.radiansToDegrees * ballAngle  - 180;
-				ballPictureRotation += distance / (MathUtils.PI / (float)textureAtlasRegions.get(ballColorIndex).size);
+				ballPictureRotation += distance / (MathUtils.PI / (float)textureAtlasRegions.size);
 			}
 
 			float rotation = targetRotation;
@@ -158,9 +155,9 @@ public class BallActor extends GameActor {
 
 			sprite.setRotation(rotation);
 			//sprite.setRotation(targetRotation);
-			if (ballPictureRotation < 0) ballPictureRotation= (float)textureAtlasRegions.get(ballColorIndex).size-0.00001f;
-			if (ballPictureRotation >= textureAtlasRegions.get(ballColorIndex).size) ballPictureRotation = 0f;
-			sprite.setRegion(textureAtlasRegions.get(ballColorIndex).get(((int) (ballPictureRotation))));
+			if (ballPictureRotation < 0) ballPictureRotation= (float)textureAtlasRegions.size-0.00001f;
+			if (ballPictureRotation >= textureAtlasRegions.size) ballPictureRotation = 0f;
+			sprite.setRegion(textureAtlasRegions.get(((int) (ballPictureRotation))));
 		}
 
 
