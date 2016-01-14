@@ -121,31 +121,42 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		isRunning = true;
 	}
 
+	private void gameFinished(boolean hasWon) {
+
+		try {
+			if(hasWon) {
+				maze.getNextMaze().beginPlay();
+			} else {
+				maze.beginPlay();
+			}
+
+		} catch (Exception e) {
+			Maze.createRandomMaze().beginPlay();
+			//((AmazingGame) Gdx.app.getApplicationListener())
+			//		.setScreen(new MenuScreen());
+		}
+
+	}
+
     public void removeBall(BallActor ball) {
 		Gdx.input.vibrate(250);
 		balls.remove(ball);
 
 		if (balls.size() == 0) {
-			try {
 
-				// vége a játéknak
-				if (everyHoleHasBall()) {
-					Gdx.app.log("játék", "Nyertem! :)");
-					maze.getNextMaze().beginPlay();
-				} else {
-					Gdx.app.log("játék", "Vesztettem!");
-					maze.beginPlay();
-				}
-
-			} catch (Exception e) {
-				Maze.createRandomMaze().beginPlay();
-				//((AmazingGame) Gdx.app.getApplicationListener())
-				//		.setScreen(new MenuScreen());
+			if (everyHoleHasBall()) {
+				Gdx.app.log("játék", "Nyertem! :)");
+				gameFinished(true);
+			} else {
+				Gdx.app.log("játék", "Vesztettem!");
+				gameFinished(false);
 			}
 
-
 			Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
+		} else if(balls.size() < maze.getBallsToSurvive()) {
+			gameFinished(false);
 		} else {
+
 			Gdx.app.log("játék", "Ajjaj! Kipukkadt egy lasztim...");
 		}
 	}
@@ -553,7 +564,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = Math.max(Math.min(initialDistance / distance, 2.5f), 1f / 2);
+		additionalZoom = Math.max(Math.min(initialDistance / distance, 2f), 1 / 2f);
 		// TODO
 		return false;
 	}

@@ -77,7 +77,7 @@ public class DoorActor extends GameActor {
 
 	public void open() {
         setSensor(true);
-
+Gdx.app.log("door", "open");
 		timeOpen = 0;
 
     }

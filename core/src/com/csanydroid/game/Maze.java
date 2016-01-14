@@ -77,19 +77,23 @@ public class Maze {
 
 	private int starsCount = 0;
 
+	// TODO adni neki egy normális nevet
     private int ballsToSurvive = 0;
 
+	public int getBallsToSurvive() {
+		return ballsToSurvive;
+	}
 
 	public static Maze createRandomMaze() {
-		return new Maze("A", "B", 10);
+		return new Maze("A", "B", 11 + (int)(Math.random() * 6));
 	}
 
 	private Maze(String name, String description, int size) {
 		this.name = name;
 		this.description = description;
 
-		this.width = size * 2 + 1;
-		this.height = size * 2 + 4;
+		this.width = 2 * size + 1;
+		this.height = 2 * size + 2;
 
 		final int [][] maze = new int[size][size];
 
@@ -98,7 +102,7 @@ public class Maze {
 		new MazeObject(ObjectType.BALL, 0, 0);
 
 		// doors
-		for(int n = (int)(Math.random() * size);n > 0;) {
+		for(int n = (int)(Math.random() * 1.8 * size);n > 0;) {
 			final int
 					x = (int)(Math.random() * size),
 					y = (int)(Math.random() * size);
@@ -116,7 +120,7 @@ public class Maze {
 		}
 
 		// stars
-		for(final int n = (int)(Math.random() * 4 * size);starsCount < n;) {
+		for(final int n = (int)(Math.random() * 3.5 * size);starsCount < n;) {
 			final int
 					x = (int)(Math.random() * size),
 					y = (int)(Math.random() * size);
@@ -133,7 +137,7 @@ public class Maze {
 		}
 
 		// puddles
-		for(int n = (int)(Math.random() * 3 * size);n > 0;) {
+		for(int n = (int)(Math.random() * 2.5 * size);n > 0;) {
 			final int
 					x = (int)(Math.random() * size),
 					y = (int)(Math.random() * size);

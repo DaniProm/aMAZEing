@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Array;
 
 public class StarActor extends GameActor {
@@ -22,6 +23,7 @@ public class StarActor extends GameActor {
 		sprite.setRegion(textureAtlasRegions.first());
 		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
+		setTouchable(Touchable.disabled);
 		music.setOnCompletionListener(new Music.OnCompletionListener() {
 			@Override
 			public void onCompletion(Music music) {
