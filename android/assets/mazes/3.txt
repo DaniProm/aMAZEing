@@ -1,8 +1,8 @@
 4. pálya - Ismerkedés az elemekkel, tócsa
 ............
-.       ~ *.
-.O ~<*~<*~<* X   .
-.          .
+.   *<~*<~*<~ ~ *.
+.O *<~*<~*<~ X   .
+.    *<~*<~*<~   .
 ............
 
 1,3:4 Ha érinted a tócsát, lelassulsz!

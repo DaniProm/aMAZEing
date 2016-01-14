@@ -35,6 +35,14 @@ public class Maze {
 
 	}
 
+	public Maze getNextMaze() {
+		return getMaze(getMazeIndex() + 1);
+	}
+
+	public static Maze getMaze(int index) {
+		return mazes.get(index);
+	}
+
 	public static ArrayList<Maze> getMazes() {
 		return mazes;
 	}
@@ -80,11 +88,14 @@ public class Maze {
 		this.name = name;
 		this.description = description;
 
-		new MazeObject(ObjectType.BALL, 0, 0);
+		this.width = size * 2 + 1;
+		this.height = size * 2 + 4;
 
 		final int [][] maze = new int[size][size];
 
 		generateMaze(0,0, maze, size);
+
+		new MazeObject(ObjectType.BALL, 0, 0);
 
 		// doors
 		for(int n = (int)(Math.random() * size);n > 0;) {
@@ -139,7 +150,7 @@ public class Maze {
 		}
 
 
-		// puddles
+
 		{
 			ArrayList<Character> chars = new ArrayList<Character>(Arrays.asList('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'));
 			Collections.shuffle(chars);
@@ -159,6 +170,7 @@ public class Maze {
 			}
 
 		}
+
 
 		for (int y = 0; y < size; y++) {
 
@@ -186,6 +198,7 @@ public class Maze {
 			new MazeObject(ObjectType.WALL, 2 * x, 2 * size - 1);
 		}
 
+
 		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size - 1);
 		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size);
 		new MazeObject(ObjectType.WALL, 2 * size - 3, 2 * size);
@@ -194,6 +207,8 @@ public class Maze {
 		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size + 1);
 		new MazeObject(ObjectType.DOOR, 2 * size - 2, 2 * size - 1);
 		new MazeObject(ObjectType.HOLE, 2 * size - 2, 2 * size);
+
+		adjustObjects();
 
 	}
 
@@ -328,17 +343,22 @@ public class Maze {
 
 		} catch (IOException ignored) { }
 
-        for (MazeObject object : this.objects) {
-            if(object.type == ObjectType.DOOR) {
+		adjustObjects();
+	}
 
-                MazeObject o1 = findMazeObject(object.getX() - 1, object.getY());
-                MazeObject o2 = findMazeObject(object.getX() + 1, object.getY());
-                boolean vertical = (o1 == null || o1.type != ObjectType.WALL) || (o2 == null || o2.type != ObjectType.WALL);
+	private void adjustObjects() {
 
-                object.setParams(new Object[] {!vertical});
+		for (MazeObject object : this.objects) {
+			if(object.type == ObjectType.DOOR) {
 
-            }
-        }
+				final MazeObject o1 = findMazeObject(object.getX() - 1, object.getY());
+				final MazeObject o2 = findMazeObject(object.getX() + 1, object.getY());
+				boolean vertical = (o1 == null || o1.type != ObjectType.WALL) || (o2 == null || o2.type != ObjectType.WALL);
+
+				object.setParams(new Object[] {!vertical});
+
+			}
+		}
 
 	}
 
@@ -346,14 +366,14 @@ public class Maze {
         return objects;
     }
 
-    public void beginPlay() throws Exception {
+    public void beginPlay() {
 	    /*
 	   if (!isUnlocked()) {
 		    throw new Exception("Maze is locked.");
 	    }
 		*/
 
-	    Gdx.app.log("maze", "begin play: " + getName());
+	    Gdx.app.log("játék maze", "begin play: " + getName());
 
 	    ((AmazingGame) Gdx.app.getApplicationListener())
 			    .setScreen(new GameScreen(this));

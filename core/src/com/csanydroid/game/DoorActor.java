@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 public class DoorActor extends GameActor {
 
 	private float timeOpen = -1;
-	private int animationFrame=0;
+	private int animationFrame = 0;
 
 	private final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.DOOR_ATLAS).getRegions();
 
@@ -32,21 +32,6 @@ public class DoorActor extends GameActor {
             }
         });
 
-        /*
-		addListener(new ActorGestureListener() {
-			@Override
-			public boolean longPress(Actor actor, float x, float y) {
-				delete();
-				return true;
-			}
-
-			@Override
-			public void fling(InputEvent event, float velocityX, float velocityY, int button) { }
-
-			@Override
-			public void zoom(InputEvent event, float initialDistance, float distance) { }
-		});
-*/
 	}
 
 	public void setOrientation(boolean horizontal)
@@ -94,15 +79,7 @@ public class DoorActor extends GameActor {
         setSensor(true);
 
 		timeOpen = 0;
-/*
-        timer.scheduleTask(new Timer.Task() {
-            @Override
-            public void run() {
 
-                setVisible(true);
-            }
-        }, 3);
-*/
     }
 
 }

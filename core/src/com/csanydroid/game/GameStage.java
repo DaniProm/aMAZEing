@@ -6,8 +6,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
@@ -21,14 +25,27 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,12 +57,14 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
 			case Input.Keys.BACK:
+			case Input.Keys.ESCAPE:
+
 				((AmazingGame) Gdx.app.getApplicationListener())
 						.setScreen(new MenuScreen());
 				break;
 		}
 
-		return false;
+		return true;
 	}
 
 	static {
@@ -89,18 +108,42 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
         return collectedStars;
     }
 
+	private boolean isRunning = true;
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void pause() {
+		isRunning = false;
+	}
+
+	public void resume() {
+		isRunning = true;
+	}
+
     public void removeBall(BallActor ball) {
 		Gdx.input.vibrate(250);
 		balls.remove(ball);
 
 		if (balls.size() == 0) {
-			// TODO to do
-			// vége a játéknak
-			if (everyHoleHasBall()) {
-				Gdx.app.log("játék", "Nyertem! :)");
-			} else {
-				Gdx.app.log("játék", "Vesztettem!");
+			try {
+
+				// vége a játéknak
+				if (everyHoleHasBall()) {
+					Gdx.app.log("játék", "Nyertem! :)");
+					maze.getNextMaze().beginPlay();
+				} else {
+					Gdx.app.log("játék", "Vesztettem!");
+					maze.beginPlay();
+				}
+
+			} catch (Exception e) {
+				Maze.createRandomMaze().beginPlay();
+				//((AmazingGame) Gdx.app.getApplicationListener())
+				//		.setScreen(new MenuScreen());
 			}
+
+
 			Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
 		} else {
 			Gdx.app.log("játék", "Ajjaj! Kipukkadt egy lasztim...");
@@ -266,56 +309,57 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public void act(float delta) {
-		if (world == null) return;
 
-        switch (Gdx.app.getType()) {
-            case Android:
-                world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
-                break;
-            case Desktop:
+		if(isRunning) {
 
-                if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-                    controlWithMouse = !controlWithMouse;
-                    Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
-                }
+			switch (Gdx.app.getType()) {
+				case Android:
+					world.setGravity(new Vector2(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX()));
+					break;
+				case Desktop:
 
-                if(!controlWithMouse) {
-                    Vector2 gravity = world.getGravity();
+					if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+						controlWithMouse = !controlWithMouse;
+						Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
+					}
 
-                    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                        gravity.x = 5;
-                    } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                        gravity.x = -5;
-                    } else {
-                        gravity.x = 0;
-                    }
+					if (!controlWithMouse) {
+						Vector2 gravity = world.getGravity();
 
-                    if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                        gravity.y = -5;
-                    } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                        gravity.y = 5;
-                    } else {
-                        gravity.y = 0;
-                    }
+						if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+							gravity.x = 5;
+						} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+							gravity.x = -5;
+						} else {
+							gravity.x = 0;
+						}
 
-                    world.setGravity(gravity);
-                } else {
+						if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+							gravity.y = -5;
+						} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+							gravity.y = 5;
+						} else {
+							gravity.y = 0;
+						}
 
-                    world.setGravity(new Vector2(
-                            ((float) Gdx.input.getX() / Gdx.graphics.getWidth() - .5f) * 20,
-                            -((float) Gdx.input.getY() / Gdx.graphics.getHeight() - .5f) * 20
-                    ));
+						world.setGravity(gravity);
+					} else {
 
-                }
+						world.setGravity(new Vector2(
+								                            ((float) Gdx.input.getX() / Gdx.graphics.getWidth() - .5f) * 20,
+								                            -((float) Gdx.input.getY() / Gdx.graphics.getHeight() - .5f) * 20
+						));
 
-                break;
-        }
+					}
+
+					break;
+			}
 
 
-		world.step(delta, 1, 1);
+			world.step(delta, 1, 1);
 
-		super.act(delta);
-
+			super.act(delta);
+		}
 
 	}
 
@@ -332,8 +376,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			holes.add((HoleActor) actor);
 		} else if (actor instanceof StarActor) {
 			++totalStars;
-		} else if (actor instanceof Scribble) {
-			actor.setZIndex(0);
 		}
 
 	}
@@ -345,7 +387,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 				if(o.getType() == Maze.ObjectType.SCRIBBLE) {
 					new Scribble((String)o.getParams()[0], o.getX(), o.getY(), (Integer)o.getParams()[1]);
-					return;
+					continue;
 				}
 
 				GameActor actor;
@@ -406,9 +448,45 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 				actor.applyWorld(world, bodyType);
 
-				addActor(actor);
+	            addActor(actor);
 
 			}
+/*
+		Collections.sort(actors, new Comparator<Actor>() {
+
+			public int getActorOrder(Actor a) {
+
+				 if(a instanceof BallActor) {
+					return 7;
+				} else if(a instanceof WallActor || a instanceof DoorActor) {
+					return 6;
+				} else if(a instanceof StarActor) {
+					return 5;
+				} else if(a instanceof HoleActor || a instanceof BlackHoleActor || a instanceof WormholeActor) {
+					return 4;
+				} else if (a instanceof PuddleActor) {
+					return 3;
+				} else if (a instanceof Scribble) {
+					return 2;
+				} else if (a instanceof BackgroundActor) {
+					return 1;
+				} else {
+					return 0;
+				}
+
+			}
+
+			@Override
+			public int compare(Actor a1, Actor a2) {
+				return -Integer.compare(getActorOrder(a1), getActorOrder(a2));
+			}
+
+		});
+
+		for(Actor actor : actors) {
+			addActor(actor);
+		}
+*/
 
 	}
 
@@ -475,7 +553,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = Math.min(initialDistance / distance, 2.5f);
+		additionalZoom = Math.max(Math.min(initialDistance / distance, 2.5f), 1f / 2);
 		// TODO
 		return false;
 	}

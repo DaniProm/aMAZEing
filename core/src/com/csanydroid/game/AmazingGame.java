@@ -15,6 +15,8 @@ public class AmazingGame extends Game implements ApplicationListener {
     @Override
 	public void create() {
 	    prefs = Gdx.app.getPreferences("AmazingGame");
+	    Gdx.input.setCatchBackKey(true);
+	    Gdx.input.setCatchMenuKey(true);
 
 	   setScreen(new LoadingScreen());
 	}

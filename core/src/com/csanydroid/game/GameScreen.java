@@ -22,7 +22,6 @@ public class GameScreen extends MyScreen {
 
 		GestureDetector gd = new GestureDetector(20, 0.5f, 2, 0.15f, gameStage);
 		InputMultiplexer im = new InputMultiplexer(gd, gameStage);
-
 		Gdx.input.setInputProcessor(im);
 
 	}
