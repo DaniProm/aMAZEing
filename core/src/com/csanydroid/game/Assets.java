@@ -15,6 +15,8 @@ public class Assets {
 
 	public static AssetManager manager;
 
+	public static final AssetDescriptor<TextureAtlas> LOADING_ATLAS
+			= new AssetDescriptor<TextureAtlas>("loading.atlas", TextureAtlas.class);
 
 	public static final AssetDescriptor<Texture> EXPLOSIVE_WALL
 			= new AssetDescriptor<Texture>("expwall1.png", Texture.class);
@@ -67,9 +69,14 @@ public class Assets {
 	public static final AssetDescriptor<Music> STAR_MUSIC
 			= new AssetDescriptor<Music>("teleport.mp3", Music.class);
 
-	public static void load() {
+	public static void prepare() {
+
 		manager = new AssetManager();
 		Texture.setAssetManager(manager);
+
+	}
+
+	public static void load() {
 
 		manager.load(WALL);
 		manager.load(PUDDLE);
@@ -88,6 +95,7 @@ public class Assets {
 		manager.load(BALL_SHADOW);
 		manager.load(BALL_LIGHT);
 		manager.load(BACKGROUND);
+
 	}
 
 	public static void unload() {
