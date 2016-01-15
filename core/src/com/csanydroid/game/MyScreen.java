@@ -26,6 +26,8 @@ public class MyScreen implements Screen {
 	private static String CHARS = "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_*<>#&@{}[],-.";
 	protected static BitmapFont FONT_HOBO_STD, /*FONT_HOBO_STD_TOP, */FONT_CALIBRI;
 
+     private float r=0.5f,g=0.5f,b=0.5f;
+
 	public MyScreen() { }
 /*
 	protected static BitmapFont font;
@@ -112,9 +114,16 @@ public class MyScreen implements Screen {
 		LABEL_STYLE2.fontColor = Color.WHITE;
 	}
 
+        public void setBackgroundColor(float r, float g, float b)
+        {
+            this.r=r;
+            this.g=g;
+            this.b=b;
+        }
+
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(.0f, .08f, .0f, 1);
+		    Gdx.gl.glClearColor(r, g, b, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.setProjectionMatrix(camera.combined);
