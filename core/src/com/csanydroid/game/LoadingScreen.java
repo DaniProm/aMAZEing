@@ -9,9 +9,9 @@ public class LoadingScreen extends MyScreen {
 
 	Stage stage;
 
-    public LoadingScreen() {
-        setBackgroundColor(0f,0f,0f);
-    }
+        public LoadingScreen() {
+            setBackgroundColor(0f,0f,0f);
+        }
 
     @Override
 	public void show() {

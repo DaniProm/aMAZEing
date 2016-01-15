@@ -21,7 +21,7 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
     TextButton button;
     MazeSelectorScreen(){
         super();
-        setBackgroundColor(0f,0.3f,0f);
+         setBackgroundColor(0f,0.3f,0f);
         stage = new Stage() {
             @Override
             public boolean keyDown(int keycode) {

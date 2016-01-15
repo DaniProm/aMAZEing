@@ -25,7 +25,7 @@ public class MenuScreen extends MyScreen{
 
 	public MenuScreen() {
       super();
-        setBackgroundColor(0.3f,0.8f,0.9f);
+         setBackgroundColor(0.3f,0.8f,0.9f);
 
         stage = new Stage() {
             @Override
