@@ -15,6 +15,8 @@ public class GameScreen extends MyScreen {
 
 	GameScreen(Maze maze) {
 		super();
+        setBackgroundColor(0f,0.3f,0f);
+
 		gameStage = new GameStage(viewport, batch, maze);
         gameStage.lookAtMaze(camera);
 

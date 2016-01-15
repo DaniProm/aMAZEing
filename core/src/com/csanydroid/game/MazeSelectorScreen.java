@@ -21,6 +21,7 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
     TextButton button;
     MazeSelectorScreen(){
         super();
+        setBackgroundColor(0f,0.3f,0f);
         stage = new Stage() {
             @Override
             public boolean keyDown(int keycode) {
@@ -92,12 +93,12 @@ stage.setDebugAll(true);
 
 
 	    TextButton button = new TextButton("Vissza", TEXT_BUTTON_STYLE);
-	    button.addListener(new ClickListener() {
-		    @Override
-		    public void clicked(InputEvent event, float x, float y) {
-			    System.out.println("Log: Klikk a 'Kilépés' gombra.");
-			    ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
-		    }
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Log: Klikk a 'Kilépés' gombra.");
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+            }
 	    });
 	    button.setPosition(0, 0);
 
