@@ -109,10 +109,10 @@ public class Maze {
 
 			if(Math.random() < .5) {
 				if ((maze[x][y] & 1) == 0) continue;
-				new MazeObject(ObjectType.DOOR, 2 * x, 2 * y - 1);
+				new MazeObject(ObjectType.DOOR, 2 * x, 2 * y - 1, false);
 			} else {
 				if ((maze[x][y] & 8) == 0) continue;
-				new MazeObject(ObjectType.DOOR, 2 * x - 1, 2 * y);
+				new MazeObject(ObjectType.DOOR, 2 * x - 1, 2 * y, false);
 			}
 
 			--n;
@@ -209,7 +209,7 @@ public class Maze {
 		new MazeObject(ObjectType.WALL, 2 * size - 3, 2 * size + 1);
 		new MazeObject(ObjectType.WALL, 2 * size - 2, 2 * size + 1);
 		new MazeObject(ObjectType.WALL, 2 * size - 1, 2 * size + 1);
-		new MazeObject(ObjectType.DOOR, 2 * size - 2, 2 * size - 1);
+		new MazeObject(ObjectType.DOOR, 2 * size - 2, 2 * size - 1, false);
 		new MazeObject(ObjectType.HOLE, 2 * size - 2, 2 * size);
 
 		adjustObjects();
@@ -255,6 +255,8 @@ public class Maze {
 		}
 	};
 
+	public static final int MAX_WORMHOLES = '9' - '1' + 1;
+	public static final int MAX_SWITCHES = 'F' - 'A' + 1;
 
 	private Maze(String name) {
 
@@ -269,7 +271,7 @@ public class Maze {
 			{
 				int y = 0;
 				while(null != (line = reader.readLine())) {
-					if (line.compareTo("") == 0) break;
+					if (line.trim().compareTo("") == 0) break;
 
 					y++;
 					int x = 0;
@@ -295,7 +297,7 @@ public class Maze {
 								new MazeObject(ObjectType.HOLE, x, y);
 								break;
 							case '%':
-								new MazeObject(ObjectType.DOOR, x, y);
+								new MazeObject(ObjectType.DOOR, x, y, false);
 								break;
 							case '@':
 								new MazeObject(ObjectType.BLACK_HOLE, x, y);
@@ -308,10 +310,18 @@ public class Maze {
 								break;
 							default:
 
-								if (ch >= 'a' && ch <= 'f') {
-									new MazeObject(ObjectType.WORMHOLE, x, y, ch - 'a');
-								} else if (ch >= 'A' && ch <= 'F') {
-									new MazeObject(ObjectType.WORMHOLE, x, y, ch - 'A');
+								if (ch >= '1' && ch <= '9') {
+									new MazeObject(ObjectType.WORMHOLE, x, y, ch - '0');
+
+								} else if (ch >= 'a' && ch <= 'g') {
+									new MazeObject(ObjectType.SWITCH, x, y, false, ch - 'a', false);
+								} else if (ch >= 'A' && ch <= 'G') {
+									new MazeObject(ObjectType.GATE, x, y, false, ch - 'A');
+
+								} else if (ch >= 'h' && ch <= 'n') {
+									new MazeObject(ObjectType.PUSH_BUTTON, x, y, ch - 'a', false);
+								} else if (ch >= 'H' && ch <= 'N') {
+									new MazeObject(ObjectType.GATE, x, y, false, ch - 'A');
 								}
 
 								break;
@@ -324,23 +334,49 @@ public class Maze {
 				this.height = y;
 			}
 
-			final Pattern pattern = Pattern.compile("(\\d+),(\\d+):(\\d) (.*)");
+			{
+				final Pattern pattern = Pattern.compile("(\\d+),(\\d+):(\\d) (.*)");
 
-			for (int i = 0; null != (line = reader.readLine()); i++) {
-				try {
-					Matcher matcher = pattern.matcher(line);
-					matcher.find();
+				for (int i = 0; null != (line = reader.readLine()); i++) {
+					if (line.trim().compareTo("") == 0) break;
+					try {
+						Matcher matcher = pattern.matcher(line);
+						matcher.find();
 
-					int x = Integer.parseInt(matcher.group(1));
-					int y = Integer.parseInt(matcher.group(2)) + 1;
-					int width = Integer.parseInt(matcher.group(3));
-					String caption = matcher.group(4);
+						int x = Integer.parseInt(matcher.group(1));
+						int y = Integer.parseInt(matcher.group(2)) + 1;
+						int width = Integer.parseInt(matcher.group(3));
+						String caption = matcher.group(4);
 
-					new MazeObject(ObjectType.SCRIBBLE, x, y, caption, width);
+						new MazeObject(ObjectType.SCRIBBLE, x, y, caption, width);
 
-				} catch(IllegalStateException ignored) {
+					} catch (IllegalStateException ignored) {
+					}
+
 				}
+			}
 
+			{
+				for (int i = 0; null != (line = reader.readLine()); i++) {
+					if (line.trim().compareTo("") == 0) break;
+					try {
+
+						final int j = line.charAt(0) - 'a';
+
+						MazeObject object = findButton(j);
+						if(object == null) continue;
+
+						final boolean param = Boolean.parseBoolean(line.substring(1).trim());
+						if(object.type == ObjectType.SWITCH) {
+							object.setParam(SWITCH_DEFAULTSTATE, param);
+						} else {
+							object.setParam(PUSHBUTTON_DEFAULTSTATE, param);
+						}
+
+					} catch (IllegalStateException ignored) {
+					}
+
+				}
 			}
 
 			reader.close();
@@ -353,14 +389,18 @@ public class Maze {
 	private void adjustObjects() {
 
 		for (MazeObject object : this.objects) {
-			if(object.type == ObjectType.DOOR) {
+			switch (object.type) {
+				case DOOR:
+				case GATE:
+				case SWITCH:
+				{
 
-				final MazeObject o1 = findMazeObject(object.getX() - 1, object.getY());
-				final MazeObject o2 = findMazeObject(object.getX() + 1, object.getY());
-				boolean vertical = (o1 == null || o1.type != ObjectType.WALL) || (o2 == null || o2.type != ObjectType.WALL);
+					final int
+							h = (findWall(object.getX() - 1, object.getY()) != null ? 1 : 0) + (findWall(object.getX() + 1, object.getY()) != null ? 1 : 0),
+							v = (findWall(object.getX(), object.getY() - 1) != null ? 1 : 0) + (findWall(object.getX(), object.getY() + 1) != null ? 1 : 0);
 
-				object.setParams(new Object[] {!vertical});
-
+					object.setParam(0, v >= h);
+				}
 			}
 		}
 
@@ -411,13 +451,46 @@ public class Maze {
         return mazes.indexOf(this);
     }
 
+	public static final int PUSHBUTTON_INDEX = 0;
+	public static final int GATE_ORIENTATION = 0;
+	public static final int DOOR_ORIENTATION = 0;
+	public static final int SWITCH_ORIENTATION = 0;
+	public static final int SWITCH_INDEX = 1;
+	public static final int PUSHBUTTON_DEFAULTSTATE = 1;
+	public static final int GATE_INDEX = 1;
+	public static final int SWITCH_DEFAULTSTATE = 2;
+
 	public enum ObjectType {
-		WALL, EXPLOSIVE_WALL, BALL, HOLE, BLACK_HOLE, WORMHOLE, PUDDLE, STAR, DOOR, SCRIBBLE;
+		WALL, EXPLOSIVE_WALL, BALL, HOLE, BLACK_HOLE, WORMHOLE, PUDDLE, STAR, DOOR, SCRIBBLE, SWITCH, PUSH_BUTTON, GATE;
 	}
 
-	public MazeObject findMazeObject(int x, int y) {
+
+	public MazeObject findButton(int i) {
 		for (MazeObject object : this.objects) {
-			if(object.x == x && object.y == y) return object;
+			switch (object.type) {
+				case SWITCH:
+					if((Integer)object.getParam(SWITCH_INDEX) == i) return object;
+					break;
+				case PUSH_BUTTON:
+					if((Integer)object.getParam(PUSHBUTTON_INDEX) == i) return object;
+					break;
+			}
+		}
+
+		return null;
+	}
+
+	public MazeObject findGate(int i) {
+		for (MazeObject object : this.objects) {
+			if(object.type == ObjectType.GATE && (Integer)object.getParam(GATE_INDEX) == i) return object;
+		}
+
+		return null;
+	}
+
+	public MazeObject findWall(int x, int y) {
+		for (MazeObject object : this.objects) {
+			if(object.x == x && object.y == y && object.type == ObjectType.WALL) return object;
 		}
 
 		return null;
@@ -447,10 +520,14 @@ public class Maze {
 		public Object[] getParams() {
 			return params;
 		}
+		public Object getParam(int i) { return params[i]; }
 
         public void setParams(Object[] params) {
             this.params = params;
         }
+		public void setParam(int i, Object o) {
+			this.params[i] = o;
+		}
 
         private MazeObject(ObjectType type, int x, int y, Object... params) {
 			this.type = type;

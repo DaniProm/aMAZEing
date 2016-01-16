@@ -2,18 +2,13 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -25,47 +20,18 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GameStage extends Stage implements GestureDetector.GestureListener {
+	protected static final Label.LabelStyle LABEL_STYLE;
+	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson
 	private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
 	protected static BitmapFont scribbleFont;
-
-	@Override
-	public boolean keyDown(int keyCode) {
-		switch (keyCode) {
-			case Input.Keys.BACK:
-			case Input.Keys.ESCAPE:
-
-				((AmazingGame) Gdx.app.getApplicationListener())
-						.setScreen(new MenuScreen());
-				break;
-		}
-
-		return true;
-	}
 
 	static {
 		// http://www.fontsquirrel.com/fonts/list/language/hungarian
@@ -80,93 +46,19 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-	protected static final Label.LabelStyle LABEL_STYLE;
-
-	static	{
+	static {
 		LABEL_STYLE = new Label.LabelStyle();
 		LABEL_STYLE.font = scribbleFont;
 	}
 
-	public World world = new World(Vector2.Zero, false);
-
 	private final ArrayList<BallActor> balls = new ArrayList<BallActor>();
 	private final ArrayList<HoleActor> holes = new ArrayList<HoleActor>();
-
-	public Maze getMaze() {
-		return maze;
-	}
-
 	private final Maze maze;
-
+	public World world = new World(Vector2.Zero, false);
+	boolean controlWithMouse = false;
 	private byte totalStars, collectedStars;
-
-	public void collectStar() {
-		++collectedStars;
-	}
-
-    public byte getCollectedStars() {
-        return collectedStars;
-    }
-
 	private boolean isRunning = true;
-	public boolean isRunning() {
-		return isRunning;
-	}
-
-	public void pause() {
-		isRunning = false;
-	}
-
-	public void resume() {
-		isRunning = true;
-	}
-
-	private void gameFinished(boolean hasWon) {
-
-		try {
-			if(hasWon) {
-				maze.getNextMaze().beginPlay();
-			} else {
-				maze.beginPlay();
-			}
-
-		} catch (Exception e) {
-			Maze.createRandomMaze().beginPlay();
-			//((AmazingGame) Gdx.app.getApplicationListener())
-			//		.setScreen(new MenuScreen());
-		}
-
-	}
-
-    public void removeBall(BallActor ball) {
-		Gdx.input.vibrate(250);
-		balls.remove(ball);
-
-		if (balls.size() == 0) {
-
-			if (everyHoleHasBall()) {
-				Gdx.app.log("játék", "Nyertem! :)");
-				gameFinished(true);
-			} else {
-				Gdx.app.log("játék", "Vesztettem!");
-				gameFinished(false);
-			}
-
-			Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
-		} else if(balls.size() < maze.getBallsToSurvive()) {
-			gameFinished(false);
-		} else {
-
-			Gdx.app.log("játék", "Ajjaj! Kipukkadt egy lasztim...");
-		}
-	}
-
-	private boolean everyHoleHasBall() {
-		for (HoleActor hole : holes) {
-			if (!hole.hasSwallowedBall()) return false;
-		}
-		return true;
-	}
+	private float additionalZoom = 1;
 
 	{
 
@@ -208,8 +100,27 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         ((HoleActor) other).swallowBall(ball);
 				                         } else if (other instanceof StarActor) {
 					                         ((StarActor) other).collect();
+				                         } else if (other instanceof SwitchActor) {
+					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
+					                         if(((SwitchActor) other).isHorizontal()) {
+						                         if(side == 0 || side == 2)
+							                         ((SwitchActor) other).setState((side == 0) == ((SwitchActor) other).isFlipped());
+					                         } else {
+						                         if(side == 1 || side == 3)
+							                         ((SwitchActor) other).setState((side == 1) == ((SwitchActor) other).isFlipped());
+					                         }
+				                         } else if (other instanceof PushButtonActor) {
+					                         ((PushButtonActor) other).setState(true);
 				                         }
 
+			                         }
+
+
+
+			                         public int angleToSide(Vector2 posA, Vector2 posB) {
+				                         float angle = (float)Math.atan2(posB.y - posA.y, posB.x - posA.x);
+				                         if (angle < 0) angle += MathUtils.PI2;
+				                         return  (((int)(angle / (MathUtils.PI / 4)) + 1) / 2) % 4;
 			                         }
 
 			                         @Override
@@ -231,6 +142,17 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 				                         if (other instanceof PuddleActor) {
 					                         ball.body.setLinearDamping(0);
+				                         } else if (other instanceof SwitchActor) {
+					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
+					                         if(((SwitchActor) other).isHorizontal()) {
+						                         if(side == 0 || side == 2)
+							                         ((SwitchActor) other).setState((side == 0) == ((SwitchActor) other).isFlipped());
+					                         } else {
+						                         if(side == 1 || side == 3)
+							                         ((SwitchActor) other).setState((side == 1) == ((SwitchActor) other).isFlipped());
+					                         }
+				                         } else if (other instanceof PushButtonActor) {
+					                         ((PushButtonActor) other).setState(false);
 				                         }
 
 			                         }
@@ -255,16 +177,100 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		addActor(new BackgroundActor(maze));
 	}
 
+	@Override
+	public boolean keyDown(int keyCode) {
+		switch (keyCode) {
+			case Input.Keys.BACK:
+			case Input.Keys.ESCAPE:
+				// TODO párbeszéd ablak mutatása
+				((AmazingGame) Gdx.app.getApplicationListener())
+						.setScreen(new MenuScreen());
+				break;
+		}
+
+		return true;
+	}
+
+	public Maze getMaze() {
+		return maze;
+	}
+
+	public void collectStar() {
+		++collectedStars;
+	}
+
+	public byte getCollectedStars() {
+		return collectedStars;
+	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void pause() {
+		isRunning = false;
+	}
+
+	public void resume() {
+		isRunning = true;
+	}
+
+	private void gameFinished(boolean hasWon) {
+
+		try {
+			if (hasWon) {
+				maze.getNextMaze().beginPlay();
+			} else {
+				maze.beginPlay();
+			}
+
+		} catch (Exception e) {
+			Maze.createRandomMaze().beginPlay();
+			//((AmazingGame) Gdx.app.getApplicationListener())
+			//		.setScreen(new MenuScreen());
+		}
+
+	}
+
+	public void removeBall(BallActor ball) {
+		Gdx.input.vibrate(250);
+		balls.remove(ball);
+
+		if (balls.size() == 0) {
+
+			if (countEmptyHoles() == 0) {
+				Gdx.app.log("játék", "Nyertem! :)");
+				gameFinished(true);
+			} else {
+				Gdx.app.log("játék", "Vesztettem!");
+				gameFinished(false);
+			}
+
+			Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
+		} else if (balls.size() < maze.getBallsToSurvive() || balls.size() < countEmptyHoles()) {
+			gameFinished(false);
+		} else {
+
+			Gdx.app.log("játék", "Ajjaj! Kipukkadt egy lasztim...");
+		}
+	}
+
+	private int countEmptyHoles() {
+		int count = 0;
+		for (HoleActor hole : holes) {
+			if (!hole.hasSwallowedBall()) ++count;
+		}
+		return count;
+	}
+
 	public World getWorld() {
 		return world;
 	}
 
-	static final float BALL_HORIZON = 2.5f; // a golyónál hányszor nagyobb teret lásson
-
 	public void lookAtMaze(final OrthographicCamera camera) {
-        camera.position.x = maze.getWidth() / 2f;
-        camera.position.y = maze.getHeight() / -2f;
-        camera.zoom = Math.max(maze.getHeight() / camera.viewportHeight, maze.getWidth() / camera.viewportWidth);
+		camera.position.x = maze.getWidth() / 2f;
+		camera.position.y = maze.getHeight() / -2f;
+		camera.zoom = Math.max(maze.getHeight() / camera.viewportHeight, maze.getWidth() / camera.viewportWidth);
 	}
 
 	public void updateCamera(final OrthographicCamera camera) {
@@ -309,19 +315,15 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			camera.zoom += (newValue - camera.zoom) / 30f;
 
 		} else {
-            lookAtMaze(camera);
-        }
+			lookAtMaze(camera);
+		}
 
 	}
-
-	private float additionalZoom = 1;
-
-    boolean controlWithMouse = false;
 
 	@Override
 	public void act(float delta) {
 
-		if(isRunning) {
+		if (isRunning) {
 
 			switch (Gdx.app.getType()) {
 				case Android:
@@ -374,7 +376,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	}
 
-@Override
+	@Override
 	public void addActor(Actor actor) {
 		super.addActor(actor);
 
@@ -393,140 +395,124 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	private void loadMaze(Maze maze) {
 
-        WormholeActor[] wormholes = new WormholeActor['F' - 'A' + 1];
-        for (Maze.MazeObject o : maze.getObjects()) {
+		WormholeActor[] wormholes = new WormholeActor[Maze.MAX_WORMHOLES];
+		GameActor[] gatesAndButtons = new GameActor[Maze.MAX_SWITCHES * 2];
 
-				if(o.getType() == Maze.ObjectType.SCRIBBLE) {
-					new Scribble((String)o.getParams()[0], o.getX(), o.getY(), (Integer)o.getParams()[1]);
-					continue;
-				}
+		for (Maze.MazeObject o : maze.getObjects()) {
 
-				GameActor actor;
-				BodyDef.BodyType bodyType;
-
-				switch (o.getType()) {
-					case WALL:
-						actor = new WallActor();
-						bodyType = BodyDef.BodyType.StaticBody;
-						break;
-					case EXPLOSIVE_WALL:
-						actor = new ExplosiveWallActor((Float)o.getParams()[0]);
-						bodyType = BodyDef.BodyType.StaticBody;
-						break;
-					case BALL:
-						actor = new BallActor();
-						bodyType = BodyDef.BodyType.DynamicBody;
-						break;
-					case HOLE:
-						actor = new HoleActor();
-						bodyType = BodyDef.BodyType.KinematicBody;
-						break;
-					case BLACK_HOLE:
-						actor = new BlackHoleActor();
-						bodyType = BodyDef.BodyType.KinematicBody;
-						break;
-					case WORMHOLE:
-						int j = (Integer)o.getParams()[0];
-						actor = new WormholeActor();
-						bodyType = BodyDef.BodyType.KinematicBody;
-
-						if (wormholes[j] == null) {
-							wormholes[j] = (WormholeActor) actor;
-						} else {
-							((WormholeActor) actor).setEndpoint(wormholes[j]);
-							wormholes[j].setEndpoint((WormholeActor) actor);
-						}
-
-						break;
-					case PUDDLE:
-						actor = new PuddleActor();
-						bodyType = BodyDef.BodyType.KinematicBody;
-						break;
-					case STAR:
-						actor = new StarActor();
-						bodyType = BodyDef.BodyType.KinematicBody;
-						break;
-					case DOOR:
-						actor = new DoorActor();
-                        ((DoorActor)actor).setOrientation((Boolean)o.getParams()[0]);
-						bodyType = BodyDef.BodyType.StaticBody;
-						break;
-					default:
-						return;
-				}
-
-				actor.setPosition(o.getX(), -o.getY());
-
-				actor.applyWorld(world, bodyType);
-
-	            addActor(actor);
-
-			}
-/*
-		Collections.sort(actors, new Comparator<Actor>() {
-
-			public int getActorOrder(Actor a) {
-
-				 if(a instanceof BallActor) {
-					return 7;
-				} else if(a instanceof WallActor || a instanceof DoorActor) {
-					return 6;
-				} else if(a instanceof StarActor) {
-					return 5;
-				} else if(a instanceof HoleActor || a instanceof BlackHoleActor || a instanceof WormholeActor) {
-					return 4;
-				} else if (a instanceof PuddleActor) {
-					return 3;
-				} else if (a instanceof Scribble) {
-					return 2;
-				} else if (a instanceof BackgroundActor) {
-					return 1;
-				} else {
-					return 0;
-				}
-
+			if (o.getType() == Maze.ObjectType.SCRIBBLE) {
+				new Scribble((String) o.getParams()[0], o.getX(), o.getY(), (Integer) o.getParams()[1]);
+				continue;
 			}
 
-			@Override
-			public int compare(Actor a1, Actor a2) {
-				return -Integer.compare(getActorOrder(a1), getActorOrder(a2));
+			GameActor actor;
+			BodyDef.BodyType bodyType;
+
+			switch (o.getType()) {
+				case WALL:
+					actor = new WallActor();
+					bodyType = BodyDef.BodyType.StaticBody;
+					break;
+				case EXPLOSIVE_WALL:
+					actor = new ExplosiveWallActor((Float) o.getParams()[0]);
+					bodyType = BodyDef.BodyType.StaticBody;
+					break;
+				case BALL:
+					actor = new BallActor();
+					bodyType = BodyDef.BodyType.DynamicBody;
+					break;
+				case HOLE:
+					actor = new HoleActor();
+					bodyType = BodyDef.BodyType.KinematicBody;
+					break;
+				case BLACK_HOLE:
+					actor = new BlackHoleActor();
+					bodyType = BodyDef.BodyType.KinematicBody;
+					break;
+				case WORMHOLE: {
+					actor = new WormholeActor();
+					bodyType = BodyDef.BodyType.KinematicBody;
+
+					final int j = (Integer) o.getParams()[0];
+					if (wormholes[j] == null) {
+						wormholes[j] = (WormholeActor) actor;
+					} else {
+						((WormholeActor) actor).setEndpoint(wormholes[j]);
+						wormholes[j].setEndpoint((WormholeActor) actor);
+					}
+				}
+				break;
+				case PUDDLE:
+					actor = new PuddleActor();
+					bodyType = BodyDef.BodyType.KinematicBody;
+					break;
+				case STAR:
+					actor = new StarActor();
+					bodyType = BodyDef.BodyType.KinematicBody;
+					break;
+				case DOOR:
+					actor = new DoorActor();
+					((DoorActor) actor).setOrientation(!(Boolean) o.getParam(Maze.DOOR_ORIENTATION));
+					bodyType = BodyDef.BodyType.StaticBody;
+					break;
+				case GATE: {
+					actor = new GateActor();
+					((GateActor) actor).setOrientation(!(Boolean) o.getParam(Maze.GATE_ORIENTATION));
+					bodyType = BodyDef.BodyType.StaticBody;
+
+					final int j = (Integer) o.getParam(Maze.GATE_INDEX);
+					if (gatesAndButtons[j] == null) {
+						gatesAndButtons[j] = actor;
+					} else {
+						((ButtonActor) gatesAndButtons[j]).setGate((GateActor) actor);
+					}
+
+				}
+				break;
+
+				case PUSH_BUTTON: {
+					actor = new PushButtonActor();
+
+					((PushButtonActor) actor).setDefaultState((Boolean) o.getParam(Maze.PUSHBUTTON_DEFAULTSTATE));
+					bodyType = BodyDef.BodyType.KinematicBody;
+
+					final int j = (Integer) o.getParams()[Maze.PUSHBUTTON_INDEX];
+					if (gatesAndButtons[j] == null) {
+						gatesAndButtons[j] = actor;
+					} else {
+						((PushButtonActor) actor).setGate((GateActor) gatesAndButtons[j]);
+					}
+				}
+				break;
+				case SWITCH: {
+
+					actor = new SwitchActor();
+
+					((SwitchActor) actor).setDefaultState((Boolean) o.getParam(Maze.SWITCH_DEFAULTSTATE));
+					((SwitchActor) actor).setOrientation((Boolean) o.getParam(Maze.SWITCH_ORIENTATION));
+					bodyType = BodyDef.BodyType.KinematicBody;
+
+					final int j = (Integer) o.getParam(Maze.SWITCH_INDEX);
+					if (gatesAndButtons[j] == null) {
+						gatesAndButtons[j] = actor;
+					} else {
+						((SwitchActor) actor).setGate((GateActor) gatesAndButtons[j]);
+					}
+				}
+				break;
+				default:
+					return;
 			}
 
-		});
+			actor.setPosition(o.getX(), -o.getY());
 
-		for(Actor actor : actors) {
+			actor.applyWorld(world, bodyType);
+
 			addActor(actor);
-		}
-*/
 
-	}
-
-	private class Scribble extends Label {
-
-		private float elapsedTime = 0f;
-		private static final float MAGNIFY = 0.0005f;
-		private static final float FONT_SCALE = 0.007f; //Ennyin volt jó...
-
-		@Override
-		public void act(float delta) {
-			elapsedTime += delta;
-			super.act(delta);
-			setFontScale(FONT_SCALE + (float)Math.sin(elapsedTime * 5.0f) * MAGNIFY);
-		}
-
-		Scribble(String text, int x, int y, int width) {
-			super(text, LABEL_STYLE);
-
-			setFontScale(FONT_SCALE);
-			setPosition(x, -y);
-			setSize(width, 1);
-			setAlignment(Align.center);
-			setWrap(true);
-			setVisible(true);
-			setColor(.9f, .9f, .9f, 1);
-			addActor(this);
 
 		}
+
 	}
 
 	@Override
@@ -573,5 +559,33 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 		//Gdx.app.log("stage", "pinch");
 		return false;
+	}
+
+	private class Scribble extends Label {
+
+		private static final float MAGNIFY = 0.0005f;
+		private static final float FONT_SCALE = 0.007f; //Ennyin volt jó...
+		private float elapsedTime = 0f;
+
+		Scribble(String text, int x, int y, int width) {
+			super(text, LABEL_STYLE);
+
+			setFontScale(FONT_SCALE);
+			setPosition(x, -y);
+			setSize(width, 1);
+			setAlignment(Align.center);
+			setWrap(true);
+			setVisible(true);
+			setColor(.9f, .9f, .9f, 1);
+			addActor(this);
+
+		}
+
+		@Override
+		public void act(float delta) {
+			elapsedTime += delta;
+			super.act(delta);
+			setFontScale(FONT_SCALE + (float) Math.sin(elapsedTime * 5.0f) * MAGNIFY);
+		}
 	}
 }

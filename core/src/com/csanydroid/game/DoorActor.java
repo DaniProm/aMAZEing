@@ -10,20 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
-public class DoorActor extends GameActor {
+public class DoorActor extends GateActor {
 
-	private float timeOpen = -1;
-	private int animationFrame = 0;
-
-	private final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.DOOR_ATLAS).getRegions();
-
-	public DoorActor() {
-		sprite = new Sprite(textureAtlasRegions.first());
-		setSize(1, 1);
-	}
+	private float timeSinceOpened;
 
     {
-
 		setTouchable(Touchable.enabled);
 		addListener(new ClickListener() {
             @Override
@@ -31,55 +22,21 @@ public class DoorActor extends GameActor {
                 open();
             }
         });
-
 	}
-
-	public void setOrientation(boolean horizontal)
-	{
-		if (horizontal) {
-			sprite.setRotation(0);
-		} else {
-			sprite.setRotation(90);
-		}
-	}
-
 
 	@Override
 	public void act(float delta) {
+		if(state == State.OPENED) {
+			timeSinceOpened += delta;
+			if(timeSinceOpened > 3) tryClose();
+		}
 		super.act(delta);
-
-		if (timeOpen >= 0)
-		{
-            // nyitódik
-			if (animationFrame < textureAtlasRegions.size - 1) {
-				animationFrame++;
-				sprite.setRegion(textureAtlasRegions.get(animationFrame));
-			}
-
-			timeOpen += delta;
-		}
-
-		if (timeOpen > 3) {
-            if(!isTouchBall()) {
-                timeOpen = -1;
-               setSensor(false);
-            }
-		} else if (timeOpen < 0) {
-            // csukódik
-			if (animationFrame > 0)
-			{
-				animationFrame--;
-				sprite.setRegion(textureAtlasRegions.get(animationFrame));
-			}
-		}
 
 	}
 
+	@Override
 	public void open() {
-        setSensor(true);
-Gdx.app.log("door", "open");
-		timeOpen = 0;
-
-    }
-
+		super.open();
+		timeSinceOpened = 0;
+	}
 }

@@ -34,14 +34,12 @@ public abstract class GameActor extends Actor {
             final Fixture fixtureA = contact.getFixtureA(), fixtureB = contact.getFixtureB();
 
             if(fixtureA.getBody().getUserData() == this) {
-                if(fixtureB.getBody().getUserData() instanceof BallActor) {
-                    return true;
-                }
+                if(fixtureB.getBody().getUserData() instanceof BallActor)
+	                return true;
 
             } else if(fixtureB.getBody().getUserData() == this) {
-                if(fixtureA.getBody().getUserData() instanceof BallActor) {
-                    return true;
-                }
+                if(fixtureA.getBody().getUserData() instanceof BallActor)
+	                return true;
 
             }
 

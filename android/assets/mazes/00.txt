@@ -1,0 +1,17 @@
+Kaplcsóóka
+..........
+.  I<a  BAX.
+.O i c ...
+.  h    @.
+...H.C....
+  .b. .
+  .  *.
+  .....
+
+1,3:2 Kapcsolgass!
+
+h false
+a false
+b false
+c false
+i true

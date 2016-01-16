@@ -60,8 +60,17 @@ public class Assets {
 	public static final AssetDescriptor<TextureAtlas> BALL_BLUE_ATLAS
 			= new AssetDescriptor<TextureAtlas>("ballblue.atlas", TextureAtlas.class);
 
+	public static final AssetDescriptor<TextureAtlas> SWITCH_ATLAS
+			= new AssetDescriptor<TextureAtlas>("switch.atlas", TextureAtlas.class);
+
 	public static final AssetDescriptor<Texture> BALL_SHADOW
 			= new AssetDescriptor<Texture>("ballshadow.png", Texture.class);
+
+
+	public static final AssetDescriptor<Texture> PUSH_BUTTON
+			= new AssetDescriptor<Texture>("push_button.png", Texture.class);
+	public static final AssetDescriptor<Texture> PUSH_BUTTON2
+			= new AssetDescriptor<Texture>("push_button2.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> BALL_LIGHT
 			= new AssetDescriptor<Texture>("balllight.png", Texture.class);
@@ -78,6 +87,9 @@ public class Assets {
 
 	public static void load() {
 
+		manager.load(SWITCH_ATLAS);
+		manager.load(PUSH_BUTTON);
+		manager.load(PUSH_BUTTON2);
 		manager.load(WALL);
 		manager.load(PUDDLE);
 		manager.load(EXPLOSIVE_WALL);
