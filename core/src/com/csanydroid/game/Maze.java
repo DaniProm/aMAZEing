@@ -314,7 +314,7 @@ public class Maze {
 									new MazeObject(ObjectType.WORMHOLE, x, y, ch - '0');
 
 								} else if (ch >= 'a' && ch <= 'g') {
-									new MazeObject(ObjectType.SWITCH, x, y, false, ch - 'a', false);
+									new MazeObject(ObjectType.SWITCH, x, y, false, ch - 'a', false, false);
 								} else if (ch >= 'A' && ch <= 'G') {
 									new MazeObject(ObjectType.GATE, x, y, false, ch - 'A');
 
@@ -366,11 +366,12 @@ public class Maze {
 						MazeObject object = findButton(j);
 						if(object == null) continue;
 
-						final boolean param = Boolean.parseBoolean(line.substring(1).trim());
+						final String[] params = line.substring(1).trim().split(",");
 						if(object.type == ObjectType.SWITCH) {
-							object.setParam(SWITCH_DEFAULTSTATE, param);
+							object.setParam(SWITCH_DEFAULTSTATE, Boolean.parseBoolean(params[0].trim()));
+							object.setParam(SWITCH_REVERSED, Boolean.parseBoolean(params[1].trim()));
 						} else {
-							object.setParam(PUSHBUTTON_DEFAULTSTATE, param);
+							object.setParam(PUSHBUTTON_DEFAULTSTATE, Boolean.parseBoolean(params[0].trim()));
 						}
 
 					} catch (IllegalStateException ignored) {
@@ -459,6 +460,7 @@ public class Maze {
 	public static final int PUSHBUTTON_DEFAULTSTATE = 1;
 	public static final int GATE_INDEX = 1;
 	public static final int SWITCH_DEFAULTSTATE = 2;
+	public static final int SWITCH_REVERSED = 3;
 
 	public enum ObjectType {
 		WALL, EXPLOSIVE_WALL, BALL, HOLE, BLACK_HOLE, WORMHOLE, PUDDLE, STAR, DOOR, SCRIBBLE, SWITCH, PUSH_BUTTON, GATE;

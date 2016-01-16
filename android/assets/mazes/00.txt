@@ -11,7 +11,7 @@ Kaplcsóóka
 1,3:2 Kapcsolgass!
 
 h false
-a false
-b false
-c false
+a false, false
+b false, true
+c false, true
 i true

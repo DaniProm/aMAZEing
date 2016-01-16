@@ -104,10 +104,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
 					                         if(((SwitchActor) other).isHorizontal()) {
 						                         if(side == 0 || side == 2)
-							                         ((SwitchActor) other).setState((side == 0) == ((SwitchActor) other).isFlipped());
+							                         ((SwitchActor) other).setState((side == 0) == ((SwitchActor) other).isReversed());
 					                         } else {
 						                         if(side == 1 || side == 3)
-							                         ((SwitchActor) other).setState((side == 1) == ((SwitchActor) other).isFlipped());
+							                         ((SwitchActor) other).setState((side == 1) == ((SwitchActor) other).isReversed());
 					                         }
 				                         } else if (other instanceof PushButtonActor) {
 					                         ((PushButtonActor) other).setState(true);
@@ -146,10 +146,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
 					                         if(((SwitchActor) other).isHorizontal()) {
 						                         if(side == 0 || side == 2)
-							                         ((SwitchActor) other).setState((side == 0) == ((SwitchActor) other).isFlipped());
+							                         ((SwitchActor) other).setState((side == 0) == ((SwitchActor) other).isReversed());
 					                         } else {
 						                         if(side == 1 || side == 3)
-							                         ((SwitchActor) other).setState((side == 1) == ((SwitchActor) other).isFlipped());
+							                         ((SwitchActor) other).setState((side == 1) == ((SwitchActor) other).isReversed());
 					                         }
 				                         } else if (other instanceof PushButtonActor) {
 					                         ((PushButtonActor) other).setState(false);
@@ -490,6 +490,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 					((SwitchActor) actor).setDefaultState((Boolean) o.getParam(Maze.SWITCH_DEFAULTSTATE));
 					((SwitchActor) actor).setOrientation((Boolean) o.getParam(Maze.SWITCH_ORIENTATION));
+
+					((SwitchActor) actor).setIsReversed((Boolean) o.getParam(Maze.SWITCH_REVERSED));
 					bodyType = BodyDef.BodyType.KinematicBody;
 
 					final int j = (Integer) o.getParam(Maze.SWITCH_INDEX);

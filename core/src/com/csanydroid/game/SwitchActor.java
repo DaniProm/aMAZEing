@@ -15,11 +15,11 @@ public class SwitchActor extends ButtonActor {
 		setSize(1, 1);
 	}
 
-	private boolean orientation;
+	private boolean orientation, isReversed;
 
 
-	public boolean isFlipped() {
-		return flipped;
+	public boolean isReversed() {
+		return this.isReversed;
 	}
 
 	private boolean isPushButton = false;
@@ -29,15 +29,12 @@ public class SwitchActor extends ButtonActor {
 		return super.getShape();
 	}
 
-	private boolean flipped;
-
 	public boolean isHorizontal() {
 		return orientation;
 	}
 
-	public void setFlipped(boolean flipped) {
-		this.flipped = flipped;
-		sprite.setFlip(this.orientation && flipped, !(this.orientation && flipped));
+	public void setIsReversed(boolean reversed) {
+		this.isReversed = reversed;
 	}
 
 	public void setOrientation(boolean horizontal) {
@@ -46,17 +43,21 @@ public class SwitchActor extends ButtonActor {
 
 	}
 
-	private Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.SWITCH_ATLAS).getRegions();
+	private final TextureAtlas textureAtlasRegions = Assets.manager.get(Assets.SWITCH_ATLAS);
 
 	@Override
 	public void setState(boolean state) {
 		if(state) {
 			gate.open();
-			sprite.setRegion(textureAtlasRegions.get(0));
 		} else {
 			gate.tryClose();
-			sprite.setRegion(textureAtlasRegions.get(1));
 		}
+
+		sprite.setRegion(textureAtlasRegions.findRegion(state ? "opened" : "closed"));
+
+		sprite.setFlip(this.isReversed, false);
+
+		//sprite.setFlip(!this.orientation && this.isReversed, this.orientation && this.isReversed);
 	}
 
 }

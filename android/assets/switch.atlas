@@ -2,14 +2,14 @@ switches.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-0
+opened
   rotate: false
   xy: 0, 0
   size: 188, 188
   orig: 188, 188
   offset: 0, 0
   index: -1
-1
+closed
   rotate: false
   xy: 188, 0
   size: 188, 188

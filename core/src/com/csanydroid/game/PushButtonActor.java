@@ -18,7 +18,6 @@ public class PushButtonActor extends ButtonActor {
 	@Override
 	public void setState(boolean state) {
 
-		Gdx.app.log("push-button-state", (this.defaultState != state) + "");
 		if(this.defaultState != state) {
 			gate.open();
 			sprite.setRegion(Assets.manager.get(Assets.PUSH_BUTTON));
