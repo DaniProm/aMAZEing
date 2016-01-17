@@ -36,6 +36,9 @@ public class Assets {
 	public static final AssetDescriptor<Texture> PUDDLE
 			= new AssetDescriptor<Texture>("mud_puddle.png", Texture.class);
 
+	public static final AssetDescriptor<Texture> WINDOW
+			= new AssetDescriptor<Texture>("window.png", Texture.class);
+
 	public static final AssetDescriptor<TextureAtlas> WORMHOLE_ATLAS
 			= new AssetDescriptor<TextureAtlas>("teleport.atlas", TextureAtlas.class);
 
@@ -107,6 +110,7 @@ public class Assets {
 		manager.load(BALL_SHADOW);
 		manager.load(BALL_LIGHT);
 		manager.load(BACKGROUND);
+		manager.load(WINDOW);
 
 	}
 

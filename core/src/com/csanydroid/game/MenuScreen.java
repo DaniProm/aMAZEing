@@ -7,12 +7,15 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
@@ -92,6 +95,12 @@ public class MenuScreen extends MyScreen{
         camera.translate(512,384);
         viewport = new ExtendViewport(1024, 768, camera);
         stage.setViewport(viewport);
+
+        NextLevelWindow nextLevelWindow = new NextLevelWindow();
+        stage.addActor(nextLevelWindow);
+        //myDialog.remove();
+        //myDialog.show(stage);
+        //stage.addActor(new MyWindow());
         //stage.addActor(actor);
     }
     @Override
