@@ -16,7 +16,7 @@ repeat: none
   orig: 128, 128
   offset: 0, 0
   index: -1
-2
+preview
   rotate: false
   xy: 256, 0
   size: 128, 128

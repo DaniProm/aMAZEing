@@ -2,7 +2,11 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.sun.media.sound.InvalidFormatException;
 
@@ -463,7 +467,50 @@ public class Maze {
 	public static final int SWITCH_REVERSED = 3;
 
 	public enum ObjectType {
-		WALL, EXPLOSIVE_WALL, BALL, HOLE, BLACK_HOLE, WORMHOLE, PUDDLE, STAR, DOOR, SCRIBBLE, SWITCH, PUSH_BUTTON, GATE;
+		WALL(Assets.manager.get(Assets.WALL)),
+		EXPLOSIVE_WALL(Assets.manager.get(Assets.EXPLOSIVE_WALL)),
+		BALL(Assets.manager.get(Assets.BALL_RED_ATLAS), Assets.manager.get(Assets.BALL_BLUE_ATLAS),Assets.manager.get(Assets.BALL_GREEN_ATLAS),Assets.manager.get(Assets.BALL_ORANGE_ATLAS)),
+		HOLE(Assets.manager.get(Assets.HOLE)),
+		BLACK_HOLE(Assets.manager.get(Assets.BLACK_HOLE)),
+		WORMHOLE(Assets.manager.get(Assets.WORMHOLE_ATLAS)),
+		PUDDLE(Assets.manager.get(Assets.PUDDLE)),
+		STAR,
+		DOOR(Assets.manager.get(Assets.DOOR_ATLAS)),
+		SCRIBBLE,
+		SWITCH,
+		PUSH_BUTTON,
+		GATE(Assets.manager.get(Assets.DOOR_ATLAS));
+
+		public TextureRegion getPreview() {
+			return textureRegion;
+		}
+
+		private final TextureRegion textureRegion;
+
+		ObjectType() {
+			textureRegion = null;
+		}
+
+		ObjectType(Texture... textures) {
+			this(textures[(int)(textures.length * Math.random())]);
+		}
+
+		ObjectType(Texture texture) {
+			this(new TextureRegion(texture));
+		}
+
+		ObjectType(TextureAtlas... atlases) {
+			this(atlases[(int)(atlases.length * Math.random())]);
+		}
+
+		ObjectType(TextureAtlas atlas) {
+			this(atlas.findRegion("preview"));
+		}
+
+
+		ObjectType(TextureRegion textureRegion) {
+			this.textureRegion = textureRegion;
+		}
 	}
 
 
