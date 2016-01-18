@@ -1,16 +1,24 @@
 package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import javafx.scene.Camera;
 
 public class LoadingScreen extends MyScreen {
 
-	Stage stage;
+    Stage stage;
 
     public LoadingScreen() {
         setBackgroundColor(0f,0f,0f);
@@ -20,15 +28,17 @@ public class LoadingScreen extends MyScreen {
 	public void show() {
 		Assets.manager.load(Assets.LOADING_ATLAS);
 	    Assets.manager.finishLoading();
-
-		stage = new Stage() {
+        camera = new OrthographicCamera(1024,768);
+        camera.translate(512,384);
+        viewport = new ExtendViewport(1024, 768, camera);
+		stage = new Stage(viewport) {
 
 			final Array<TextureAtlas.AtlasRegion> loadingAtlasRegions = Assets.manager.get(Assets.LOADING_ATLAS).getRegions();
 
 			Sprite sprite = new Sprite();
 			{
-				sprite.setSize(15,15);
-				sprite.setPosition(-7, -8);
+				sprite.setSize(400,400);
+				sprite.setPosition(312, 184);
 			}
 			@Override
 			public void draw() {
