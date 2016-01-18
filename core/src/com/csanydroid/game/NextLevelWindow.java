@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -22,11 +23,22 @@ public class NextLevelWindow extends MyWindow {
         label.setFontScale(0.6f);
 
         MazeActor mazeActor = new MazeActor(Maze.findMaze("1"));
-        mazeActor.setSize(200,200);
-        mazeActor.setPosition(getWidth()/2-100,20);
+        mazeActor.setSize(180,180);
+        mazeActor.setPosition(getWidth() / 2 - 95, 20);
+
+        TextButton textButtonNext = new TextButton("Tovább", textButtonStyle);
+        textButtonNext.setSize(170,60);
+        textButtonNext.setPosition(20,80);
+
+        TextButton textButtonRepeat = new TextButton("Újra", textButtonStyle);
+        textButtonRepeat.setSize(170,60);
+        textButtonRepeat.setPosition(getWidth()-200,80);
 
         addActor(label);
         addActor(mazeActor);
+        addActor(textButtonNext);
+        addActor(textButtonRepeat);
+
         addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

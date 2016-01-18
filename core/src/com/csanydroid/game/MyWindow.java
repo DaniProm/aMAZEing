@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -30,7 +31,7 @@ abstract public class MyWindow extends Window {
     private static WindowStyle windowStyle = new WindowStyle();
     protected final static Label.LabelStyle labelStyle = new Label.LabelStyle();
     private final static Label.LabelStyle titleStyle = new Label.LabelStyle();
-    protected final static Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
+    protected final static TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
     private static String CHARS = "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_*<>#&@{}[],-.";
     private static BitmapFont bitmapFont;
     private Label titleLabel;
@@ -64,6 +65,13 @@ abstract public class MyWindow extends Window {
 
         titleStyle.font = bitmapFont;
         titleStyle.fontColor = Color.WHITE;
+
+        textButtonStyle.font = bitmapFont;
+        textButtonStyle.fontColor = Color.WHITE;
+        textButtonStyle.over = new SpriteDrawable(new Sprite(Assets.manager.get(Assets.BUTTON_ATLAS).getRegions().get(0)));
+        textButtonStyle.down = new SpriteDrawable(new Sprite(Assets.manager.get(Assets.BUTTON_ATLAS).getRegions().get(1)));
+        textButtonStyle.up = new SpriteDrawable(new Sprite(Assets.manager.get(Assets.BUTTON_ATLAS).getRegions().get(2)));
+
 
     }
 

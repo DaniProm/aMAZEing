@@ -66,6 +66,9 @@ public class Assets {
 	public static final AssetDescriptor<TextureAtlas> SWITCH_ATLAS
 			= new AssetDescriptor<TextureAtlas>("switch.atlas", TextureAtlas.class);
 
+    public static final AssetDescriptor<TextureAtlas> BUTTON_ATLAS
+            = new AssetDescriptor<TextureAtlas>("button.atlas", TextureAtlas.class);
+
 	public static final AssetDescriptor<Texture> BALL_SHADOW
 			= new AssetDescriptor<Texture>("ballshadow.png", Texture.class);
 
@@ -103,6 +106,7 @@ public class Assets {
 		manager.load(STAR_ATLAS);
 		manager.load(STAR_MUSIC);
 		manager.load(DOOR_ATLAS);
+        manager.load(BUTTON_ATLAS);
 		manager.load(BALL_GREEN_ATLAS);
 		manager.load(BALL_RED_ATLAS);
 		manager.load(BALL_ORANGE_ATLAS);
