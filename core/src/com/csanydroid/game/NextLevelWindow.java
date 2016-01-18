@@ -26,11 +26,11 @@ public class NextLevelWindow extends MyWindow {
         mazeActor.setSize(180,180);
         mazeActor.setPosition(getWidth() / 2 - 95, 20);
 
-        TextButton textButtonNext = new TextButton("Tovább", textButtonStyle);
+        TextButton textButtonNext = new TextButton("Újra", textButtonStyle);
         textButtonNext.setSize(170,60);
         textButtonNext.setPosition(20,80);
 
-        TextButton textButtonRepeat = new TextButton("Újra", textButtonStyle);
+        TextButton textButtonRepeat = new TextButton("Tovább", textButtonStyle);
         textButtonRepeat.setSize(170,60);
         textButtonRepeat.setPosition(getWidth()-200,80);
 
