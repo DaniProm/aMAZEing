@@ -19,7 +19,21 @@ public class GameScreen extends MyScreen {
 
 		gameStage = new GameStage(viewport, batch, maze);
         gameStage.lookAtMaze(camera);
+gameStage.setEventListener(new GameStage.EventListener() {
+    @Override
+    public void onFinish(boolean hasWon) {
+    controlStage.addActor(new NextLevelWindow(gameStage));
 
+        Gdx.input.setInputProcessor(controlStage);
+
+
+    }
+
+    @Override
+    public void onBallRemove() {
+        Gdx.input.vibrate(250);
+    }
+});
         controlStage = new ControlStage(batch, gameStage);
 
 		GestureDetector gd = new GestureDetector(20, 0.5f, 2, 0.15f, gameStage);
