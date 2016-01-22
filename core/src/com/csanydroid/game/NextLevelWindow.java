@@ -1,5 +1,6 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -10,47 +11,61 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 public class NextLevelWindow extends MyWindow {
-    Maze maze;
-    public NextLevelWindow(byte collectedStars, byte totalStars) {
+
+    public NextLevelWindow(final GameStage gameStage) {
         super();
 
-            setTitle("Gratulálok!");
-            Label label = new Label("Sikeresen teljesítetetted a pályát, "+collectedStars+" db csillagot gyűjtöttél össze a(z)"+totalStars+" db-ból! \nÜgyes vagy! :)", labelStyle);
+        setTitle("Szint vége");
+
+            Label label = new Label(
+                    String.format(
+                            "Sikeresen teljesítetetted a pályát! %d darab csillagot gyűjtöttél össze a(z) %d darabból! %nÜgyes vagy! :)",
+                            gameStage.getCollectedStars(),
+                            gameStage.getMaze().getStarsCount()
+                    ),
+                    labelStyle);
             label.setWrap(true);
             label.setAlignment(Align.topLeft, Align.bottomLeft);
-            label.setPosition(10, 350);
+            label.setPosition(10, 300);
             label.setWidth(getWidth() - 20);
             label.setFontScale(0.6f);
             addActor(label);
 
 
-        final MazeActor mazeActor = new MazeActor(Maze.findMaze("1"));
+        final MazeActor mazeActor = new MazeActor(gameStage.getMaze().getNextMaze());
         mazeActor.setSize(180, 180);
         mazeActor.setPosition(getWidth() / 2 - 95, 20);
 
         TextButton textButtonNext = new TextButton("Újra", textButtonStyle);
         textButtonNext.setSize(170, 60);
-        textButtonNext.setPosition(20, 80);
+        textButtonNext.setPosition(20, 110);
         textButtonNext.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                maze.getNextMaze().beginPlay();
+                try {
+                    gameStage.getMaze().beginPlay();
+                } catch (Exception ignored) {
+                }
             }
         });
 
         TextButton textButtonRepeat = new TextButton("Tovább", textButtonStyle);
         textButtonRepeat.setSize(170, 60);
-        textButtonRepeat.setPosition(getWidth() - 200, 80);
+        textButtonRepeat.setPosition(getWidth() - 200, 110);
         textButtonRepeat.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                maze.beginPlay();
+                try {
+                    gameStage.getMaze().getNextMaze().beginPlay();
+                } catch (Exception ignored) {
+                }
             }
         });
+
         TextButton textButtonSelector = new TextButton("Pályák", textButtonStyle);
-        textButtonNext.setSize(170, 60);
-        textButtonNext.setPosition(20, 80);
-        textButtonNext.addListener(new ClickListener() {
+        textButtonSelector.setSize(170, 60);
+        textButtonSelector.setPosition(20, 45);
+        textButtonSelector.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((AmazingGame) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());

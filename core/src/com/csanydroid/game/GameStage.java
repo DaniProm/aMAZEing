@@ -60,7 +60,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private byte totalStars, collectedStars;
 	private boolean isRunning = true;
 	private float additionalZoom = 1;
-	private NextLevelWindow nextLevelWindow;
+
 	{
 
 		world.setContactFilter(new ContactFilter() {
@@ -219,23 +219,39 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private void gameFinished(boolean hasWon) {
 
 		try {
+
 			if (hasWon) {
-				nextLevelWindow = new NextLevelWindow(collectedStars);
-			} else {
+                maze.unlockNext();
+            } else {
 				maze.beginPlay();
 			}
 
+            eventListener.onFinish(hasWon);
+
 		} catch (Exception e) {
-			//Maze.createRandomMaze().beginPlay();
-			System.out.println("--------------------A HIBA: "+e.getMessage()+"-----------------------");
-			//((AmazingGame) Gdx.app.getApplicationListener())
-			//		.setScreen(new MenuScreen());
+            try {
+                Maze.createRandomMaze().beginPlay();
+            } catch (Exception ignored) { }
+
 		}
 
 	}
 
+    public void setEventListener(EventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    EventListener eventListener;
+
+    interface EventListener {
+        void onFinish(boolean hasWon);
+        void onBallRemove();
+    }
+
 	public void removeBall(BallActor ball) {
-		Gdx.input.vibrate(250);
+
+        eventListener.onBallRemove();
+
 		balls.remove(ball);
 
 		if (balls.size() == 0) {
@@ -248,7 +264,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				gameFinished(false);
 			}
 
-			Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
+			//Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
 		} else if (balls.size() < maze.getBallsToSurvive() || balls.size() < countEmptyHoles()) {
 			gameFinished(false);
 		} else {

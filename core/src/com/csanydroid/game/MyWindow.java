@@ -78,6 +78,7 @@ abstract public class MyWindow extends Window {
     public MyWindow() {
         super("", windowStyle);
         setResizable(false);
+        setVisible(true);
         setMovable(false);
         setFillParent(false);
         setBounds(204, 153, 612, 459);

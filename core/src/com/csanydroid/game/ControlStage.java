@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -22,8 +23,7 @@ public class ControlStage extends Stage {
 
     protected OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     public ControlStage(Batch batch, GameStage gameStage) {
-        super(new ScalingViewport(Scaling.fill, 0, 0), batch);
-        setViewport(new ScreenViewport(camera));
+        super(new ExtendViewport(1024, 768), batch);
         camera.position.x = -10;
         camera.update();
         camera.setToOrtho(true);
@@ -59,7 +59,7 @@ public class ControlStage extends Stage {
             addActor(this);
             stars.add(this);
             setSize(STAR_WIDTH, STAR_WIDTH);
-            setPosition((stars.size() - 1) * starSpace, STAR_WIDTH / 4);
+            setPosition(10 + (stars.size() - 1) * starSpace, 768 - STAR_WIDTH - 10);
 
         }
 
