@@ -56,7 +56,7 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 
         //table.add(mazeActor);
         //stage.addActor(mazeActor);
-stage.setDebugAll(true);
+        stage.setDebugAll(true);
         Table table = new Table();
 
        for (final Maze maze : Maze.getMazes()) {
@@ -96,7 +96,7 @@ stage.setDebugAll(true);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Log: Klikk a 'Kilépés' gombra.");
+                System.out.println("Log: Klikk a 'Vissza' gombra.");
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
 	    });

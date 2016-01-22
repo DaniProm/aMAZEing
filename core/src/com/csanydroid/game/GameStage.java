@@ -33,6 +33,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
 	protected static BitmapFont scribbleFont;
 
+
 	static {
 		// http://www.fontsquirrel.com/fonts/list/language/hungarian
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
@@ -59,7 +60,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private byte totalStars, collectedStars;
 	private boolean isRunning = true;
 	private float additionalZoom = 1;
-
+	private NextLevelWindow nextLevelWindow;
 	{
 
 		world.setContactFilter(new ContactFilter() {
@@ -168,7 +169,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		);
 
 	}
-
 	public GameStage(Viewport viewport, Batch batch, Maze maze) {
 		super(viewport, batch);
 		this.maze = maze;
@@ -176,6 +176,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		addActor(new BackgroundActor(maze));
 	}
+
 
 	@Override
 	public boolean keyDown(int keyCode) {
@@ -219,13 +220,14 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		try {
 			if (hasWon) {
-				maze.getNextMaze().beginPlay();
+				nextLevelWindow = new NextLevelWindow(collectedStars);
 			} else {
 				maze.beginPlay();
 			}
 
 		} catch (Exception e) {
 			Maze.createRandomMaze().beginPlay();
+			System.out.println("--------------------A HIBA: "+e.getMessage()+"-----------------------");
 			//((AmazingGame) Gdx.app.getApplicationListener())
 			//		.setScreen(new MenuScreen());
 		}
