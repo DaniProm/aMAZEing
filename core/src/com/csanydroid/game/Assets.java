@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Assets {
@@ -57,8 +56,8 @@ public class Assets {
 	public static final AssetDescriptor<TextureAtlas> BLACK_HOLE
 			= new AssetDescriptor<TextureAtlas>("black_hole.atlas", TextureAtlas.class);
 
-	public static final AssetDescriptor<TextureAtlas> WORMHOLE_ATLAS
-			= new AssetDescriptor<TextureAtlas>("teleport.atlas", TextureAtlas.class);
+	public static final AssetDescriptor<Texture> WORMHOLE
+			= new AssetDescriptor<Texture>("wormhole.png", Texture.class);
 
 	public static final AssetDescriptor<TextureAtlas> STAR_ATLAS
 			= new AssetDescriptor<TextureAtlas>("star.atlas", TextureAtlas.class);
@@ -158,7 +157,7 @@ public class Assets {
 		manager.load(EXPLOSION_ATLAS);
 		manager.load(HOLE);
 		manager.load(BLACK_HOLE);
-		manager.load(WORMHOLE_ATLAS);
+		manager.load(WORMHOLE);
 		manager.load(STAR_ATLAS);
 		manager.load(DOOR_ATLAS);
         manager.load(BUTTON_ATLAS);

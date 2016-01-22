@@ -174,26 +174,33 @@ public class BallActor extends GameActor {
 		if (Timer>=0) {
 			Timer+=delta;
 		}
-		if (Timer>=0 && Timer<=0.5)
+		if (Timer>=0 && Timer<=1.5)
 		{
-			scale+=0.1f;
-            setSize(scale, scale);
+			setPosition((getX()+(float)Math.ceil(wa.getX()))/2, (getY()+(float)Math.ceil(wa.getY()))/2);
+			if (scale>0) {
+				scale -= 0.1f;
+				setSize(scale, scale);
+				setPosition(getX()+getWidth()/2-scale+0.5f, getY()+getHeight()/2-scale+0.5f);
+			}
 		}
-		if (Timer>0.5 && Timer<=1.5)
+		/*if (Timer>0.5 && Timer<=1.5)
 		{
 			scale-=0.2f;
             sprite.setSize(scale, scale);
-		}
+		}*/
 		if (Timer > 1.5f && tx!=-10000) {
 			body.setTransform(tx, ty, 0);
 			tx = -10000;
 			ty = -10000;
 		}
-		if (Timer > 1.5) {
-			scale += 0.1f;
-			setSize(scale, scale);
+		if (Timer > 2) {
+			if (scale<=1) {
+				scale += 0.1f;
+				setSize(scale, scale);
+				setPosition(getX()+getWidth()/2-scale+0.5f, getY()+getHeight()/2-scale+0.5f);
+			}
 		}
-		if (Timer > 3)
+		if (Timer>0 && scale >= 1)
 		{
 			Timer = -1;
 			activate();

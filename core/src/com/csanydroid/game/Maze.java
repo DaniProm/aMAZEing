@@ -457,7 +457,7 @@ public class Maze {
 		BALL(Assets.manager.get(Assets.BALL_RED_ATLAS), Assets.manager.get(Assets.BALL_BLUE_ATLAS),Assets.manager.get(Assets.BALL_GREEN_ATLAS),Assets.manager.get(Assets.BALL_ORANGE_ATLAS)),
 		HOLE(Assets.manager.get(Assets.HOLE)),
 		BLACK_HOLE(Assets.manager.get(Assets.BLACK_HOLE)),
-		WORMHOLE(Assets.manager.get(Assets.WORMHOLE_ATLAS)),
+		WORMHOLE(Assets.manager.get(Assets.WORMHOLE)),
 		PUDDLE(Assets.manager.get(Assets.PUDDLE)),
 		STAR,
 		DOOR(Assets.manager.get(Assets.DOOR_ATLAS)),

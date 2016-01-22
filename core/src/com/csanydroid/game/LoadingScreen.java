@@ -83,8 +83,8 @@ public class LoadingScreen extends MyScreen {
 		//stage.act();
 		batch.begin();
 
-		int i = (int) (loadingAtlasRegions.size * Assets.manager.getProgress()) - 1;
-		sprite.setRegion(loadingAtlasRegions.get(Math.max(0, i)));
+		int i = (int) (((float)loadingAtlasRegions.size * Assets.manager.getProgress()*1.5f) - 1);
+		sprite.setRegion(loadingAtlasRegions.get(Math.min(Math.max(0, i), loadingAtlasRegions.size-1)));
 		sprite.draw(batch);
 		//stage.draw();
 		batch.end();

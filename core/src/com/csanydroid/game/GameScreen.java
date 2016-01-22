@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 public class GameScreen extends MyScreen {
 
-	private Box2DDebugRenderer debugger = new Box2DDebugRenderer();
+	//private Box2DDebugRenderer debugger = new Box2DDebugRenderer();
 	private GameStage gameStage;
 	private ControlStage controlStage;
     InterMazeWindow imw = null;
@@ -67,10 +67,10 @@ gameStage.setEventListener(new GameStage.EventListener() {
         batch.setProjectionMatrix(controlStage.camera.combined);
         controlStage.act();
         controlStage.draw();
-
+/*
         batch.begin();
         debugger.render(gameStage.world, camera.combined);
-        batch.end();
+        batch.end();*/
 
 	}
 
