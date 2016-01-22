@@ -25,6 +25,7 @@ public class MenuBackgroundActor extends Actor {
         logo.setSize(width * logo.getTexture().getWidth()/background.getTexture().getWidth(),height * logo.getTexture().getHeight()/background.getTexture().getHeight());
         logo.setPosition(getWidth() / 2 - logo.getWidth() / 2, getHeight() / 2);
         logo.setPosition(getWidth()/2-logo.getWidth()/2, getHeight()/2);
+        logo.setOrigin(getWidth()/2, getHeight()/2);
     }
 
     @Override
@@ -45,6 +46,6 @@ public class MenuBackgroundActor extends Actor {
         super.act(delta);
         elapsedTime += delta;
         logo.setRotation((float)Math.sin((double)elapsedTime)*5);
-
+        //logo.setScale(logo.getScaleX()*0.99f);
     }
 }
