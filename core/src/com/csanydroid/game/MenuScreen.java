@@ -3,6 +3,7 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -25,8 +26,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /** A játék menüje*/
 public class MenuScreen extends MyScreen{
     Stage stage;
-    private final Sound s = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
-    private Sprite sprite;
+    private final Music music = Assets.manager.get(Assets.MENU_MUSIC);
 
     GameActor actor;
 
@@ -52,29 +52,23 @@ public class MenuScreen extends MyScreen{
         menuBackgroundActor.setPosition(0, 0);
         menuBackgroundActor.setSize(1024, 768);
         stage.addActor(menuBackgroundActor);
-        System.out.println("Log: 'GameMenu' meghíva.");
 
-        System.out.println("Log: 'Tábla' létrehozva.");
+        MyButton button;
 
-        TextButton button;
-        // gombok hozzáadása
-
-        final float ROW_HEIGHT = 75f;
-
-        sprite = new Sprite(Assets.manager.get(Assets.PLAY));
-        sprite.setPosition(1024 / 2.1f, 768 / 2.9f);
+        //Sprite sprite = new Sprite(Assets.manager.get(Assets.PLAY));
+        //sprite.setPosition(487, 265);
 
 
-        button = new TextButton("Play ", MyWindow.textButtonStyle);
+        button = new MyButton("Play", MyWindow.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());
             }
         });
-        button.setPosition(1024 / 2.1f, 768 / 2.9f);
+        button.setPosition(488, 265);
         stage.addActor(button);
-        System.out.println((char) 0 * 34);
+
         actor = new BallActor();
         actor.setSize(128, 128);
         camera = new OrthographicCamera(1024,768);
@@ -82,12 +76,8 @@ public class MenuScreen extends MyScreen{
         viewport = new ExtendViewport(1024, 768, camera);
         stage.setViewport(viewport);
 
-
-        //myDialog.remove();
-        //myDialog.show(stage);
-        //stage.addActor(new MyWindow());
-        //stage.addActor(actor);
     }
+
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -100,31 +90,22 @@ public class MenuScreen extends MyScreen{
     @Override
     public void hide() {
         super.hide();
-        s.pause();
+        music.pause();
     }
 
     @Override
     public void show() {
+        music.play();
         Gdx.input.setInputProcessor(stage);
-        /*s.setVolume(1,0.5f);
-        s.play();
-        s.setLooping(1,true);*/
     }
-
-
 
     @Override
     public void render(float delta) {
         super.render(delta);
         batch.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0);
-        stage.act(Gdx.graphics.getDeltaTime());
+        stage.act(delta);
         stage.draw();
         batch.end();
     }
 }
-
-/**GameStage gamestage = new GameStage(Viewport viewport, Batch batch, Maze maze);
- * NextLevelWindow nextLevelWindow = new NextLevelWindow(gamestage);
- * stage.addActor(nextLevelWindow);
- */

@@ -19,8 +19,8 @@ public class Assets {
 	public static final AssetDescriptor<TextureAtlas> LOADING_ATLAS
 			= new AssetDescriptor<TextureAtlas>("loading.atlas", TextureAtlas.class);
 
-	public static final AssetDescriptor<Texture> PLAY
-			= new AssetDescriptor<Texture>("play.png", Texture.class);
+	//public static final AssetDescriptor<Texture> PLAY
+	//		= new AssetDescriptor<Texture>("play.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> MENU_MOLE
 			= new AssetDescriptor<Texture>("menumole.png", Texture.class);
@@ -179,7 +179,7 @@ public class Assets {
 		manager.load(MENU_BACKGROUND);
 		manager.load(MENU_LOGO);
 		manager.load(MENU_MOLE);
-		manager.load(PLAY);
+		//manager.load(PLAY);
 
         manager.load(MAZESELECTING_MUSIC);
         manager.load(MENU_MUSIC);
