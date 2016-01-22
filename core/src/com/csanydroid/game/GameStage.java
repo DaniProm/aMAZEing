@@ -260,8 +260,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			if (hasWon) {
                 maze.unlockNext();
-            } else {
-				maze.beginPlay();
 			}
 
 		} catch (Exception e) {

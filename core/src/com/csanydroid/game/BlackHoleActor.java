@@ -19,8 +19,7 @@ public class BlackHoleActor extends GameActor {
 	private float stateTime = 0;
 	protected static Animation animation;
 	public BlackHoleActor() {
-		sprite = new Sprite(Assets.manager.get(Assets.BLACK_HOLE2));
-		final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.BLACK_HOLE2_ATLAS).getRegions();
+		final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.BLACK_HOLE).getRegions();
 		sprite = new Sprite(textureAtlasRegions.first());
 		sprite.setRegion(textureAtlasRegions.first());
 		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);

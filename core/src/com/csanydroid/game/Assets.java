@@ -25,6 +25,10 @@ public class Assets {
 	public static final AssetDescriptor<Texture> MENU_MOLE
 			= new AssetDescriptor<Texture>("menumole.png", Texture.class);
 
+
+    public static final AssetDescriptor<Texture> LOCK
+            = new AssetDescriptor<Texture>("lock.png", Texture.class);
+
 	public static final AssetDescriptor<Texture> MENU_LOGO
 			= new AssetDescriptor<Texture>("menulogo.png", Texture.class);
 
@@ -33,10 +37,10 @@ public class Assets {
 
 
 	public static final AssetDescriptor<Texture> EXPLOSIVE_WALL
-			= new AssetDescriptor<Texture>("expwall1.png", Texture.class);
+			= new AssetDescriptor<Texture>("expwall.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> WALL
-			= new AssetDescriptor<Texture>("wall1.png", Texture.class);
+			= new AssetDescriptor<Texture>("wall.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> HOLE
 			= new AssetDescriptor<Texture>("hole.png", Texture.class);
@@ -44,20 +48,14 @@ public class Assets {
 	public static final AssetDescriptor<Texture> BACKGROUND
 			= new AssetDescriptor<Texture>("background.png", Texture.class);
 
-	public static final AssetDescriptor<Texture> BLACK_HOLE
-			= new AssetDescriptor<Texture>("black_hole.png", Texture.class);
-
-	public static final AssetDescriptor<Texture> BLACK_HOLE2
-			= new AssetDescriptor<Texture>("dead2.png", Texture.class);
-
 	public static final AssetDescriptor<Texture> PUDDLE
 			= new AssetDescriptor<Texture>("mud_puddle.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> WINDOW
 			= new AssetDescriptor<Texture>("window.png", Texture.class);
 
-	public static final AssetDescriptor<TextureAtlas> BLACK_HOLE2_ATLAS
-			= new AssetDescriptor<TextureAtlas>("Dead.atlas", TextureAtlas.class);
+	public static final AssetDescriptor<TextureAtlas> BLACK_HOLE
+			= new AssetDescriptor<TextureAtlas>("black_hole.atlas", TextureAtlas.class);
 
 	public static final AssetDescriptor<TextureAtlas> WORMHOLE_ATLAS
 			= new AssetDescriptor<TextureAtlas>("teleport.atlas", TextureAtlas.class);
@@ -69,7 +67,7 @@ public class Assets {
 			= new AssetDescriptor<TextureAtlas>("door.atlas", TextureAtlas.class);
 
 	public static final AssetDescriptor<TextureAtlas> EXPLOSION_ATLAS
-			= new AssetDescriptor<TextureAtlas>("boom1.atlas", TextureAtlas.class);
+			= new AssetDescriptor<TextureAtlas>("explosion.atlas", TextureAtlas.class);
 
 	public static final AssetDescriptor<TextureAtlas> BALL_GREEN_ATLAS
 			= new AssetDescriptor<TextureAtlas>("ballgreen.atlas", TextureAtlas.class);
@@ -101,8 +99,6 @@ public class Assets {
 	public static final AssetDescriptor<Texture> BALL_LIGHT
 			= new AssetDescriptor<Texture>("balllight.png", Texture.class);
 
-	public static final AssetDescriptor<Music> STAR_MUSIC
-			= new AssetDescriptor<Music>("teleport.mp3", Music.class);
 
     public static final AssetDescriptor<Music> MAZESELECTING_MUSIC
             = new AssetDescriptor<Music>("sounds/Loungekore.mp3", Music.class);
@@ -152,6 +148,7 @@ public class Assets {
 
 	public static void load() {
 
+        manager.load(LOCK);
 		manager.load(SWITCH_ATLAS);
 		manager.load(PUSH_BUTTON);
 		manager.load(PUSH_BUTTON2);
@@ -161,11 +158,8 @@ public class Assets {
 		manager.load(EXPLOSION_ATLAS);
 		manager.load(HOLE);
 		manager.load(BLACK_HOLE);
-		manager.load(BLACK_HOLE2);
-		manager.load(BLACK_HOLE2_ATLAS);
 		manager.load(WORMHOLE_ATLAS);
 		manager.load(STAR_ATLAS);
-		manager.load(STAR_MUSIC);
 		manager.load(DOOR_ATLAS);
         manager.load(BUTTON_ATLAS);
 		manager.load(BALL_GREEN_ATLAS);

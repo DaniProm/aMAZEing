@@ -1,8 +1,8 @@
-dead2.png
+black_hole.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-0
+preview
   rotate: false
   xy: 0, 0
   size: 128, 128
