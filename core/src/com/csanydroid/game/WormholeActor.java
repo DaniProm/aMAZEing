@@ -26,7 +26,6 @@ public class WormholeActor extends GameActor {
 	protected static Animation animation;
 	private float stateTime = 0;
 
-	private final Sound sound = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
 	private float active = 0;
 	private WormholeActor endpoint = null;
 

@@ -240,6 +240,8 @@ public class BallActor extends GameActor {
 	public void Teleport(float x, float y, WormholeActor a, WormholeActor b)
 	{
 		deactivate();
+        Assets.manager.get(Assets.TELEPORTATION_SOUND).play();
+
 		wa = a;
 		wb = b;
 		tx = x;
