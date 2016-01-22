@@ -42,7 +42,7 @@ public class NextLevelWindow extends MyWindow {
             public void clicked(InputEvent event, float x, float y) {
                 maze.beginPlay(); //Ha false akkor újra
             }
-        });
+        }); //Mi a szar
 
         addActor(label);
         addActor(mazeActor);
