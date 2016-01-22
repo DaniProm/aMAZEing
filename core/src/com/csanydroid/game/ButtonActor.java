@@ -32,7 +32,11 @@ public abstract class ButtonActor extends GameActor {
 		this.setState(this.defaultState);
 	}
 
-	public abstract void setState(boolean state);
+	public void setState(boolean state) {
+
+        Assets.manager.get(Assets.SWITCHING_SOUND).play();
+
+    }
 
 	@Override
 	protected Shape getShape() {

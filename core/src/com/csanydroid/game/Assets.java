@@ -3,6 +3,7 @@ package com.csanydroid.game;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -18,8 +19,8 @@ public class Assets {
 	public static final AssetDescriptor<TextureAtlas> LOADING_ATLAS
 			= new AssetDescriptor<TextureAtlas>("loading.atlas", TextureAtlas.class);
 
-	public static final AssetDescriptor<Texture> PLAY
-			= new AssetDescriptor<Texture>("play.png", Texture.class);
+	//public static final AssetDescriptor<Texture> PLAY
+	//		= new AssetDescriptor<Texture>("play.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> MENU_MOLE
 			= new AssetDescriptor<Texture>("menumole.png", Texture.class);
@@ -103,7 +104,46 @@ public class Assets {
 	public static final AssetDescriptor<Music> STAR_MUSIC
 			= new AssetDescriptor<Music>("teleport.mp3", Music.class);
 
-	public static void prepare() {
+    public static final AssetDescriptor<Music> MAZESELECTING_MUSIC
+            = new AssetDescriptor<Music>("sounds/Loungekore.mp3", Music.class);
+
+    public static final AssetDescriptor<Music> NEXTLEVEL_MUSIC
+            = new AssetDescriptor<Music>("sounds/RocknRoll.mp3", Music.class);
+
+    public static final AssetDescriptor<Music> MENU_MUSIC
+            = new AssetDescriptor<Music>("sounds/Ska1.mp3", Music.class);
+
+
+
+    public static final AssetDescriptor<Sound> BLACKHOLE_SOUND
+            = new AssetDescriptor<Sound>("sounds/black_hole.mp3", Sound.class);
+
+    public static final AssetDescriptor<Sound> BALLCWBALL_SOUND
+            = new AssetDescriptor<Sound>("sounds/ball_collision_with_ball.mp3", Sound.class);
+
+    public static final AssetDescriptor<Sound> BALLCWWALL_SOUND
+            = new AssetDescriptor<Sound>("sounds/ball_collision_with_wall.mp3", Sound.class);
+
+    public static final AssetDescriptor<Sound> CLICK_SOUND
+            = new AssetDescriptor<Sound>("sounds/click.mp3", Sound.class);
+
+    public static final AssetDescriptor<Music> PUDDE_MUSIC
+            = new AssetDescriptor<Music>("sounds/puddle.mp3", Music.class);
+
+    public static final AssetDescriptor<Sound> STARCOLLECTION_SOUND
+            = new AssetDescriptor<Sound>("sounds/star_collection.mp3", Sound.class);
+
+    public static final AssetDescriptor<Sound> SWITCHING_SOUND
+            = new AssetDescriptor<Sound>("sounds/switching.mp3", Sound.class);
+
+    public static final AssetDescriptor<Sound> TELEPORTATION_SOUND
+            = new AssetDescriptor<Sound>("sounds/teleportation.mp3", Sound.class);
+
+    public static final AssetDescriptor<Sound> WALLEXPLOSION_SOUND
+            = new AssetDescriptor<Sound>("sounds/wall_explosion.mp3", Sound.class);
+
+
+    public static void prepare() {
 
 		manager = new AssetManager();
 		Texture.setAssetManager(manager);
@@ -139,8 +179,30 @@ public class Assets {
 		manager.load(MENU_BACKGROUND);
 		manager.load(MENU_LOGO);
 		manager.load(MENU_MOLE);
-		manager.load(PLAY);
+		//manager.load(PLAY);
+
+        manager.load(MAZESELECTING_MUSIC);
+        manager.load(MENU_MUSIC);
+        manager.load(NEXTLEVEL_MUSIC);
+
+        manager.load(BLACKHOLE_SOUND);
+        manager.load(BALLCWBALL_SOUND);
+        manager.load(BALLCWWALL_SOUND);
+        manager.load(CLICK_SOUND);
+        manager.load(PUDDE_MUSIC);
+        manager.load(STARCOLLECTION_SOUND);
+        manager.load(SWITCHING_SOUND);
+        manager.load(TELEPORTATION_SOUND);
+        manager.load(WALLEXPLOSION_SOUND);
+
 	}
+
+    public static void afterLoaded() {
+        manager.get(PUDDE_MUSIC).setLooping(true);
+        manager.get(MAZESELECTING_MUSIC).setLooping(true);
+        manager.get(MENU_MUSIC).setLooping(true);
+        manager.get(NEXTLEVEL_MUSIC).setLooping(true);
+    }
 
 	public static void unload() {
 		manager.dispose();

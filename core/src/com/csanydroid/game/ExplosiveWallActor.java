@@ -22,6 +22,7 @@ public class ExplosiveWallActor extends WallActor {
 
 	public void ballCollide(float externStrength) {
 		if(externStrength < this.strength) return;
+        Assets.manager.get(Assets.WALLEXPLOSION_SOUND).play();
 		explosionAnimation = new Animation(1 / 10f, Assets.manager.get(Assets.EXPLOSION_ATLAS).getRegions());
 	}
 

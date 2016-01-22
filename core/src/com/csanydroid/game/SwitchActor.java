@@ -47,6 +47,8 @@ public class SwitchActor extends ButtonActor {
 
 	@Override
 	public void setState(boolean state) {
+        super.setState(state);
+
 		if(state) {
 			gate.open();
 		} else {

@@ -34,6 +34,9 @@ public class BlackHoleActor extends GameActor {
 	}
 
 	public void swallowBall(BallActor ball) {
+
+        Assets.manager.get(Assets.BLACKHOLE_SOUND).play();
+
 		balls.add(ball);
 	}
 
