@@ -1,5 +1,6 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -24,6 +25,7 @@ public class StarActor extends GameActor {
 		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
 		setTouchable(Touchable.disabled);
+
 		music.setOnCompletionListener(new Music.OnCompletionListener() {
 			@Override
 			public void onCompletion(Music music) {
@@ -49,6 +51,7 @@ public class StarActor extends GameActor {
 		setZIndex(Integer.MAX_VALUE);
 		hasCollected = true;
 		((GameStage)getStage()).collectStar();
+
 		music.play();
 	}
 

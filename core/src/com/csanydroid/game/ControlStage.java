@@ -14,7 +14,7 @@ public class ControlStage extends Stage {
 
     private final GameStage gameStage;
 
-    private final static Texture ballTexture = new Texture("star.png"), starTexture = new Texture("star.png");
+    private final static Texture ballTexture = new Texture("hole.png"), starTexture = new Texture("hole.png");
 
     protected OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     public ControlStage(Batch batch, GameStage gameStage) {
