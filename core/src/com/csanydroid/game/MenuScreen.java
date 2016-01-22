@@ -30,7 +30,7 @@ public class MenuScreen extends MyScreen{
 
 	public MenuScreen() {
       super();
-         setBackgroundColor(0.3f,0.8f,0.9f);
+         setBackgroundColor(0.3f, 0.8f, 0.9f);
 
         stage = new Stage() {
             @Override
@@ -45,7 +45,10 @@ public class MenuScreen extends MyScreen{
             }
 
         };
-
+        MenuBackgroundActor menuBackgroundActor = new MenuBackgroundActor();
+        menuBackgroundActor.setPosition(0,0);
+        menuBackgroundActor.setSize(1024,768);
+        stage.addActor(menuBackgroundActor);
         System.out.println("Log: 'GameMenu' meghíva.");
         Table table = new Table();
         table.setFillParent(true);
