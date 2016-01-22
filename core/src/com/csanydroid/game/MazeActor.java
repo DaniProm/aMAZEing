@@ -57,11 +57,6 @@ public class MazeActor extends Actor {
             batch.draw(lockTexture,
 		                      getX() + (getWidth() - lockTexture.getWidth()) / 2,
 		                      getY() + (getHeight() - lockTexture.getHeight()) / 2);
-        } else if (!maze.isKnown()) {
-	        batch.draw(starTexture,
-			                  getX(),
-			                  getY() - (getHeight() - lockTexture.getHeight()));
-
         }
 
     }

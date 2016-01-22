@@ -219,15 +219,17 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		try {
 			if (hasWon) {
+                maze.unlockNext();
 				maze.getNextMaze().beginPlay();
 			} else {
 				maze.beginPlay();
 			}
 
 		} catch (Exception e) {
-			Maze.createRandomMaze().beginPlay();
-			//((AmazingGame) Gdx.app.getApplicationListener())
-			//		.setScreen(new MenuScreen());
+            Gdx.app.log("kurva", "anyad: " + e.getMessage());
+            try {
+                Maze.createRandomMaze().beginPlay();
+            } catch (Exception ignored) { }
 		}
 
 	}
