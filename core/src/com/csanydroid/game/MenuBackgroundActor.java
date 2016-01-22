@@ -1,5 +1,6 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,11 +21,14 @@ public class MenuBackgroundActor extends Actor {
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
+        //float aspect = Gdx.graphics.getWidth()/Gdx.graphics.getHeight();
+        //Gdx.app.log("asp",aspect + "");
         background.setSize(width, height);
-        mole.setSize(width , height * mole.getTexture().getHeight() / background.getTexture().getHeight());
-        logo.setSize(width * logo.getTexture().getWidth()/background.getTexture().getWidth(),height * logo.getTexture().getHeight()/background.getTexture().getHeight());
-        logo.setPosition(getWidth() / 2 - logo.getWidth() / 2, getHeight() / 2);
-        logo.setPosition(getWidth()/2-logo.getWidth()/2, getHeight()/2);
+        mole.setSize(width , mole.getTexture().getHeight() * width / mole.getWidth());
+        //mole.setScale(width / mole.getWidth());
+
+        logo.setSize(width*0.6f , logo.getTexture().getHeight() * width * 0.6f / logo.getWidth());
+        logo.setPosition(getWidth() / 2 - logo.getWidth() / 2, getHeight() - logo.getHeight() - getHeight() / 8);
         logo.setOrigin(getWidth()/2, getHeight()/2);
     }
 

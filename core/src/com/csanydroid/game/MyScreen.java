@@ -26,7 +26,7 @@ public class MyScreen implements Screen {
 	private static String CHARS = "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_*<>#&@{}[],-.";
 	protected static BitmapFont FONT_HOBO_STD, /*FONT_HOBO_STD_TOP, */FONT_CALIBRI;
 
-     private float r=0.5f,g=0.5f,b=0.5f;
+    protected float r=0.5f,g=0.5f,b=0.5f;
 
 	public MyScreen() { }
 /*

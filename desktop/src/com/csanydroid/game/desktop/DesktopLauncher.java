@@ -9,8 +9,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		System.setProperty("user.name","CorrectUserName");
 		config.title = "Amazing";
-		config.width = 800;
-		config.height = 600;
+		config.width = 1024;
+		config.height = 578;
 		new LwjglApplication(new AmazingGame(), config);
 	}
 }

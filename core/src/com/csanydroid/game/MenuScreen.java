@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
@@ -48,10 +49,8 @@ public class MenuScreen extends MyScreen{
             }
 
         };
-        MenuBackgroundActor menuBackgroundActor = new MenuBackgroundActor();
-        menuBackgroundActor.setPosition(0, 0);
-        menuBackgroundActor.setSize(1024, 768);
-        stage.addActor(menuBackgroundActor);
+
+
 
         MyButton button;
 
@@ -59,6 +58,22 @@ public class MenuScreen extends MyScreen{
         //sprite.setPosition(487, 265);
 
 
+
+
+
+        actor = new BallActor();
+        actor.setSize(128, 128);
+        //camera = new OrthographicCamera(1024,768);
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        camera.translate(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+        viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+
+        stage.setViewport(viewport);
+
+        MenuBackgroundActor menuBackgroundActor = new MenuBackgroundActor();
+        menuBackgroundActor.setPosition(0, 0);
+        menuBackgroundActor.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.addActor(menuBackgroundActor);
         button = new MyButton("Play", MyWindow.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
@@ -66,24 +81,26 @@ public class MenuScreen extends MyScreen{
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());
             }
         });
-        button.setPosition(488, 265);
+        button.setPosition(Gdx.graphics.getWidth()*0.7f,Gdx.graphics.getHeight()*0.3f);
+
         stage.addActor(button);
-
-        actor = new BallActor();
-        actor.setSize(128, 128);
-        camera = new OrthographicCamera(1024,768);
-        camera.translate(512,384);
-        viewport = new ExtendViewport(1024, 768, camera);
-        stage.setViewport(viewport);
-
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        camera.viewportWidth = width;
+        viewport.update(width, height);
+        camera.update();
+       /* camera.viewportWidth = width;
         camera.viewportHeight = height;
-        stage.getViewport().update(width, height);
+
+        stage.getViewport().update(width, height);*/
+        /*camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        camera.translate(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+        viewport = new ExtendViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), camera);
+        stage.setViewport(viewport);
+        stage.getCamera().update();
+*/
     }
 
 
