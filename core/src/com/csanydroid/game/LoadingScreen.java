@@ -65,7 +65,8 @@ public class LoadingScreen extends MyScreen {
 		super.render(delta);
 
 		if (Assets.manager.update()) {
-			((AmazingGame) Gdx.app.getApplicationListener())
+            Assets.afterLoaded();
+            ((AmazingGame) Gdx.app.getApplicationListener())
 					.setScreen(new MenuScreen());
 		}
 

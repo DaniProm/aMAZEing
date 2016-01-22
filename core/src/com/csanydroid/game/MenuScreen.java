@@ -3,6 +3,7 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,7 +25,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /** A játék menüje*/
 public class MenuScreen extends MyScreen{
     Stage stage;
-    private final Sound s = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
+
+    private Music music = Assets.manager.get(Assets.MENU_MUSIC);
 
     GameActor actor;
 
@@ -46,8 +48,8 @@ public class MenuScreen extends MyScreen{
 
         };
         MenuBackgroundActor menuBackgroundActor = new MenuBackgroundActor();
-        menuBackgroundActor.setPosition(0,0);
-        menuBackgroundActor.setSize(1024,768);
+        menuBackgroundActor.setPosition(0, 0);
+        menuBackgroundActor.setSize(1024, 768);
         stage.addActor(menuBackgroundActor);
         System.out.println("Log: 'GameMenu' meghíva.");
         Table table = new Table();
@@ -119,15 +121,13 @@ public class MenuScreen extends MyScreen{
     @Override
     public void hide() {
         super.hide();
-        s.pause();
+        music.pause();
     }
 
     @Override
     public void show() {
+        music.play();
         Gdx.input.setInputProcessor(stage);
-        /*s.setVolume(1,0.5f);
-        s.play();
-        s.setLooping(1,true);*/
     }
 
 
@@ -142,8 +142,3 @@ public class MenuScreen extends MyScreen{
         batch.end();
     }
 }
-
-/**GameStage gamestage = new GameStage(Viewport viewport, Batch batch, Maze maze);
- * NextLevelWindow nextLevelWindow = new NextLevelWindow(gamestage);
- * stage.addActor(nextLevelWindow);
- */

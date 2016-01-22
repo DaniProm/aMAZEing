@@ -1,7 +1,9 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -57,8 +59,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final Maze maze;
 	public World world = new World(Vector2.Zero, false);
 	boolean controlWithMouse = false;
-	private byte totalStars, collectedStars;
-	private boolean isRunning = true;
+	private byte collectedStars;
+
 	private float additionalZoom = 1;
 
 	{
@@ -90,6 +92,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				                         }
 
 				                         if (other instanceof PuddleActor) {
+                                             Assets.manager.get(Assets.PUDDE_MUSIC).play();
 					                         ball.body.setLinearDamping(4f);
 				                         } else if (other instanceof BlackHoleActor) {
 					                         ((BlackHoleActor) other).swallowBall(ball);
@@ -102,6 +105,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				                         } else if (other instanceof StarActor) {
 					                         ((StarActor) other).collect();
 				                         } else if (other instanceof SwitchActor) {
+                                             ball.body.setLinearDamping(1f);
 					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
 					                         if(((SwitchActor) other).isHorizontal()) {
 						                         if(side == 0 || side == 2)
@@ -112,7 +116,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         }
 				                         } else if (other instanceof PushButtonActor) {
 					                         ((PushButtonActor) other).setState(true);
-				                         }
+				                         } else if(other instanceof WallActor) {
+                                             Assets.manager.get(Assets.BALLCWWALL_SOUND).play();
+                                         } else if (other instanceof BallActor) {
+                                             Assets.manager.get(Assets.BALLCWBALL_SOUND).play();
+                                         }
 
 			                         }
 
@@ -143,7 +151,9 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 				                         if (other instanceof PuddleActor) {
 					                         ball.body.setLinearDamping(0);
+                                             Assets.manager.get(Assets.PUDDE_MUSIC).pause();
 				                         } else if (other instanceof SwitchActor) {
+                                             ball.body.setLinearDamping(0);
 					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
 					                         if(((SwitchActor) other).isHorizontal()) {
 						                         if(side == 0 || side == 2)
@@ -169,12 +179,15 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		);
 
 	}
+
 	public GameStage(Viewport viewport, Batch batch, Maze maze) {
 		super(viewport, batch);
 		this.maze = maze;
 		loadMaze(maze);
 
 		addActor(new BackgroundActor(maze));
+
+        changeState(GameState.PLAYING);
 	}
 
 
@@ -183,9 +196,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		switch (keyCode) {
 			case Input.Keys.BACK:
 			case Input.Keys.ESCAPE:
-				// TODO párbeszéd ablak mutatása
-				((AmazingGame) Gdx.app.getApplicationListener())
-						.setScreen(new MenuScreen());
+                pause();
 				break;
 		}
 
@@ -204,29 +215,55 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return collectedStars;
 	}
 
-	public boolean isRunning() {
-		return isRunning;
-	}
-
 	public void pause() {
-		isRunning = false;
+        if(state == GameState.PLAYING) {
+            changeState(GameState.PAUSED);
+        }
 	}
 
 	public void resume() {
-		isRunning = true;
-	}
 
-	private void gameFinished(boolean hasWon) {
+        if (state == GameState.PAUSED) {
+            changeState(GameState.PLAYING);
+        }
+    }
+
+    enum GameState {
+        PLAYING, PAUSED, WON, LOST;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    private GameState state;
+
+    private void changeState(GameState state) {
+        if(this.state == state) return;
+        this.state = state;
+
+        if(this.state == GameState.PLAYING) {
+
+            GestureDetector gd = new GestureDetector(20, 0.5f, 2, 0.15f, this);
+            InputMultiplexer im = new InputMultiplexer(gd, this);
+            Gdx.input.setInputProcessor(im);
+
+        }
+
+        if(eventListener != null) eventListener.onStateChange();
+
+    }
+
+    private void gameFinished(boolean hasWon) {
 
 		try {
+            changeState(hasWon ? GameState.WON : GameState.LOST);
 
 			if (hasWon) {
                 maze.unlockNext();
             } else {
 				maze.beginPlay();
 			}
-
-            eventListener.onFinish(hasWon);
 
 		} catch (Exception e) {
             try {
@@ -244,7 +281,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
     EventListener eventListener;
 
     interface EventListener {
-        void onFinish(boolean hasWon);
+        void onStateChange();
         void onBallRemove();
     }
 
@@ -341,7 +378,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	@Override
 	public void act(float delta) {
 
-		if (isRunning) {
+		if (state == GameState.PLAYING) {
 
 			switch (Gdx.app.getType()) {
 				case Android:
@@ -405,8 +442,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			balls.add((BallActor) actor);
 		} else if (actor instanceof HoleActor) {
 			holes.add((HoleActor) actor);
-		} else if (actor instanceof StarActor) {
-			++totalStars;
 		}
 
 	}

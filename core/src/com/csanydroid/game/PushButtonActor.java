@@ -17,6 +17,7 @@ public class PushButtonActor extends ButtonActor {
 
 	@Override
 	public void setState(boolean state) {
+        super.setState(state);
 
 		if(this.defaultState != state) {
 			gate.open();
