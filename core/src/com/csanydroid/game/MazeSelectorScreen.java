@@ -28,7 +28,8 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
                 switch (keycode) {
                     case Input.Keys.ESCAPE:
                     case Input.Keys.BACK:
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        ((Game) Gdx.app.getApplicationListener())
+                                .setScreen(new MenuScreen());
                         break;
                 }
                 return false;
@@ -42,6 +43,15 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
        for (final Maze maze : Maze.getMazes()) {
 
             MazeActor mazeActor = new MazeActor(maze);
+
+           mazeActor.addListener(new ClickListener() {
+               @Override
+               public void clicked(InputEvent event, float x, float y) {
+                   try {
+                       maze.beginPlay();
+                   } catch (Exception e) { }
+               }
+           });
 
             mazeActor.setSize(256, 256);
 

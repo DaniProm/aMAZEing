@@ -18,18 +18,6 @@ public class MazeActor extends Actor {
     MazeActor(final Maze maze){
         super();
         this.maze = maze;
-
-	    addListener(new ClickListener() {
-		    @Override
-		    public void clicked(InputEvent event, float x, float y) {
-			    try {
-				    MazeActor.this.maze.beginPlay();
-			    } catch (Exception e) {
-				    e.printStackTrace();
-			    }
-		    }
-	    });
-
     }
 
 	@Override
