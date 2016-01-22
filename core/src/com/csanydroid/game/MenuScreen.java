@@ -3,10 +3,10 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -25,10 +25,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /** A játék menüje*/
 public class MenuScreen extends MyScreen{
     Stage stage;
-
-    private Music music = Assets.manager.get(Assets.MENU_MUSIC);
+    private final Sound s = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
+    private Sprite sprite;
 
     GameActor actor;
+
 
 	public MenuScreen() {
       super();
@@ -52,50 +53,28 @@ public class MenuScreen extends MyScreen{
         menuBackgroundActor.setSize(1024, 768);
         stage.addActor(menuBackgroundActor);
         System.out.println("Log: 'GameMenu' meghíva.");
-        Table table = new Table();
-        table.setFillParent(true);
 
         System.out.println("Log: 'Tábla' létrehozva.");
 
         TextButton button;
-        Label label = new Label("aMAZEing", LABEL_STYLE); // Ha már magyar a kezelőfelület, akkor ez is lehetne magyar
-        label.setAlignment(Align.center, Align.center);
-        table.add(label)
-                .width(500f)
-                .height(130f);
-        System.out.println("Log: 'Label' létrehozva.");
-
         // gombok hozzáadása
 
         final float ROW_HEIGHT = 75f;
 
-        button = new TextButton("Játék indítása", MyScreen.TEXT_BUTTON_STYLE);
+        sprite = new Sprite(Assets.manager.get(Assets.PLAY));
+        sprite.setPosition(1024 / 2.1f, 768 / 2.9f);
+
+
+        button = new TextButton("Play ", MyWindow.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());
-                System.out.println("Log: Klikk a 'Játék indítása' gombra.");
             }
         });
-        table.row();
-        table.add(button).height(ROW_HEIGHT);
-        System.out.println("Log: 'Játék indítása' gomb létrehozva.");
-
-        button = new TextButton("Kilépés", MyScreen.TEXT_BUTTON_STYLE);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Log: Klikk a 'Kilépés' gombra.");
-                System.exit(0);
-            }
-        });
-
-        table.row().height(ROW_HEIGHT);
-        table.add(button);
-        System.out.println("Log: 'Kilépés' gomb létrehozva.");
-        stage.addActor(table);
-        System.out.println("Log: A 'table' hozzáadva a 'stage'hez");
-
+        button.setPosition(1024 / 2.1f, 768 / 2.9f);
+        stage.addActor(button);
+        System.out.println((char) 0 * 34);
         actor = new BallActor();
         actor.setSize(128, 128);
         camera = new OrthographicCamera(1024,768);
@@ -121,13 +100,15 @@ public class MenuScreen extends MyScreen{
     @Override
     public void hide() {
         super.hide();
-        music.pause();
+        s.pause();
     }
 
     @Override
     public void show() {
-        music.play();
         Gdx.input.setInputProcessor(stage);
+        /*s.setVolume(1,0.5f);
+        s.play();
+        s.setLooping(1,true);*/
     }
 
 
@@ -142,3 +123,8 @@ public class MenuScreen extends MyScreen{
         batch.end();
     }
 }
+
+/**GameStage gamestage = new GameStage(Viewport viewport, Batch batch, Maze maze);
+ * NextLevelWindow nextLevelWindow = new NextLevelWindow(gamestage);
+ * stage.addActor(nextLevelWindow);
+ */
