@@ -1,14 +1,10 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.sun.media.sound.InvalidFormatException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -415,41 +411,30 @@ public class Maze {
         return objects;
     }
 
-    public void beginPlay() {
-	    /*
-	   if (!isUnlocked()) {
-		    throw new Exception("Maze is locked.");
-	    }
-		*/
+    public void beginPlay() throws Exception {
 
-	    Gdx.app.log("játék maze", "begin play: " + getName());
+        if (!isUnlocked()) {
+            throw new Exception("Maze is locked.");
+        }
 
 	    ((AmazingGame) Gdx.app.getApplicationListener())
 			    .setScreen(new GameScreen(this));
 
-	    {
-		    final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-		    ag.prefs.putBoolean("known/" + getName(), true);
-		    ag.prefs.flush();
-	    }
-
 	}
 
-	public boolean isKnown() {
-		final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-		return ag.prefs.getBoolean("known/" + getName());
-	}
+    private static String PREF_LEVEL_NUMBER = "level_number";
 
-
-    public void setLock(boolean lock) {
-        final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-        ag.prefs.putBoolean("level/" + getName(), lock);
+    private final static AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
+    public void unlockNext() {
+        ag.prefs.putInteger(PREF_LEVEL_NUMBER, getMazeIndex() + 1);
         ag.prefs.flush();
     }
 
     public boolean isUnlocked() {
-        final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-        return ag.prefs.getBoolean("level/" + getName());
+        int i = getMazeIndex();
+        if(i > 0) {
+            return ag.prefs.getInteger(PREF_LEVEL_NUMBER) >= i;
+        } else return true;
     }
 
     public int getMazeIndex() {

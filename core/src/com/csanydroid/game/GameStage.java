@@ -226,7 +226,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			}
 
 		} catch (Exception e) {
-			Maze.createRandomMaze().beginPlay();
+			//Maze.createRandomMaze().beginPlay();
 			System.out.println("--------------------A HIBA: "+e.getMessage()+"-----------------------");
 			//((AmazingGame) Gdx.app.getApplicationListener())
 			//		.setScreen(new MenuScreen());
