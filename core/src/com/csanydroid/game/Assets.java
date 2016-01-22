@@ -43,11 +43,17 @@ public class Assets {
 	public static final AssetDescriptor<Texture> BLACK_HOLE
 			= new AssetDescriptor<Texture>("black_hole.png", Texture.class);
 
+	public static final AssetDescriptor<Texture> BLACK_HOLE2
+			= new AssetDescriptor<Texture>("dead2.png", Texture.class);
+
 	public static final AssetDescriptor<Texture> PUDDLE
 			= new AssetDescriptor<Texture>("mud_puddle.png", Texture.class);
 
 	public static final AssetDescriptor<Texture> WINDOW
 			= new AssetDescriptor<Texture>("window.png", Texture.class);
+
+	public static final AssetDescriptor<TextureAtlas> BLACK_HOLE2_ATLAS
+			= new AssetDescriptor<TextureAtlas>("Dead.atlas", TextureAtlas.class);
 
 	public static final AssetDescriptor<TextureAtlas> WORMHOLE_ATLAS
 			= new AssetDescriptor<TextureAtlas>("teleport.atlas", TextureAtlas.class);
@@ -112,6 +118,8 @@ public class Assets {
 		manager.load(EXPLOSION_ATLAS);
 		manager.load(HOLE);
 		manager.load(BLACK_HOLE);
+		manager.load(BLACK_HOLE2);
+		manager.load(BLACK_HOLE2_ATLAS);
 		manager.load(WORMHOLE_ATLAS);
 		manager.load(STAR_ATLAS);
 		manager.load(STAR_MUSIC);
