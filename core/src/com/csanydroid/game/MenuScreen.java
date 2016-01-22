@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /** A játék menüje*/
@@ -44,7 +46,7 @@ public class MenuScreen extends MyScreen{
 
         };
 
-        System.out.println("Log: 'GameMdenu' meghíva.");
+        System.out.println("Log: 'GameMenu' meghíva.");
         Table table = new Table();
         table.setFillParent(true);
 
@@ -96,8 +98,7 @@ public class MenuScreen extends MyScreen{
         viewport = new ExtendViewport(1024, 768, camera);
         stage.setViewport(viewport);
 
-        NextLevelWindow nextLevelWindow = new NextLevelWindow();
-        stage.addActor(nextLevelWindow);
+
         //myDialog.remove();
         //myDialog.show(stage);
         //stage.addActor(new MyWindow());
@@ -138,3 +139,8 @@ public class MenuScreen extends MyScreen{
         batch.end();
     }
 }
+
+/**GameStage gamestage = new GameStage(Viewport viewport, Batch batch, Maze maze);
+ * NextLevelWindow nextLevelWindow = new NextLevelWindow(gamestage);
+ * stage.addActor(nextLevelWindow);
+ */

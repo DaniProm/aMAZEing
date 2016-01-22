@@ -18,6 +18,16 @@ public class Assets {
 	public static final AssetDescriptor<TextureAtlas> LOADING_ATLAS
 			= new AssetDescriptor<TextureAtlas>("loading.atlas", TextureAtlas.class);
 
+	public static final AssetDescriptor<Texture> MENU_MOLE
+			= new AssetDescriptor<Texture>("menumole.png", Texture.class);
+
+	public static final AssetDescriptor<Texture> MENU_LOGO
+			= new AssetDescriptor<Texture>("menulogo.png", Texture.class);
+
+	public static final AssetDescriptor<Texture> MENU_BACKGROUND
+			= new AssetDescriptor<Texture>("menubackground.png", Texture.class);
+
+
 	public static final AssetDescriptor<Texture> EXPLOSIVE_WALL
 			= new AssetDescriptor<Texture>("expwall1.png", Texture.class);
 
@@ -115,7 +125,9 @@ public class Assets {
 		manager.load(BALL_LIGHT);
 		manager.load(BACKGROUND);
 		manager.load(WINDOW);
-
+		manager.load(MENU_BACKGROUND);
+		manager.load(MENU_LOGO);
+		manager.load(MENU_MOLE);
 	}
 
 	public static void unload() {
