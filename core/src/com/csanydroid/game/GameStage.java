@@ -220,7 +220,13 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 		try {
 			if (hasWon) {
-				nextLevelWindow = new NextLevelWindow(collectedStars);
+				nextLevelWindow = new NextLevelWindow(collectedStars, totalStars);
+				if(NextLevelWindow.b){
+					maze.getNextMaze().beginPlay();
+				}
+				else{
+					maze.beginPlay();
+				}
 			} else {
 				maze.beginPlay();
 			}

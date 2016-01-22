@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 public class NextLevelWindow extends MyWindow {
-    Maze maze;
+    static boolean b;
     public NextLevelWindow(byte collectedStars, byte totalStars) {
         super();
 
@@ -34,7 +34,7 @@ public class NextLevelWindow extends MyWindow {
         textButtonNext.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                maze.getNextMaze().beginPlay();
+                b=true;
             }
         });
 
@@ -44,7 +44,7 @@ public class NextLevelWindow extends MyWindow {
         textButtonRepeat.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                maze.beginPlay();
+               b=false;
             }
         });
         TextButton textButtonSelector = new TextButton("Pályák", textButtonStyle);
