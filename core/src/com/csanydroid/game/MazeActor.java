@@ -9,8 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MazeActor extends Actor {
-    private static Texture lockTexture = new Texture("lock.png");
-	private static Texture starTexture = new Texture("lock.png");
+    private Texture lockTexture = Assets.manager.get(Assets.LOCK);
 
     private final Maze maze;
 	private float size;
