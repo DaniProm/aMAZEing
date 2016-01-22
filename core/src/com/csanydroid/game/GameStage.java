@@ -148,7 +148,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         }
 				                         }
 
-
 				                         if (other instanceof PuddleActor) {
 					                         ball.body.setLinearDamping(0);
                                              Assets.manager.get(Assets.PUDDE_MUSIC).pause();
