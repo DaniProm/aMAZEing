@@ -1,4 +1,4 @@
-5. pálya - Ismerkedés az elemekkel, ajtó
+5. pálya - Ajtó
 ............
 .    %     .
 .O   .   * .

@@ -1,8 +1,8 @@
-6. pálya - Ismerkedés az elemekkel, feketelyuk
+6. pálya - Daráló
 ............
 .    @     .
 .O . .X. .*.
 .    :   *@.
 ............
 
-1,1:4 Óvakodj a feketelyukaktól!
+1,1:4 Óvakodj a darálóktól!

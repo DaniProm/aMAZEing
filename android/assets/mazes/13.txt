@@ -1,9 +1,0 @@
-4. pálya - kapcsolók - 2
-..............
-.O    .X .  i.
-.   .I.A.. ...
-. a .X.     O.
-..............
-
-a false,false
-i false,false
