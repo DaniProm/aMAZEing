@@ -45,7 +45,7 @@ public class InterMazeWindow extends MyWindow {
                 showNextMazeWindow();
                 break;
             case LOST:
-                showNextMazeWindow();
+                showFailMazeWindow();
                 break;
         }
     }
@@ -154,6 +154,48 @@ public class InterMazeWindow extends MyWindow {
         addActor(textButtonRepeat);
         addActor(textButtonSelector);
 
+    }
+
+    private void showFailMazeWindow(){
+        setTitle("Sajnos vesztettél!");
+
+        Label label = new Label(
+                String.format(
+                        "Sajnos elvesztetted az összes gömbödet, próbákozz újra! :("),
+                labelStyle);
+        label.setWrap(true);
+        label.setAlignment(Align.topLeft, Align.bottomLeft);
+        label.setPosition(10, 300);
+        label.setWidth(getWidth() - 20);
+        label.setFontScale(0.6f);
+        addActor(label);
+
+        TextButton textButtonNext = new MyButton("Újra", textButtonStyle);
+        textButtonNext.setSize(170, 60);
+        textButtonNext.setPosition(20, 110);
+        textButtonNext.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    gameStage.getMaze().beginPlay();
+                } catch (Exception ignored) {
+                }
+            }
+        });
+
+        TextButton textButtonSelector = new MyButton("Pályák", textButtonStyle);
+        textButtonSelector.setSize(170, 60);
+        textButtonSelector.setPosition(20, 45);
+        textButtonSelector.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((AmazingGame) Gdx.app.getApplicationListener())
+                        .setScreen(new MazeSelectorScreen());
+            }
+        });
+
+        addActor(textButtonNext);
+        addActor(textButtonSelector);
     }
 }
 
