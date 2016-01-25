@@ -48,12 +48,15 @@ public class BlackHoleActor extends GameActor {
 		sprite.setRegion(animation.getKeyFrame(stateTime));
 
 		for (BallActor ball; (ball = balls.poll()) != null; ) {
-			float width=getWidth();
-			setSize(getWidth() * 1.02f, getHeight() * 1.02f);
-			setPosition(getX() - (getWidth() - width) / 2, getY()-(getWidth()-width)/2);
-			sprite.setAlpha(sprite.getColor().a*0.97f);
-
-			ball.delete();
+			//float width=getWidth();
+			ball.setBlackhole();
+			//setSize(getWidth() * 1.02f, getHeight() * 1.02f);
+			//setPosition(getX() - (getWidth() - width) / 2, getY() - (getWidth() - width) / 2);
+			//ball.sprite.setAlpha(ball.sprite.getColor().a * 0.97f);
+			//final float alpha = ball.sprite.getColor().a;
+			//if(alpha < 0.1f) {
+			//	ball.delete();
+			//}
 		}
 
 

@@ -70,7 +70,7 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 	    // gombok hozzáadása
 
 
-	    TextButton button = new MyButton("Vissza", TEXT_BUTTON_STYLE);
+	    TextButton button = new MyButton("Vissza", MyWindow.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

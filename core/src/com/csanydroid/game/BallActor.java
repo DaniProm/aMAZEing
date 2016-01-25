@@ -23,6 +23,9 @@ public class BallActor extends GameActor {
 	private float ballAngle = 0, prevBallAngle = 0;
 	private boolean ballInverzeRotation = false;
 
+	private boolean onBlackhole = false;
+
+
 	//private static int createdBallsNumber = 0;
 
 	private static final float ballZoom = 0.93f;
@@ -72,6 +75,13 @@ public class BallActor extends GameActor {
 	public static float absAngleDeg(float a)
 	{
 		return (a+36000) % 360;
+	}
+
+
+
+	public void setBlackhole()
+	{
+		onBlackhole = true;
 	}
 
 	@Override
@@ -210,6 +220,21 @@ public class BallActor extends GameActor {
 		}
 
 		// Teleport //
+
+		// Daráló //
+		if (onBlackhole)
+		{
+			final float alpha = sprite.getColor().a;
+			sprite.setAlpha(alpha * 0.97f);
+			spriteLight.setAlpha(alpha * 0.97f);
+			spriteShadow.setAlpha(alpha * 0.97f);
+			if(alpha < 0.1f) {
+				delete();
+			}
+
+		}
+		// Daráló //
+
 	}
 
 	@Override
