@@ -111,31 +111,31 @@ public class Assets {
 
 
     public static final AssetDescriptor<Sound> BLACKHOLE_SOUND
-            = new AssetDescriptor<Sound>("sounds/black_hole.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/black_hole.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> BALLCWBALL_SOUND
-            = new AssetDescriptor<Sound>("sounds/ball_collision_with_ball.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/ball_collision_with_ball.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> BALLCWWALL_SOUND
-            = new AssetDescriptor<Sound>("sounds/ball_collision_with_wall.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/ball_collision_with_wall.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> CLICK_SOUND
-            = new AssetDescriptor<Sound>("sounds/click.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/click.wav", Sound.class);
 
     public static final AssetDescriptor<Music> PUDDE_MUSIC
-            = new AssetDescriptor<Music>("sounds/puddle.mp3", Music.class);
+            = new AssetDescriptor<Music>("sounds/puddle.wav", Music.class);
 
     public static final AssetDescriptor<Sound> STARCOLLECTION_SOUND
-            = new AssetDescriptor<Sound>("sounds/star_collection.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/star_collection.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> SWITCHING_SOUND
-            = new AssetDescriptor<Sound>("sounds/switching.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/switching.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> TELEPORTATION_SOUND
-            = new AssetDescriptor<Sound>("sounds/teleportation.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/teleportation.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> WALLEXPLOSION_SOUND
-            = new AssetDescriptor<Sound>("sounds/wall_explosion.mp3", Sound.class);
+            = new AssetDescriptor<Sound>("sounds/wall_explosion.wav", Sound.class);
 
 
     public static void prepare() {

@@ -1,6 +1,5 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -299,7 +298,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			}
 
 			//Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
-		} else if (balls.size() < maze.getBallsToSurvive() || balls.size() < countEmptyHoles()) {
+		} else if (balls.size() < maze.getRemainingBalls() || balls.size() < countEmptyHoles()) {
 			gameFinished(false);
 		} else {
 
@@ -386,6 +385,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
 						controlWithMouse = !controlWithMouse;
 						Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
+					}
+
+					if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
+						maze.unlockAll();
+						Gdx.app.log("control", "Az összes pálya feloldva");
 					}
 
 					if (!controlWithMouse) {

@@ -77,11 +77,11 @@ public class Maze {
 
 	private int starsCount = 0;
 
-	// TODO adni neki egy normális nevet
-    private int ballsToSurvive = 0;
+	
+    private int remainingBalls = 0;
 
-	public int getBallsToSurvive() {
-		return ballsToSurvive;
+	public int getRemainingBalls() {
+		return remainingBalls;
 	}
 
 	public static Maze createRandomMaze() {
@@ -436,6 +436,11 @@ public class Maze {
             return ag.prefs.getInteger(PREF_LEVEL_NUMBER) >= i;
         } else return true;
     }
+
+	public void unlockAll() {
+		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size()-1);
+		ag.prefs.flush();
+	}
 
     public int getMazeIndex() {
         return mazes.indexOf(this);

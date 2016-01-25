@@ -82,6 +82,7 @@ public class BallActor extends GameActor {
 	public void setBlackhole()
 	{
 		onBlackhole = true;
+		deactivate();
 	}
 
 	@Override
