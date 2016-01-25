@@ -47,7 +47,6 @@ public class StarActor extends GameActor {
 		((GameStage)getStage()).collectStar();
 
         Assets.manager.get(Assets.STARCOLLECTION_SOUND).play();
-
 	}
 
 	@Override
@@ -61,10 +60,10 @@ public class StarActor extends GameActor {
 		else {
 			deactivate();
 			final float oldWidth = getWidth();
-			setSize(getWidth() * 1.02f, getHeight() * 1.02f);
+			setSize(getWidth() * 1.05f, getHeight() * 1.05f);
 			setPosition(getX() - (getWidth() - oldWidth) / 2, getY() - (getWidth() - oldWidth) / 2);
-            final float alpha = sprite.getColor().a*0.97f;
-            if(alpha < 1) {
+            final float alpha = sprite.getColor().a*0.95f;
+            if(alpha < 0.1f) {
                 delete();
             }
 
