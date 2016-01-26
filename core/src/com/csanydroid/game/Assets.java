@@ -113,6 +113,12 @@ public class Assets {
     public static final AssetDescriptor<Sound> BLACKHOLE_SOUND
             = new AssetDescriptor<Sound>("sounds/black_hole.wav", Sound.class);
 
+	public static final AssetDescriptor<Sound> DOOR_OPEN_SOUND
+			= new AssetDescriptor<Sound>("sounds/door.wav", Sound.class);
+
+	public static final AssetDescriptor<Sound> DOOR_CLOSE_SOUND
+			= new AssetDescriptor<Sound>("sounds/door_back.wav", Sound.class);
+
     public static final AssetDescriptor<Sound> BALLCWBALL_SOUND
             = new AssetDescriptor<Sound>("sounds/ball_collision_with_ball.wav", Sound.class);
 
@@ -146,7 +152,7 @@ public class Assets {
 	}
 
 	public static void load() {
-
+		//TEXTÚRÁK//
         manager.load(LOCK);
 		manager.load(SWITCH_ATLAS);
 		manager.load(PUSH_BUTTON);
@@ -173,11 +179,16 @@ public class Assets {
 		manager.load(MENU_LOGO);
 		manager.load(MENU_MOLE);
 		//manager.load(PLAY);
+		//TEXTÚRÁK//
 
+
+		//ZENE//
         manager.load(MAZESELECTING_MUSIC);
         manager.load(MENU_MUSIC);
         manager.load(NEXTLEVEL_MUSIC);
+		//ZENE//
 
+		//HANGOK//
         manager.load(BLACKHOLE_SOUND);
         manager.load(BALLCWBALL_SOUND);
         manager.load(BALLCWWALL_SOUND);
@@ -187,6 +198,9 @@ public class Assets {
         manager.load(SWITCHING_SOUND);
         manager.load(TELEPORTATION_SOUND);
         manager.load(WALLEXPLOSION_SOUND);
+		manager.load(DOOR_OPEN_SOUND);
+		manager.load(DOOR_CLOSE_SOUND);
+		//HANGOK//
 
 	}
 
