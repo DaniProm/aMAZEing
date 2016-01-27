@@ -669,7 +669,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			}
 		}
 		// TODO
-		Gdx.app.log("stage", "Addzoom : " + additionalZoom);
+		//Gdx.app.log("stage", "Addzoom : " + additionalZoom);
 		zoomPrevDistance = distance;
 		return false;
 	}
