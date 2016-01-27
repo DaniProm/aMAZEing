@@ -213,6 +213,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return collectedStars;
 	}
 
+
 	public void pause() {
         if(state == GameState.PLAYING) {
             changeState(GameState.PAUSED);
@@ -227,7 +228,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
     }
 
     enum GameState {
-        PLAYING, PAUSED, WON, LOST;
+        PLAYING, PAUSED, WON, LOST, WINNER
     }
 
     public GameState getState() {
@@ -258,12 +259,13 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
             changeState(hasWon ? GameState.WON : GameState.LOST);
 
 			if (hasWon) {
-                maze.unlockNext();
+				maze.unlockNext();
 			}
+
 
 		} catch (Exception e) {
             try {
-                Maze.createRandomMaze().beginPlay();
+                changeState(GameState.WINNER);
             } catch (Exception ignored) { }
 
 		}
@@ -390,6 +392,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
 						maze.unlockAll();
 						Gdx.app.log("control", "Az összes pálya feloldva");
+					}
+
+					if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+						changeState(GameState.WON);
+						Gdx.app.log("control", "CHEAT...A pálya kész");
 					}
 
 					if (!controlWithMouse) {

@@ -38,14 +38,17 @@ public class InterMazeWindow extends MyWindow {
         super();
         this.gameStage = gameStage;
         switch (gameStage.getState()) {
-            case PAUSED:
-                showPausedWindow();
-                break;
             case WON:
                 showNextMazeWindow();
                 break;
+            case PAUSED:
+                showPausedWindow();
+                break;
             case LOST:
                 showFailMazeWindow();
+                break;
+            case WINNER:
+                showWinnerWindow();
                 break;
         }
     }
@@ -161,7 +164,7 @@ public class InterMazeWindow extends MyWindow {
 
         Label label = new Label(
                 String.format(
-                        "Sajnos elvesztetted az összes gömbödet, próbákozz újra! :("),
+                        "Sajnos nem sikerült teljesítened a pályát. \nNe feledd, az összes gömbönek célba kell érnie!\nPróbáld újra! :("),
                 labelStyle);
         label.setWrap(true);
         label.setAlignment(Align.topLeft, Align.bottomLeft);
@@ -197,5 +200,35 @@ public class InterMazeWindow extends MyWindow {
         addActor(textButtonNext);
         addActor(textButtonSelector);
     }
+
+    private void showWinnerWindow(){
+        setTitle("Nyertél!");
+
+        Label label = new Label(
+                String.format(
+                        "Sikeresen teljesítetetted az összes pályát, gratulálok! :)\n Most egy bónusz pályát vihetsz végig! :)"),
+                labelStyle);
+        label.setWrap(true);
+        label.setAlignment(Align.topLeft, Align.bottomLeft);
+        label.setPosition(10, 300);
+        label.setWidth(getWidth() - 20);
+        label.setFontScale(0.6f);
+        addActor(label);
+
+
+        TextButton textButtonSelector = new MyButton("Tovább", textButtonStyle);
+        textButtonSelector.setSize(170, 60);
+        textButtonSelector.setPosition(20, 45);
+        textButtonSelector.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {Maze.createRandomMaze().beginPlay();}
+                catch (Exception e){}
+            }
+        });
+
+        addActor(textButtonSelector);
+    }
+
 }
 

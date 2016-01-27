@@ -92,8 +92,8 @@ public class Maze {
 		this.name = name;
 		this.description = description;
 
-		this.width = 2 * size + 1;
-		this.height = 2 * size + 2;
+		this.width = 2 * size + 2;
+		this.height = 2 * size;
 
 		final int [][] maze = new int[size][size];
 
@@ -438,7 +438,7 @@ public class Maze {
     }
 
 	public void unlockAll() {
-		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size()-1);
+		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size());
 		ag.prefs.flush();
 	}
 

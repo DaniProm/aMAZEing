@@ -19,7 +19,7 @@ public class GameScreen extends MyScreen {
 
     GameScreen(Maze maze) {
 		super();
-            setBackgroundColor(0f,0.3f,0f);
+            setBackgroundColor(0f, 0.3f, 0f);
 
 		gameStage = new GameStage(viewport, batch, maze);
         gameStage.lookAtMaze(camera);
@@ -28,17 +28,17 @@ gameStage.setEventListener(new GameStage.EventListener() {
     @Override
     public void onStateChange() {
         System.out.println("state changed: " + gameStage.getState());
-        if(imw != null) {
+        if (imw != null) {
             imw.remove();
             imw = null;
         }
 
-        if(gameStage.getState() == GameStage.GameState.PLAYING) {
+        if (gameStage.getState() == GameStage.GameState.PLAYING) {
             Gdx.input.setInputProcessor(gameStage);
             return;
         }
         imw = new InterMazeWindow(gameStage);
-    controlStage.addActor(imw);
+        controlStage.addActor(imw);
 
         Gdx.input.setInputProcessor(controlStage);
 
