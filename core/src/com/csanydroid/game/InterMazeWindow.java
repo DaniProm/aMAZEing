@@ -164,7 +164,7 @@ public class InterMazeWindow extends MyWindow {
 
         Label label = new Label(
                 String.format(
-                        "Sajnos nem sikerült teljesítened a pályát. \nNe feledd, az összes gömbönek célba kell érnie!\nPróbáld újra! :("),
+                        "Sajnos nem sikerült teljesítened a pályát. Ne feledd, az összes gömbönek célba kell érnie! Próbáld újra! :("),
                 labelStyle);
         label.setWrap(true);
         label.setAlignment(Align.topLeft, Align.bottomLeft);
