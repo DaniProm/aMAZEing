@@ -439,9 +439,9 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			world.step(delta, 1, 1);
 
-			super.act(delta);
-		}
 
+		}
+		super.act(delta);
 	}
 
 	@Override
