@@ -59,9 +59,30 @@ public class InterMazeWindow extends MyWindow {
 
         MyButton button;
 
+        final MazeActor mazeActor = new MazeActor(gameStage.getMaze());
+        mazeActor.setSize(200, 200);
+        mazeActor.setPosition(getWidth() / 2 - 100, 180);
+
+        addActor(mazeActor);
+
+        TextButton textButtonNext = new MyButton("Újra", textButtonStyle);
+        textButtonNext.setSize(180, 60);
+        textButtonNext.setPosition(getWidth() / 2 - 90, 30);
+        textButtonNext.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    gameStage.getMaze().beginPlay();
+                } catch (Exception ignored) {
+                }
+            }
+        });
+
+        addActor(textButtonNext);
+
         button = new MyButton("Folytatás", textButtonStyle);
-        button.setSize(170, 60);
-        button.setPosition(20, 110);
+        button.setSize(210, 60);
+        button.setPosition(30, 110);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -75,8 +96,8 @@ public class InterMazeWindow extends MyWindow {
 
 
         button = new MyButton("Feladom", textButtonStyle);
-        button.setSize(170, 60);
-        button.setPosition(300, 110);
+        button.setSize(210, 60);
+        button.setPosition(360, 110);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
