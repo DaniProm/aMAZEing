@@ -27,7 +27,7 @@ gameStage.setEventListener(new GameStage.EventListener() {
 
     @Override
     public void onStateChange() {
-        System.out.println("state changed: " + gameStage.getState());
+        //System.out.println("state changed: " + gameStage.getState());
         if (imw != null) {
             imw.remove();
             imw = null;

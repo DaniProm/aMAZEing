@@ -1,5 +1,6 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -50,6 +51,7 @@ public class BlackHoleActor extends GameActor {
 		for (BallActor ball; (ball = balls.poll()) != null; ) {
 			//float width=getWidth();
 			ball.setBlackhole();
+			//balls.remove(ball);
 			//setSize(getWidth() * 1.02f, getHeight() * 1.02f);
 			//setPosition(getX() - (getWidth() - width) / 2, getY() - (getWidth() - width) / 2);
 			//ball.sprite.setAlpha(ball.sprite.getColor().a * 0.97f);

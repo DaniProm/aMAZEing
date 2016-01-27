@@ -61,6 +61,10 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private byte collectedStars;
 
 	private float additionalZoom = 1;
+	private float additionalPositionX = 0;
+	private float additionalPositionY = 0;
+	private float additionalPosLockTime = -100;
+	private float elapsedTime = 0;
 
 	{
 
@@ -284,7 +288,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
     }
 
 	public void removeBall(BallActor ball) {
-
+		//Gdx.app.log("Vibra","1");
         eventListener.onBallRemove();
 
 		balls.remove(ball);
@@ -358,12 +362,28 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			width = Math.max(right - left, BALL_HORIZON);
 
 			float newValue;
-
-			newValue = (right + left) / 2;
-			camera.position.x += (newValue - camera.position.x) / 10;
-			newValue = (top + bottom) / 2;
-			camera.position.y += (newValue - camera.position.y) / 10;
-
+//Gdx.app.log("stage", "Elapsed: " + elapsedTime + "  add" + additionalPosLockTime);
+			if (elapsedTime>additionalPosLockTime+2f) {
+				newValue = (right + left) / 2;
+				camera.position.x += (newValue - camera.position.x) / 10;
+				newValue = (top + bottom) / 2;
+				camera.position.y += (newValue - camera.position.y) / 10;
+				if (additionalZoom>1.1f)
+				{
+					additionalZoom*=0.95;
+				}
+				else if (additionalZoom<0.9f)
+				{
+					additionalZoom*=1.05;
+				}
+			}
+			else
+			{
+				if (elapsedTime<additionalPosLockTime+0.1f) {
+					camera.position.x += additionalPositionX;
+					camera.position.y += additionalPositionY;
+				}
+			}
 			newValue = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 			camera.zoom += (newValue - camera.zoom) / 30f;
 
@@ -376,6 +396,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	@Override
 	public void act(float delta) {
 
+		elapsedTime += delta;
 		if (state == GameState.PLAYING) {
 
 			switch (Gdx.app.getType()) {
@@ -600,14 +621,28 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean fling(float velocityX, float velocityY, int button) {
-		//Gdx.app.log("stage", "fling");
+		//Gdx.app.log("stage", "fling : " + velocityX + " : " + velocityY + " button: "  +button);
 		return false;
 	}
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		//Gdx.app.log("stage", "fling : " + x + " : " + y + " deltaX: " + deltaX + " deltaY: "  +deltaY);
+		additionalPositionX = -deltaX *((OrthographicCamera)getCamera()).zoom;
+		additionalPositionY = deltaY *((OrthographicCamera)getCamera()).zoom;
+		if (additionalPositionX !=0 || additionalPositionY!=0) {
+			additionalPosLockTime = elapsedTime;
+		}
 		//Gdx.app.log("stage", "pan");
 		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		additionalPositionX = 0;
+		additionalPositionY = 0;
+		zoomPrevDistance = -1;
+		return super.touchUp(screenX, screenY, pointer, button);
 	}
 
 	@Override
@@ -616,10 +651,26 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return false;
 	}
 
+	private float zoomPrevDistance = -1;
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = Math.max(Math.min(initialDistance / distance, 2f), 1 / 2f);
+		//additionalZoom = Math.max(Math.min(initialDistance / distance, 2f), 1 / 2f);
+
+		//Gdx.app.log("stage", "Init : " + initialDistance + "  Dist " + distance);
+		if (zoomPrevDistance >0) {
+			additionalZoom += (zoomPrevDistance - distance) * ((OrthographicCamera) getCamera()).zoom;
+			if (additionalZoom < 2f/Math.max(maze.getWidth(), maze.getHeight()))
+			{
+				additionalZoom = 2f/Math.min(maze.getWidth(), maze.getHeight());
+			}
+			if (additionalZoom>3)
+			{
+				additionalZoom = 3;
+			}
+		}
 		// TODO
+		Gdx.app.log("stage", "Addzoom : " + additionalZoom);
+		zoomPrevDistance = distance;
 		return false;
 	}
 

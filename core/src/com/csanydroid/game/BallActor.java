@@ -231,6 +231,7 @@ public class BallActor extends GameActor {
 			spriteShadow.setAlpha(alpha * 0.97f);
 			if(alpha < 0.1f) {
 				delete();
+				remove();
 			}
 
 		}
