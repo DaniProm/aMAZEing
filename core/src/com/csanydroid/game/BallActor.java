@@ -59,8 +59,8 @@ public class BallActor extends GameActor {
 	@Override
 	public void delete() {
 		((GameStage)getStage()).removeBall(this);
-		super.delete();
-
+		//super.delete();
+		deactivate();
 	}
 
 	public static float minAngleRad(float a, float b)
@@ -87,7 +87,7 @@ public class BallActor extends GameActor {
 
 	@Override
 	public void act(float delta) {
-		super.act(delta);
+		if (swallowHole==null) super.act(delta);
 		float BallPositionX = body.getPosition().x;
 		float BallPositionY = body.getPosition().y;
 		float distanceX = prevBallPositionX - BallPositionX;
@@ -236,6 +236,65 @@ public class BallActor extends GameActor {
 		}
 		// Daráló //
 
+
+		if (swallowHole!=null) {
+			float ix = 0f;
+			float iy = 0;
+			if (Math.abs(((getX() + getWidth()/2) - (swallowHole.getX() + swallowHole.getWidth()/2+0.08f))) > 0.05f || Math.abs(((getY() + getHeight()/2) - (swallowHole.getY()+swallowHole.getHeight()/2 + 0.03f))) > 0.05f) {
+				if (getX() + getWidth()/2 < swallowHole.getX() + swallowHole.getWidth()/2+0.08f)
+				{
+					ix = 0.03f;
+				}
+				else
+				{
+					ix = -0.03f;
+				}
+				if (getY() + getHeight()/2 < swallowHole.getY() + swallowHole.getHeight()/2+0.03f)
+				{
+					iy = 0.03f;
+				}
+				else
+				{
+					iy = -0.03f;
+				}
+				setPosition(getX() + ix, getY() +iy);
+				if (scale>0.5)
+				{
+					scale-=0.02f;
+					float alpha = sprite.getColor().a;
+					sprite.setAlpha(alpha * 0.99f);
+					spriteLight.setAlpha(alpha * 0.99f);
+					float w = getWidth();
+					float h = getHeight();
+					setSize(scale, scale);
+					setPosition(getX() + (h - getWidth()) / 2, getY()+(w-getWidth())/2);
+				}
+			}
+			//setPosition(0, 0);
+			//Gdx.app.log("asd", "" + getX());
+		}
+		//ballToSwallow.Swallow(this);
+
+		//ballToSwallow = null;
+
+		// itt lehetne megváltoztatni a sprite-ot is...
+// Lyuk //
+
+//			setPosition((getX()+(float)Math.ceil(swallowHole.getX()))/2, (getY()+0.5f+(float)Math.ceil(swallowHole.getY()))/2);
+		//if (scale>0.5) {
+		//scale -= 0.5f;
+		//ballToSwallow.setSize(scale, scale);
+
+
+//				setPosition(getX()+getWidth()/2-scale+0.5f, getY()+getHeight()/2-scale+0.5f);
+		//}
+
+	}
+
+	private HoleActor swallowHole = null;
+	public void Swallow(HoleActor h)
+	{
+		swallowHole = h;
 	}
 
 	@Override
@@ -283,5 +342,11 @@ public class BallActor extends GameActor {
 		scale=1;
 	}
 
+/*	private HoleActor swallowHole = null;
+	public void Swallow(HoleActor h)
+	{
+		swallowHole = h;
+	}
+*/
 }
 

@@ -45,6 +45,7 @@ public class HoleActor extends GameActor {
 		if(ballToSwallow != null) {
 			hasSwallowedBall = true;
 			ballToSwallow.delete();
+			ballToSwallow.Swallow(this);
 			ballToSwallow = null;
 
 			// itt lehetne megváltoztatni a sprite-ot is...
