@@ -426,8 +426,10 @@ public class Maze {
 
     private final static AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
     public void unlockNext() {
-        ag.prefs.putInteger(PREF_LEVEL_NUMBER, getMazeIndex() + 1);
-        ag.prefs.flush();
+		if (ag.prefs.getInteger(PREF_LEVEL_NUMBER)<getMazeIndex() + 1) {
+			ag.prefs.putInteger(PREF_LEVEL_NUMBER, getMazeIndex() + 1);
+			ag.prefs.flush();
+		}
     }
 
     public boolean isUnlocked() {
