@@ -441,6 +441,10 @@ public class Maze {
 		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size());
 		ag.prefs.flush();
 	}
+	public void lockAll() {
+		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size());
+		ag.prefs.clear();
+	}
 
     public int getMazeIndex() {
         return mazes.indexOf(this);

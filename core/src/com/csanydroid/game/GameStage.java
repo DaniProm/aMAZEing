@@ -389,6 +389,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 						Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
 					}
 
+					if (Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
+						maze.lockAll();
+						Gdx.app.log("control", "Az összes pálya lezárva ");
+					}
+
 					if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
 						maze.unlockAll();
 						Gdx.app.log("control", "Az összes pálya feloldva");
