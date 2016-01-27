@@ -22,7 +22,7 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
     MazeSelectorScreen(){
         super();
          setBackgroundColor(0f,0.3f,0f);
-        stage = new Stage() {
+        stage = new Stage(viewport) {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
@@ -37,8 +37,9 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 
         };
 
-        stage.setDebugAll(true);
+       // stage.setDebugAll(true);
         Table table = new Table();
+        table.row();
 
        for (final Maze maze : Maze.getMazes()) {
 
@@ -53,11 +54,11 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
                }
            });
 
-            mazeActor.setSize(256, 256);
+            mazeActor.setSize(600, 600);
 
            table.add(mazeActor).pad(12);
 
-            table.row();
+
 
         }
 

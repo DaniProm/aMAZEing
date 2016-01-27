@@ -22,7 +22,7 @@ public class DoorActor extends GateActor {
 		addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                open(); Assets.manager.get(Assets.DOOR_OPEN_SOUND).play();
+                open();
             }
         });
 	}
@@ -31,7 +31,10 @@ public class DoorActor extends GateActor {
 	public void act(float delta) {
 		if(state == State.OPENED) {
 			timeSinceOpened += delta;
-			if(timeSinceOpened > 3) tryClose();Assets.manager.get(Assets.DOOR_CLOSE_SOUND).play();
+			if(timeSinceOpened > 3) {
+				tryClose();
+
+			}
 		}
 		super.act(delta);
 
