@@ -1,0 +1,9 @@
+8. pálya - Kapcsolók - 2
+..............
+.O *  .X .  i.
+.   .I.A..*...
+. a .X.     O.
+..............
+
+a false,false
+i false,false

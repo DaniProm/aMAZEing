@@ -1,14 +1,10 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.sun.media.sound.InvalidFormatException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -81,11 +77,11 @@ public class Maze {
 
 	private int starsCount = 0;
 
-	// TODO adni neki egy normális nevet
-    private int ballsToSurvive = 0;
+	
+    private int remainingBalls = 0;
 
-	public int getBallsToSurvive() {
-		return ballsToSurvive;
+	public int getRemainingBalls() {
+		return remainingBalls;
 	}
 
 	public static Maze createRandomMaze() {
@@ -96,8 +92,8 @@ public class Maze {
 		this.name = name;
 		this.description = description;
 
-		this.width = 2 * size + 1;
-		this.height = 2 * size + 2;
+		this.width = 2 * size + 2;
+		this.height = 2 * size;
 
 		final int [][] maze = new int[size][size];
 
@@ -415,42 +411,42 @@ public class Maze {
         return objects;
     }
 
-    public void beginPlay() {
-	    /*
-	   if (!isUnlocked()) {
-		    throw new Exception("Maze is locked.");
-	    }
-		*/
+    public void beginPlay() throws Exception {
 
-	    Gdx.app.log("játék maze", "begin play: " + getName());
+        if (!isUnlocked()) {
+            throw new Exception("Maze is locked.");
+        }
 
 	    ((AmazingGame) Gdx.app.getApplicationListener())
 			    .setScreen(new GameScreen(this));
 
-	    {
-		    final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-		    ag.prefs.putBoolean("known/" + getName(), true);
-		    ag.prefs.flush();
-	    }
-
 	}
 
-	public boolean isKnown() {
-		final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-		return ag.prefs.getBoolean("known/" + getName());
-	}
+    private static String PREF_LEVEL_NUMBER = "level_number";
 
-
-    public void setLock(boolean lock) {
-        final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-        ag.prefs.putBoolean("level/" + getName(), lock);
-        ag.prefs.flush();
+    private final static AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
+    public void unlockNext() {
+		if (ag.prefs.getInteger(PREF_LEVEL_NUMBER)<getMazeIndex() + 1) {
+			ag.prefs.putInteger(PREF_LEVEL_NUMBER, getMazeIndex() + 1);
+			ag.prefs.flush();
+		}
     }
 
     public boolean isUnlocked() {
-        final AmazingGame ag = (AmazingGame) Gdx.app.getApplicationListener();
-        return ag.prefs.getBoolean("level/" + getName());
+        int i = getMazeIndex();
+        if(i > 0) {
+            return ag.prefs.getInteger(PREF_LEVEL_NUMBER) >= i;
+        } else return true;
     }
+
+	public void unlockAll() {
+		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size());
+		ag.prefs.flush();
+	}
+	public void lockAll() {
+		ag.prefs.putInteger(PREF_LEVEL_NUMBER, mazes.size());
+		ag.prefs.clear();
+	}
 
     public int getMazeIndex() {
         return mazes.indexOf(this);
@@ -472,7 +468,7 @@ public class Maze {
 		BALL(Assets.manager.get(Assets.BALL_RED_ATLAS), Assets.manager.get(Assets.BALL_BLUE_ATLAS),Assets.manager.get(Assets.BALL_GREEN_ATLAS),Assets.manager.get(Assets.BALL_ORANGE_ATLAS)),
 		HOLE(Assets.manager.get(Assets.HOLE)),
 		BLACK_HOLE(Assets.manager.get(Assets.BLACK_HOLE)),
-		WORMHOLE(Assets.manager.get(Assets.WORMHOLE_ATLAS)),
+		WORMHOLE(Assets.manager.get(Assets.WORMHOLE)),
 		PUDDLE(Assets.manager.get(Assets.PUDDLE)),
 		STAR,
 		DOOR(Assets.manager.get(Assets.DOOR_ATLAS)),

@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,17 +19,17 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
     SpriteBatch batch = new SpriteBatch();
     Stage stage;
 
-    TextButton button;
     MazeSelectorScreen(){
         super();
          setBackgroundColor(0f,0.3f,0f);
-        stage = new Stage() {
+        stage = new Stage(viewport) {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case Input.Keys.ESCAPE:
                     case Input.Keys.BACK:
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        ((Game) Gdx.app.getApplicationListener())
+                                .setScreen(new MenuScreen());
                         break;
                 }
                 return false;
@@ -36,50 +37,28 @@ public class MazeSelectorScreen extends MyScreen implements ApplicationListener{
 
         };
 
-
-
-        System.out.println("Log: 'Tábla' létrehozva.");
-
-       /* Label label = new Label("Pályák", LABEL_STYLE);
-        label.setAlignment(Align.center, Align.center);
-        stage.add...
-                .width(500f)
-                .height(130f);*/
-        System.out.println("Log: 'Label' létrehozva.");
-
-
-        final float ROW_HEIGHT = 75f;
-
-
-        /*table.add(mazeActor);
-        stage.addActor(mazeActor);*/
-
-        //table.add(mazeActor);
-        //stage.addActor(mazeActor);
-stage.setDebugAll(true);
+       // stage.setDebugAll(true);
         Table table = new Table();
+        table.row();
 
        for (final Maze maze : Maze.getMazes()) {
 
             MazeActor mazeActor = new MazeActor(maze);
-            //mazeActor.setPosition(Gdx.graphics.getWidth() / 4, Gdx.graphics.getWidth() / 4);
-            //mazeActor.setPosition(0,0);
-            mazeActor.setSize(256, 256);
 
-/*
-            button = new TextButton(String.format("#%d pálya: ", maze.getMazeIndex() + 1, maze.getDescription()), MyScreen.TEXT_BUTTON_STYLE);
-	      //  button.setSize(400, 200);
-            button.addListener(new ClickListener() {
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-		            maze.beginPlay();
-	            }
-            });
-            table.add(button).height(200);
-*/
+           mazeActor.addListener(new ClickListener() {
+               @Override
+               public void clicked(InputEvent event, float x, float y) {
+                   try {
+                       maze.beginPlay();
+                   } catch (Exception e) { }
+               }
+           });
+
+            mazeActor.setSize(600, 600);
+
            table.add(mazeActor).pad(12);
 
-            table.row();
+
 
         }
 
@@ -92,21 +71,16 @@ stage.setDebugAll(true);
 	    // gombok hozzáadása
 
 
-	    TextButton button = new TextButton("Vissza", TEXT_BUTTON_STYLE);
+	    TextButton button = new MyButton("Vissza", MyWindow.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Log: Klikk a 'Kilépés' gombra.");
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             }
 	    });
 	    button.setPosition(0, 0);
 
 	    stage.addActor(button);
-
-        /*mazeActor = new MazeActor(false);
-        mazeActor.setPosition(mazeActor.getX(), mazeActor.getY());
-        stage.addActor(mazeActor);*/
 
     }
 
@@ -129,9 +103,20 @@ stage.setDebugAll(true);
     @Override
     public void render() {}
 
+
+    private Music music = Assets.manager.get(Assets.MAZESELECTING_MUSIC);
+
+    @Override
+    public void hide() {
+        super.hide();
+
+        music.pause();
+    }
+
     @Override
     public void show() {
         super.show();
+        music.play();
         Gdx.input.setInputProcessor(stage);
     }
 

@@ -1,0 +1,10 @@
+7. pálya - Kapcsolók - 1
+............
+.  a  .   X.
+.     .*   .
+.O    A   @.
+............
+
+1,2:5 A kapcsoló segítségével nyisd ki az ajtót!
+
+a false,false

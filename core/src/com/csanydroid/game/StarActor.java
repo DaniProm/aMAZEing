@@ -1,6 +1,8 @@
 package com.csanydroid.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Array;
 
 public class StarActor extends GameActor {
-	private final Music music = Assets.manager.get(Assets.STAR_MUSIC);
 
 	protected static Animation animation;
 	private float stateTime = 0;
@@ -24,12 +25,7 @@ public class StarActor extends GameActor {
 		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
 		setSize(0.5f, 0.5f);
 		setTouchable(Touchable.disabled);
-		music.setOnCompletionListener(new Music.OnCompletionListener() {
-			@Override
-			public void onCompletion(Music music) {
-				delete();
-			}
-		});
+
 	}
 
     @Override
@@ -49,7 +45,8 @@ public class StarActor extends GameActor {
 		setZIndex(Integer.MAX_VALUE);
 		hasCollected = true;
 		((GameStage)getStage()).collectStar();
-		music.play();
+
+        Assets.manager.get(Assets.STARCOLLECTION_SOUND).play();
 	}
 
 	@Override
@@ -62,10 +59,15 @@ public class StarActor extends GameActor {
 		if(!hasCollected) super.act(delta);
 		else {
 			deactivate();
-			float width=getWidth();
-			setSize(getWidth() * 1.02f, getHeight() * 1.02f);
-			setPosition(getX()-(getWidth()-width)/2, getY()-(getWidth()-width)/2);
-			sprite.setAlpha(sprite.getColor().a*0.97f);
+			final float oldWidth = getWidth();
+			setSize(getWidth() * 1.05f, getHeight() * 1.05f);
+			setPosition(getX() - (getWidth() - oldWidth) / 2, getY() - (getWidth() - oldWidth) / 2);
+            final float alpha = sprite.getColor().a*0.95f;
+            if(alpha < 0.1f) {
+                delete();
+            }
+
+			sprite.setAlpha(alpha);
 			//sprite.setColor(0,0,0,sprite.getColor().a*0.95f);
 
 			//setVisible(false);

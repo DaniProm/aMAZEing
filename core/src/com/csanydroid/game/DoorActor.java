@@ -1,6 +1,7 @@
 package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.utils.Array;
 public class DoorActor extends GateActor {
 
 	private float timeSinceOpened;
+
+
 
     {
 		setTouchable(Touchable.enabled);
@@ -28,7 +31,10 @@ public class DoorActor extends GateActor {
 	public void act(float delta) {
 		if(state == State.OPENED) {
 			timeSinceOpened += delta;
-			if(timeSinceOpened > 3) tryClose();
+			if(timeSinceOpened > 3) {
+				tryClose();
+
+			}
 		}
 		super.act(delta);
 

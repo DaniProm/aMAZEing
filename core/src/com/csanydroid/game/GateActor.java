@@ -72,6 +72,7 @@ public class GateActor extends GameActor {
 
 	public void open() {
 		if(state == State.OPENED || state == State.OPENING) return;
+		Assets.manager.get(Assets.DOOR_OPEN_SOUND).play();
 		state = State.OPENING;
 		if(body != null) setSensor(true);
 	}
@@ -79,12 +80,14 @@ public class GateActor extends GameActor {
 	public void tryClose() {
 		if(state == State.CLOSED || state == State.CLOSING) return;
 		state = State.TRY_CLOSE;
+
 	}
 
 	private void close() {
 		//if(state == State.CLOSED) return;
 		state = State.CLOSING;
 		if(body != null) setSensor(false);
+		Assets.manager.get(Assets.DOOR_CLOSE_SOUND).play();
 	}
 
 }

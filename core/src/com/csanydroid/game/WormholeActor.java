@@ -1,9 +1,5 @@
 package com.csanydroid.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,8 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayDeque;
@@ -26,7 +20,6 @@ public class WormholeActor extends GameActor {
 	protected static Animation animation;
 	private float stateTime = 0;
 
-	private final Sound sound = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
 	private float active = 0;
 	private WormholeActor endpoint = null;
 
@@ -58,12 +51,14 @@ public class WormholeActor extends GameActor {
 
 	public WormholeActor() {
 
-		final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.WORMHOLE_ATLAS).getRegions();
+		//final Array<TextureAtlas.AtlasRegion> textureAtlasRegions = Assets.manager.get(Assets.WORMHOLE).getRegions();
 
-		sprite = new Sprite(textureAtlasRegions.first());
-		sprite.setRegion(textureAtlasRegions.first());
-		animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
-		setSize(0.5f, 0.5f);
+		sprite = new Sprite(Assets.manager.get(Assets.WORMHOLE));
+		sprite.rotate((float)(Math.random()*360.0));
+		//sprite.setRegion(textureAtlasRegions.first());
+		//animation = new Animation(1 / 30f, textureAtlasRegions, Animation.PlayMode.LOOP);
+		//setSize(0.5f, 0.5f);
+		setSize(1f, 1f);
 		/*music.setOnCompletionListener(new Music.OnCompletionListener() {
 			@Override
 			public void onCompletion(Music music) {
@@ -104,13 +99,13 @@ public class WormholeActor extends GameActor {
 		active -= delta;
 		elapsedTime += delta;
 
-		float size = (0.15f * (float) (Math.sin(elapsedTime * 5.0f)))+0.85f;
-		sprite.setRegion(animation.getKeyFrame(stateTime * 0.2f));
-		sprite.setSize(size, size);
+//		float size = (0.15f * (float) (Math.sin(elapsedTime * 5.0f)))+0.85f;
+//		sprite.setRegion(animation.getKeyFrame(stateTime * 0.2f));
+//		sprite.setSize(size, size);
 		Vector2 v = body.getPosition();
-		sprite.setPosition(v.x + (1 - size) / 2, v.y + (1 - size) / 2);
-		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-		sprite.rotate(1);
+//		sprite.setPosition(v.x + (1 - size) / 2, v.y + (1 - size) / 2);
+//		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+		//sprite.rotate(0.1f);
 		if (balls.size() > 0) {
 			// H: Emlékeztessetek, hogy ezzel kapcsolatban meg kell beszélni valamit!
 			final BallActor ball = balls.getFirst();

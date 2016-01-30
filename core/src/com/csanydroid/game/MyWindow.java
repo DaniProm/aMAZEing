@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -28,8 +29,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
  */
 abstract public class MyWindow extends Window {
     private static WindowStyle windowStyle = new WindowStyle();
-    private static Label.LabelStyle labelStyle = new Label.LabelStyle();
-    private static Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
+    protected final static Label.LabelStyle labelStyle = new Label.LabelStyle();
+    private final static Label.LabelStyle titleStyle = new Label.LabelStyle();
+    protected final static TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
     private static String CHARS = "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_*<>#&@{}[],-.";
     private static BitmapFont bitmapFont;
     private Label titleLabel;
@@ -39,9 +41,9 @@ abstract public class MyWindow extends Window {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/sitka.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 40;
-        parameter.shadowOffsetX = 2;
-        parameter.shadowOffsetY = 2;
-        parameter.shadowColor = Color.BLACK;
+        parameter.shadowOffsetX = 1;
+        parameter.shadowOffsetY = 1;
+        parameter.shadowColor = Color.valueOf("237700");
         parameter.characters = CHARS;
         bitmapFont = generator.generateFont(parameter);
         bitmapFont.setColor(0, 0, 0, 1f);
@@ -58,17 +60,29 @@ abstract public class MyWindow extends Window {
         pixmap.drawPixel(0,0,Color.rgba8888(0,0,0,0.5f));
         windowStyle.stageBackground = new SpriteDrawable(new Sprite(new Texture(pixmap)));
 
-
         labelStyle.font = bitmapFont;
+        labelStyle.fontColor = Color.valueOf("43a708");
+
+        titleStyle.font = bitmapFont;
+        titleStyle.fontColor = Color.WHITE;
+
+        textButtonStyle.font = bitmapFont;
+        textButtonStyle.fontColor = Color.WHITE;
+        textButtonStyle.over = new SpriteDrawable(new Sprite(Assets.manager.get(Assets.BUTTON_ATLAS).getRegions().get(0)));
+        textButtonStyle.down = new SpriteDrawable(new Sprite(Assets.manager.get(Assets.BUTTON_ATLAS).getRegions().get(1)));
+        textButtonStyle.up = new SpriteDrawable(new Sprite(Assets.manager.get(Assets.BUTTON_ATLAS).getRegions().get(2)));
+
+
     }
 
     public MyWindow() {
         super("", windowStyle);
         setResizable(false);
+        setVisible(true);
         setMovable(false);
         setFillParent(false);
         setBounds(204, 153, 612, 459);
-        titleLabel = new Label("Hello world",labelStyle);
+        titleLabel = new Label("Hello world",titleStyle);
         titleLabel.setPosition(5, 405);
         titleLabel.setWidth(getWidth());
         titleLabel.setAlignment(1, 1);

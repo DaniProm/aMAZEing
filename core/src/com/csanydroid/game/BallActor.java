@@ -23,6 +23,9 @@ public class BallActor extends GameActor {
 	private float ballAngle = 0, prevBallAngle = 0;
 	private boolean ballInverzeRotation = false;
 
+	private boolean onBlackhole = false;
+
+
 	//private static int createdBallsNumber = 0;
 
 	private static final float ballZoom = 0.93f;
@@ -56,8 +59,8 @@ public class BallActor extends GameActor {
 	@Override
 	public void delete() {
 		((GameStage)getStage()).removeBall(this);
-		super.delete();
-
+		//super.delete();
+		deactivate();
 	}
 
 	public static float minAngleRad(float a, float b)
@@ -74,9 +77,17 @@ public class BallActor extends GameActor {
 		return (a+36000) % 360;
 	}
 
+
+
+	public void setBlackhole()
+	{
+		onBlackhole = true;
+		deactivate();
+	}
+
 	@Override
 	public void act(float delta) {
-		super.act(delta);
+		if (swallowHole==null) super.act(delta);
 		float BallPositionX = body.getPosition().x;
 		float BallPositionY = body.getPosition().y;
 		float distanceX = prevBallPositionX - BallPositionX;
@@ -174,26 +185,33 @@ public class BallActor extends GameActor {
 		if (Timer>=0) {
 			Timer+=delta;
 		}
-		if (Timer>=0 && Timer<=0.5)
+		if (Timer>=0 && Timer<=1.5)
 		{
-			scale+=0.1f;
-            setSize(scale, scale);
+			setPosition((getX()+(float)Math.ceil(wa.getX()))/2, (getY()+(float)Math.ceil(wa.getY()))/2);
+			if (scale>0) {
+				scale -= 0.1f;
+				setSize(scale, scale);
+				setPosition(getX()+getWidth()/2-scale+0.5f, getY()+getHeight()/2-scale+0.5f);
+			}
 		}
-		if (Timer>0.5 && Timer<=1.5)
+		/*if (Timer>0.5 && Timer<=1.5)
 		{
 			scale-=0.2f;
             sprite.setSize(scale, scale);
-		}
+		}*/
 		if (Timer > 1.5f && tx!=-10000) {
 			body.setTransform(tx, ty, 0);
 			tx = -10000;
 			ty = -10000;
 		}
-		if (Timer > 1.5) {
-			scale += 0.1f;
-			setSize(scale, scale);
+		if (Timer > 2) {
+			if (scale<=1) {
+				scale += 0.1f;
+				setSize(scale, scale);
+				setPosition(getX()+getWidth()/2-scale+0.5f, getY()+getHeight()/2-scale+0.5f);
+			}
 		}
-		if (Timer > 3)
+		if (Timer>0 && scale >= 1)
 		{
 			Timer = -1;
 			activate();
@@ -203,6 +221,81 @@ public class BallActor extends GameActor {
 		}
 
 		// Teleport //
+
+		// Daráló //
+		if (onBlackhole)
+		{
+			final float alpha = sprite.getColor().a;
+			sprite.setAlpha(alpha * 0.97f);
+			spriteLight.setAlpha(alpha * 0.97f);
+			spriteShadow.setAlpha(alpha * 0.97f);
+			if(alpha < 0.1f) {
+				delete();
+				remove();
+			}
+
+		}
+		// Daráló //
+
+
+		if (swallowHole!=null) {
+			float ix = 0f;
+			float iy = 0;
+			if (Math.abs(((getX() + getWidth()/2) - (swallowHole.getX() + swallowHole.getWidth()/2+0.08f))) > 0.05f || Math.abs(((getY() + getHeight()/2) - (swallowHole.getY()+swallowHole.getHeight()/2 + 0.03f))) > 0.05f) {
+				if (getX() + getWidth()/2 < swallowHole.getX() + swallowHole.getWidth()/2+0.08f)
+				{
+					ix = 0.03f;
+				}
+				else
+				{
+					ix = -0.03f;
+				}
+				if (getY() + getHeight()/2 < swallowHole.getY() + swallowHole.getHeight()/2+0.03f)
+				{
+					iy = 0.03f;
+				}
+				else
+				{
+					iy = -0.03f;
+				}
+				setPosition(getX() + ix, getY() +iy);
+				if (scale>0.5)
+				{
+					scale-=0.02f;
+					float alpha = sprite.getColor().a;
+					sprite.setAlpha(alpha * 0.99f);
+					spriteLight.setAlpha(alpha * 0.99f);
+					float w = getWidth();
+					float h = getHeight();
+					setSize(scale, scale);
+					setPosition(getX() + (h - getWidth()) / 2, getY()+(w-getWidth())/2);
+				}
+			}
+			//setPosition(0, 0);
+			//Gdx.app.log("asd", "" + getX());
+		}
+		//ballToSwallow.Swallow(this);
+
+		//ballToSwallow = null;
+
+		// itt lehetne megváltoztatni a sprite-ot is...
+// Lyuk //
+
+//			setPosition((getX()+(float)Math.ceil(swallowHole.getX()))/2, (getY()+0.5f+(float)Math.ceil(swallowHole.getY()))/2);
+		//if (scale>0.5) {
+		//scale -= 0.5f;
+		//ballToSwallow.setSize(scale, scale);
+
+
+//				setPosition(getX()+getWidth()/2-scale+0.5f, getY()+getHeight()/2-scale+0.5f);
+		//}
+
+	}
+
+	private HoleActor swallowHole = null;
+	public void Swallow(HoleActor h)
+	{
+		swallowHole = h;
 	}
 
 	@Override
@@ -240,6 +333,8 @@ public class BallActor extends GameActor {
 	public void Teleport(float x, float y, WormholeActor a, WormholeActor b)
 	{
 		deactivate();
+        Assets.manager.get(Assets.TELEPORTATION_SOUND).play();
+
 		wa = a;
 		wb = b;
 		tx = x;
@@ -248,5 +343,11 @@ public class BallActor extends GameActor {
 		scale=1;
 	}
 
+/*	private HoleActor swallowHole = null;
+	public void Swallow(HoleActor h)
+	{
+		swallowHole = h;
+	}
+*/
 }
 

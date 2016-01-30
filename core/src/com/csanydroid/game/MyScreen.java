@@ -19,14 +19,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MyScreen implements Screen {
 
 	protected final SpriteBatch batch = new SpriteBatch();
-	public final static float WORLD_WIDTH = 160, WORLD_HEIGHT = 90;
+	public final static float WORLD_WIDTH = 1024, WORLD_HEIGHT = 768;
 	protected OrthographicCamera camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
 	//protected Viewport viewport = new ScreenViewport(camera);
 	protected Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 	private static String CHARS = "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_*<>#&@{}[],-.";
 	protected static BitmapFont FONT_HOBO_STD, /*FONT_HOBO_STD_TOP, */FONT_CALIBRI;
 
-     private float r=0.5f,g=0.5f,b=0.5f;
+    protected float r=0.5f,g=0.5f,b=0.5f;
 
 	public MyScreen() { }
 /*
@@ -45,6 +45,7 @@ public class MyScreen implements Screen {
 	}*/
 
 	static {
+
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 50;

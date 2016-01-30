@@ -3,62 +3,91 @@ package com.csanydroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ControlStage extends Stage {
 
     private final GameStage gameStage;
 
-    private final static Texture ballTexture = new Texture("hole.png"), starTexture = new Texture("hole.png");
-
     protected OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    public ControlStage(Batch batch, GameStage gameStage) {
-        super(new ScalingViewport(Scaling.fill, 0, 0), batch);
-        setViewport(new ScreenViewport(camera));
+    public ControlStage(Batch batch, final GameStage gameStage) {
+        super(new ExtendViewport(1024, 768), batch);
         camera.position.x = -10;
         camera.update();
         camera.setToOrtho(true);
 
         this.gameStage = gameStage;
-        this.batch = getBatch();
+        starSpace = STAR_BAR_WIDTH / gameStage.getMaze().getStarsCount();
+
     }
 
     private final static float STAR_WIDTH = 30, STAR_BAR_WIDTH = 200;
 
-    Batch batch;
+    private Animation animation = new Animation(1 / 30f, Assets.manager.get(Assets.STAR_ATLAS).getRegions(), Animation.PlayMode.LOOP);
 
-    private float elapsedTime = 0;
+    private List<Star> stars = new ArrayList<Star>();
 
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-        elapsedTime += delta;
-    }
+    private final float starSpace;
 
     @Override
     public void draw() {
         super.draw();
 
-        batch.begin();
-        int i = gameStage.getCollectedStars();
-        if(i > 0) {
-            final float step = STAR_BAR_WIDTH / (i - 1);
-            float x = 0;
-            do {
-                double angle = Math.toRadians(elapsedTime * 60 + i * 20) % MathUtils.PI2;
-                if(angle < 0 || angle > Math.PI) angle = 0;
-                batch.draw(starTexture, x, 0 - (float)Math.sin(angle) * (STAR_WIDTH / 4), STAR_WIDTH, STAR_WIDTH);
+        for(int collectedStarsNum = gameStage.getCollectedStars();collectedStarsNum > stars.size();)
+            new Star();
+    }
 
-                x += step;
-            } while (--i > 0);
+    private class Star extends Actor {
+
+        private float stateTime = 0;
+
+        Sprite sprite = new Sprite();
+
+        public Star() {
+            addActor(this);
+            stars.add(this);
+            setSize(STAR_WIDTH, STAR_WIDTH);
+            setPosition(10 + (stars.size() - 1) * starSpace, 768 - STAR_WIDTH - 10);
+
         }
-        batch.end();
 
+        @Override
+        public void act(float delta) {
+            stateTime += delta;
+            sprite.setRegion(animation.getKeyFrame(stateTime));
+        }
+
+        @Override
+        protected void positionChanged() {
+            super.positionChanged();
+            sprite.setPosition(getX(), getY());
+        }
+
+        @Override
+        protected void sizeChanged() {
+            super.sizeChanged();
+            sprite.setSize(getWidth(), getHeight());
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            sprite.draw(batch);
+        }
     }
 
     @Override

@@ -19,7 +19,8 @@ public class AmazingGame extends Game implements ApplicationListener {
 	    Gdx.input.setCatchMenuKey(true);
 		Assets.prepare();
 
-	   setScreen(new LoadingScreen());
+	  setScreen(new LoadingScreen());
+
 	}
 
 	@Override

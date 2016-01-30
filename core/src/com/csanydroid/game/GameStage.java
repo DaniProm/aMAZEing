@@ -2,6 +2,7 @@ package com.csanydroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,6 +34,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final static String DEFAULT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~* ÖÜÓŐÚÉÁŰÍöüóőúéáűí";
 	protected static BitmapFont scribbleFont;
 
+
 	static {
 		// http://www.fontsquirrel.com/fonts/list/language/hungarian
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/AlegreyaSC-Regular.otf"));
@@ -56,9 +58,13 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	private final Maze maze;
 	public World world = new World(Vector2.Zero, false);
 	boolean controlWithMouse = false;
-	private byte totalStars, collectedStars;
-	private boolean isRunning = true;
+	private byte collectedStars;
+
 	private float additionalZoom = 1;
+	private float additionalPositionX = 0;
+	private float additionalPositionY = 0;
+	private float additionalPosLockTime = -100;
+	private float elapsedTime = 0;
 
 	{
 
@@ -89,6 +95,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				                         }
 
 				                         if (other instanceof PuddleActor) {
+                                             Assets.manager.get(Assets.PUDDE_MUSIC).play();
 					                         ball.body.setLinearDamping(4f);
 				                         } else if (other instanceof BlackHoleActor) {
 					                         ((BlackHoleActor) other).swallowBall(ball);
@@ -101,6 +108,7 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				                         } else if (other instanceof StarActor) {
 					                         ((StarActor) other).collect();
 				                         } else if (other instanceof SwitchActor) {
+                                             ball.body.setLinearDamping(1f);
 					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
 					                         if(((SwitchActor) other).isHorizontal()) {
 						                         if(side == 0 || side == 2)
@@ -111,7 +119,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         }
 				                         } else if (other instanceof PushButtonActor) {
 					                         ((PushButtonActor) other).setState(true);
-				                         }
+				                         } else if(other instanceof WallActor) {
+                                             Assets.manager.get(Assets.BALLCWWALL_SOUND).play();
+                                         } else if (other instanceof BallActor) {
+                                             Assets.manager.get(Assets.BALLCWBALL_SOUND).play();
+                                         }
 
 			                         }
 
@@ -139,10 +151,11 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					                         }
 				                         }
 
-
 				                         if (other instanceof PuddleActor) {
 					                         ball.body.setLinearDamping(0);
+                                             Assets.manager.get(Assets.PUDDE_MUSIC).pause();
 				                         } else if (other instanceof SwitchActor) {
+                                             ball.body.setLinearDamping(0);
 					                         int side = angleToSide(other.body.getPosition(), ball.body.getPosition());
 					                         if(((SwitchActor) other).isHorizontal()) {
 						                         if(side == 0 || side == 2)
@@ -175,16 +188,17 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		loadMaze(maze);
 
 		addActor(new BackgroundActor(maze));
+
+        changeState(GameState.PLAYING);
 	}
+
 
 	@Override
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
 			case Input.Keys.BACK:
 			case Input.Keys.ESCAPE:
-				// TODO párbeszéd ablak mutatása
-				((AmazingGame) Gdx.app.getApplicationListener())
-						.setScreen(new MenuScreen());
+                pause();
 				break;
 		}
 
@@ -203,37 +217,80 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return collectedStars;
 	}
 
-	public boolean isRunning() {
-		return isRunning;
-	}
 
 	public void pause() {
-		isRunning = false;
+        if(state == GameState.PLAYING) {
+            changeState(GameState.PAUSED);
+        }
 	}
 
 	public void resume() {
-		isRunning = true;
-	}
 
-	private void gameFinished(boolean hasWon) {
+        if (state == GameState.PAUSED) {
+            changeState(GameState.PLAYING);
+        }
+    }
+
+    enum GameState {
+        PLAYING, PAUSED, WON, LOST, WINNER
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    private GameState state;
+
+    private void changeState(GameState state) {
+        if(this.state == state) return;
+        this.state = state;
+
+        if(this.state == GameState.PLAYING) {
+
+            GestureDetector gd = new GestureDetector(20, 0.5f, 2, 0.15f, this);
+            InputMultiplexer im = new InputMultiplexer(gd, this);
+            Gdx.input.setInputProcessor(im);
+
+        }
+
+        if(eventListener != null) eventListener.onStateChange();
+
+    }
+
+    private void gameFinished(boolean hasWon) {
 
 		try {
+            changeState(hasWon ? GameState.WON : GameState.LOST);
+
 			if (hasWon) {
-				maze.getNextMaze().beginPlay();
-			} else {
-				maze.beginPlay();
+				maze.unlockNext();
 			}
 
+
 		} catch (Exception e) {
-			Maze.createRandomMaze().beginPlay();
-			//((AmazingGame) Gdx.app.getApplicationListener())
-			//		.setScreen(new MenuScreen());
+            try {
+                changeState(GameState.WINNER);
+            } catch (Exception ignored) { }
+
 		}
 
 	}
 
+    public void setEventListener(EventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    EventListener eventListener;
+
+    interface EventListener {
+        void onStateChange();
+        void onBallRemove();
+    }
+
 	public void removeBall(BallActor ball) {
-		Gdx.input.vibrate(250);
+		//Gdx.app.log("Vibra","1");
+        eventListener.onBallRemove();
+
 		balls.remove(ball);
 
 		if (balls.size() == 0) {
@@ -246,8 +303,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 				gameFinished(false);
 			}
 
-			Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
-		} else if (balls.size() < maze.getBallsToSurvive() || balls.size() < countEmptyHoles()) {
+			//Gdx.app.log("játék", "Sikerült " + collectedStars + " csillagot összegyűjtenem a " + totalStars + "-ra/-hoz/-ig/-ből/-ba/-tól.");
+		} else if (balls.size() < maze.getRemainingBalls() || balls.size() < countEmptyHoles()) {
 			gameFinished(false);
 		} else {
 
@@ -305,12 +362,28 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			width = Math.max(right - left, BALL_HORIZON);
 
 			float newValue;
-
-			newValue = (right + left) / 2;
-			camera.position.x += (newValue - camera.position.x) / 10;
-			newValue = (top + bottom) / 2;
-			camera.position.y += (newValue - camera.position.y) / 10;
-
+//Gdx.app.log("stage", "Elapsed: " + elapsedTime + "  add" + additionalPosLockTime);
+			if (elapsedTime>additionalPosLockTime+2f) {
+				newValue = (right + left) / 2;
+				camera.position.x += (newValue - camera.position.x) / 10;
+				newValue = (top + bottom) / 2;
+				camera.position.y += (newValue - camera.position.y) / 10;
+				if (additionalZoom>1.1f)
+				{
+					additionalZoom*=0.95;
+				}
+				else if (additionalZoom<0.9f)
+				{
+					additionalZoom*=1.05;
+				}
+			}
+			else
+			{
+				if (elapsedTime<additionalPosLockTime+0.1f) {
+					camera.position.x += additionalPositionX;
+					camera.position.y += additionalPositionY;
+				}
+			}
 			newValue = additionalZoom * Math.max(height / camera.viewportHeight, width / camera.viewportWidth);
 			camera.zoom += (newValue - camera.zoom) / 30f;
 
@@ -323,7 +396,8 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 	@Override
 	public void act(float delta) {
 
-		if (isRunning) {
+		elapsedTime += delta;
+		if (state == GameState.PLAYING) {
 
 			switch (Gdx.app.getType()) {
 				case Android:
@@ -334,6 +408,21 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 					if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
 						controlWithMouse = !controlWithMouse;
 						Gdx.app.log("control", "vezérlés " + (controlWithMouse ? "egérrel" : "billentyűvel"));
+					}
+
+					if (Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
+						maze.lockAll();
+						Gdx.app.log("control", "Az összes pálya lezárva ");
+					}
+
+					if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
+						maze.unlockAll();
+						Gdx.app.log("control", "Az összes pálya feloldva");
+					}
+
+					if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+						changeState(GameState.WON);
+						Gdx.app.log("control", "CHEAT...A pálya kész");
 					}
 
 					if (!controlWithMouse) {
@@ -371,9 +460,9 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 			world.step(delta, 1, 1);
 
-			super.act(delta);
-		}
 
+		}
+		super.act(delta);
 	}
 
 	@Override
@@ -387,8 +476,6 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 			balls.add((BallActor) actor);
 		} else if (actor instanceof HoleActor) {
 			holes.add((HoleActor) actor);
-		} else if (actor instanceof StarActor) {
-			++totalStars;
 		}
 
 	}
@@ -534,14 +621,28 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 
 	@Override
 	public boolean fling(float velocityX, float velocityY, int button) {
-		//Gdx.app.log("stage", "fling");
+		//Gdx.app.log("stage", "fling : " + velocityX + " : " + velocityY + " button: "  +button);
 		return false;
 	}
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		//Gdx.app.log("stage", "fling : " + x + " : " + y + " deltaX: " + deltaX + " deltaY: "  +deltaY);
+		additionalPositionX = -deltaX *((OrthographicCamera)getCamera()).zoom;
+		additionalPositionY = deltaY *((OrthographicCamera)getCamera()).zoom;
+		if (additionalPositionX !=0 || additionalPositionY!=0) {
+			additionalPosLockTime = elapsedTime;
+		}
 		//Gdx.app.log("stage", "pan");
 		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		additionalPositionX = 0;
+		additionalPositionY = 0;
+		zoomPrevDistance = -1;
+		return super.touchUp(screenX, screenY, pointer, button);
 	}
 
 	@Override
@@ -550,10 +651,26 @@ public class GameStage extends Stage implements GestureDetector.GestureListener 
 		return false;
 	}
 
+	private float zoomPrevDistance = -1;
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		additionalZoom = Math.max(Math.min(initialDistance / distance, 2f), 1 / 2f);
+		//additionalZoom = Math.max(Math.min(initialDistance / distance, 2f), 1 / 2f);
+
+		//Gdx.app.log("stage", "Init : " + initialDistance + "  Dist " + distance);
+		if (zoomPrevDistance >0) {
+			additionalZoom += (zoomPrevDistance - distance) * ((OrthographicCamera) getCamera()).zoom;
+			if (additionalZoom < 2f/Math.max(maze.getWidth(), maze.getHeight()))
+			{
+				additionalZoom = 2f/Math.min(maze.getWidth(), maze.getHeight());
+			}
+			if (additionalZoom>3)
+			{
+				additionalZoom = 3;
+			}
+		}
 		// TODO
+		//Gdx.app.log("stage", "Addzoom : " + additionalZoom);
+		zoomPrevDistance = distance;
 		return false;
 	}
 
