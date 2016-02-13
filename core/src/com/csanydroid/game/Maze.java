@@ -103,19 +103,24 @@ public class Maze {
 
 		// doors
 		for(int n = (int)(Math.random() * 1.8 * size);n > 0;) {
-			final int
+			int
 					x = (int)(Math.random() * size),
 					y = (int)(Math.random() * size);
 
 			if(Math.random() < .5) {
 				if ((maze[x][y] & 1) == 0) continue;
-				new MazeObject(ObjectType.DOOR, 2 * x, 2 * y - 1, false);
+				x *= 2;
+				y = y * 2 - 1;
 			} else {
 				if ((maze[x][y] & 8) == 0) continue;
-				new MazeObject(ObjectType.DOOR, 2 * x - 1, 2 * y, false);
+				x = x * 2 - 1;
+				y *= 2;
 			}
 
-			--n;
+			if(!isThereObjectAt(x, y, ObjectType.DOOR)) {
+				new MazeObject(ObjectType.DOOR, x, y, false);
+				--n;
+			}
 
 		}
 
@@ -397,8 +402,8 @@ public class Maze {
 				{
 
 					final int
-							h = (findWall(object.getX() - 1, object.getY()) != null ? 1 : 0) + (findWall(object.getX() + 1, object.getY()) != null ? 1 : 0),
-							v = (findWall(object.getX(), object.getY() - 1) != null ? 1 : 0) + (findWall(object.getX(), object.getY() + 1) != null ? 1 : 0);
+							h = (isThereObjectAt(object.getX() - 1, object.getY(), ObjectType.WALL) ? 1 : 0) + (isThereObjectAt(object.getX() + 1, object.getY(), ObjectType.WALL) ? 1 : 0),
+							v = (isThereObjectAt(object.getX(), object.getY() - 1, ObjectType.WALL) ? 1 : 0) + (isThereObjectAt(object.getX(), object.getY() + 1, ObjectType.WALL) ? 1 : 0);
 
 					object.setParam(0, v >= h);
 				}
@@ -533,12 +538,12 @@ public class Maze {
 		return null;
 	}
 
-	public MazeObject findWall(int x, int y) {
+	private boolean isThereObjectAt(int x, int y, ObjectType type) {
 		for (MazeObject object : this.objects) {
-			if(object.x == x && object.y == y && object.type == ObjectType.WALL) return object;
+			if(object.x == x && object.y == y && object.type == type) return true;
 		}
 
-		return null;
+		return false;
 	}
 
 	public class MazeObject {
