@@ -68,7 +68,7 @@ public class MenuScreen extends MyScreen{
         camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         camera.translate(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
         viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-
+  
         stage.setViewport(viewport);
 
         MenuBackgroundActor menuBackgroundActor = new MenuBackgroundActor();

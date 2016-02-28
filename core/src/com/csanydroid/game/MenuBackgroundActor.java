@@ -18,7 +18,7 @@ public class MenuBackgroundActor extends Actor {
         csany_logo = new Sprite(Assets.manager.get(Assets.CSANY_LOGO));
         pd_logo = new Sprite(Assets.manager.get(Assets.PenDroid_LOGO));
 
-    }
+    }//
 
     @Override
     public void setSize(float width, float height) {

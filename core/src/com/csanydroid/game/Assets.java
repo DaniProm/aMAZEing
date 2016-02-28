@@ -113,7 +113,7 @@ public class Assets {
     public static final AssetDescriptor<Music> MENU_MUSIC
             = new AssetDescriptor<Music>("sounds/Ska1.mp3", Music.class);
 
-
+//
 
     public static final AssetDescriptor<Sound> BLACKHOLE_SOUND
             = new AssetDescriptor<Sound>("sounds/black_hole.wav", Sound.class);
