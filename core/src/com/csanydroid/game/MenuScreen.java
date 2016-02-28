@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /** A játék menüje*/
 public class MenuScreen extends MyScreen{
     Stage stage;
+    static float getButtonPosX = 0,getButtonPosY = 0, getButtonHeight = 0;
     private final Music music = Assets.manager.get(Assets.MENU_MUSIC);
 
     GameActor actor;
@@ -73,7 +74,6 @@ public class MenuScreen extends MyScreen{
         MenuBackgroundActor menuBackgroundActor = new MenuBackgroundActor();
         menuBackgroundActor.setPosition(0, 0);
         menuBackgroundActor.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.addActor(menuBackgroundActor);
         button = new MyButton("Play", MyWindow.textButtonStyle);
         button.addListener(new ClickListener() {
             @Override
@@ -81,7 +81,10 @@ public class MenuScreen extends MyScreen{
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MazeSelectorScreen());
             }
         });
-        button.setPosition(Gdx.graphics.getWidth()*0.7f,Gdx.graphics.getHeight()*0.3f);
+        button.setPosition(Gdx.graphics.getWidth() * 0.7f, Gdx.graphics.getHeight() * 0.3f);
+        getButtonPosX = button.getX(); getButtonPosY= button.getY(); getButtonHeight = button.getHeight();
+
+        stage.addActor(menuBackgroundActor);
 
         stage.addActor(button);
     }

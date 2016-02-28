@@ -24,6 +24,11 @@ public class Assets {
 	public static final AssetDescriptor<Texture> MENU_MOLE
 			= new AssetDescriptor<Texture>("menumole.png", Texture.class);
 
+	public static final AssetDescriptor<Texture> CSANY_LOGO
+			= new AssetDescriptor<Texture>("csany.png", Texture.class);
+
+	public static final AssetDescriptor<Texture> PenDroid_LOGO
+			= new AssetDescriptor<Texture>("pd.png", Texture.class);
 
     public static final AssetDescriptor<Texture> LOCK
             = new AssetDescriptor<Texture>("lock.png", Texture.class);
@@ -178,6 +183,8 @@ public class Assets {
 		manager.load(MENU_BACKGROUND);
 		manager.load(MENU_LOGO);
 		manager.load(MENU_MOLE);
+		manager.load(CSANY_LOGO);
+		manager.load(PenDroid_LOGO);
 		//manager.load(PLAY);
 		//TEXTÚRÁK//
 
